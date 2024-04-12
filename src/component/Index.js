@@ -3,20 +3,17 @@ import axios from 'axios'; // You may need to install axios for HTTP requests
 import './bootstrap.min.css'; // Import Bootstrap CSS
 import './owl.carousel.min.css';
 import Carousel from './Carousel';
-import Topview from './Topview'
-import '/CDweb2/src/css/ds/style.css'
+
+import '../css/ds/style.css'
+import ProductItem from '../page/ProductItem';
 function AnimePage() {
     const [movies, setMovies] = useState([]);
     const [filter, setFilter] = useState('isAtoZ');
 
-    const [products, setProducts] = useState([]);
-
     useEffect(() => {
-      fetch('YOUR_API_ENDPOINT_HERE')
-        .then(response => response.json())
-        .then(data => setProducts(data))
-        .catch(error => console.error('Error:', error));
-    }, []); // Chạy chỉ một lần khi component được render
+        // Fetch movies based on filter
+        fetchMovies(filter);
+    }, [filter]);
 
     const fetchMovies = async (filter) => {
         try {
@@ -54,28 +51,14 @@ function AnimePage() {
                 </div>
               </div>
               <div className="row">
-      {products.map(movie => (
-        <div className="col-lg-4 col-md-6 col-sm-6" key={movie.id}>
-          <div className="product__item">
-            <div className="product__item__pic set-bg" style={{ backgroundImage: `url(${movie.image})` }}>
-              <div className="ep">{movie.episode} / {movie.totalEpisodes}</div>
-              <div className="view"><i className="fa fa-eye"></i> {movie.views}</div>
-            </div>
-            <div className="product__item__text">
-              <h5><a href="#">{movie.name}</a></h5>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+               <ProductItem></ProductItem>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
-    <Topview/>
     </div>
- 
         
     );
 }

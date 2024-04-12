@@ -3,13 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import './css/ds/style.css'
 import App from './App';
-import Index from './component/Index'
 import reportWebVitals from './reportWebVitals';
 import './component/bootstrap.min.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Index/>
+    <App/>
   </React.StrictMode>
 );
 

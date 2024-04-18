@@ -1,29 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import './bootstrap.min.css'; // Import Bootstrap CSS
 
-function ProductItem({ movie }) {
-  movie = {
-      id: 1,
-      imageUrl: "https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg",
-      episodes: 18,
-      views: 9141,
-      title: "The Seven Deadly Sins: Wrath of the Gods"
-    };
+
+
+function ProductItem(props) {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/anime')
+    .then(response => {
+      console.log('Response:', response.json);
+      return response.json();
+    })
+    .then(data => {
+      console.log('Data:', data);
+      setMovies(data);
+    })
+      .catch(error => console.error('Error:', error));
+  }, []); //
+
   return (
-    <div className="col-lg-4 col-md-6 col-sm-6">
-<div className="product__item">
-    <Link to={`/movie/${movie.id}`}>
-        <div className="product__item__pic set-bg" style={{ backgroundImage: `url(${movie.imageUrl})` }}>
-          <div className="ep">{movie.episodes}</div>
-          <div className="view"><i className="fa fa-eye"></i> {movie.views}</div>
+    <div className="row">
+      {movies.map(movies => (
+        <div className="col-lg-4 col-md-6 col-sm-6" key={movies.id}>
+          <div className="product__item">
+            <div className="product__item__pic set-bg" style={{ backgroundImage: `url(${movies.image})` }}>
+              <div className="ep">{movies.episode} / {movies.totalEpisodes}</div>
+              <div className="view"><i className="fa fa-eye"></i> {movies.views}</div>
+            </div>
+            <div className="product__item__text">
+              <h5><a href="#">{movies.name}</a></h5>
+            </div>
+          </div>
         </div>
-        <div className="product__item__text">
-          <h5>{movie.title}</h5>
-        </div>
-      </Link>
+      ))}
     </div>
-    </div>
-    
   );
 }
 

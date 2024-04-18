@@ -9,23 +9,18 @@ import ProductItem from '../page/ProductItem';
 function AnimePage() {
     const [movies, setMovies] = useState([]);
     const [filter, setFilter] = useState('isAtoZ');
-
     useEffect(() => {
-        // Fetch movies based on filter
-        fetchMovies(filter);
-    }, [filter]);
-
-    const fetchMovies = async (filter) => {
-        try {
-            const response = await axios.post('/anime-main/Index', { filter });
-            setMovies(response.data.renderMovies);
-        } catch (error) {
-            console.error('Error fetching movies:', error);
-        }
-    };
-    const handleFilterChange = (event) => {
-        setFilter(event.target.value);
-    };
+      fetch('http://localhost:8080/anime')
+      .then(response => {
+        console.log('Response:', response.json);
+        return response.json();
+      })
+      .then(data => {
+        console.log('Data:', data);
+        setMovies(data);
+      })
+        .catch(error => console.error('Error:', error));
+    }, []); //
 
     return (
         
@@ -50,9 +45,7 @@ function AnimePage() {
                 <div className="col-lg-4 col-md-4 col-sm-4">
                 </div>
               </div>
-              <div className="row">
-               <ProductItem></ProductItem>
-              </div>
+             <ProductItem/>
             </div>
           </div>
         </div>

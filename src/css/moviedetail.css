@@ -1,0 +1,97 @@
+.anime__details__content {
+    background-color: white !important;
+}
+
+span {
+    color: black !important;
+}
+
+.anime__details__widget ul li {
+    color: blue;
+}
+
+.container p {
+    color: black !important;
+}
+
+.footer {
+    background-color: whitesmoke;
+    padding-top: 0px;
+    padding-bottom: 3%;
+}
+
+.page-up {
+    position: absolute;
+    left: 65%;
+    top: 35%;
+    margin-left: -25px;
+}
+
+.anime__review__item__text {
+    overflow: hidden;
+    background: whitesmoke;
+    padding: 18px 30px 16px 20px;
+    border-radius: 10px;
+}
+
+.breadcrumb__links a {
+    font-size: 15px;
+    color: black;
+    margin-right: 18px;
+    display: inline-block;
+    position: relative;
+}
+
+.anime__details__title h3 {
+    font-weight: 700;
+    margin-bottom: 13px;
+    margin-top: 2%;
+}
+.breadcrumb__links > a {
+    color: black !important;
+
+}
+.breadcrumb__links > a :hover {
+    color: blue ;
+
+}
+.anime_details_title h3{
+    filter: none !important
+}
+.section-title h5{
+    filter: none !important
+
+}
+.anime__review__item__text h6{
+    color: black;
+    filter: none !important
+
+}
+
+
+.image-container {
+    position: relative;
+  }
+  
+  .movie-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .icon-layer {
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 10px;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .anime_showmore a  {
+    cursor: pointer;
+  }
+  
+  .anime_showmore i  {
+    color: blue;
+    text-decoration: underline;
+  }

@@ -30,7 +30,7 @@ function ProductItem(props) {
               <div className="view"><i className="fa fa-eye"></i> {movies.views}</div>
             </div>
             <div className="product__item__text">
-              <h5><a href="#">{movies.name}</a></h5>
+              <h5><Link to="/" >{movies.name}</Link></h5>
             </div>
           </div>
         </div>

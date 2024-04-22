@@ -67,7 +67,7 @@ function HeaderPage() {
                                         <ul className="genreDropdown">
                                             {/* Render ra the loai */}
                                         <li><a href="/categories">Hành động</a></li>
-                                        <li><a href="/categories">Lãng mạn</a></li>
+                                        <li><a href="/servicePack">Lãng mạn</a></li>
                                         <li><a href="/categories">Học đường</a></li>
                                         <li><a href="/categories">Kinh dị</a></li>
                                         <li><a href="/categories">Viễn tưởng</a></li>

@@ -1,9 +1,35 @@
-import React from "react";
-import "../../src/component/bootstrap.min.css";
-import Carousel from "../../src/component/Carousel";
-import "../css/ds/style.css";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./bootstrap.min.css";
+import "./owl.carousel.min.css";
+import Carousel from "./Carousel";
 
-const CategoriesPage = () => {
+import "../css/ds/style.css";
+function CategoriesPage() {
+  const [movies, setMovies] = useState([]);
+  const [filter, setFilter] = useState("AtoZ");
+  const [categorieId, setCateId] = useState("action");
+  useEffect(() => {
+    filterMovie(categorieId, filter);
+  }, [categorieId, filter]);
+
+  const filterMovie = async (categorieId, filter) => {
+    try {
+      const response = await axios.post("/anime-main/Categories", {
+        categorieId,
+        filter,
+      });
+      setMovies(response.data.renderMovies);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
+  };
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
+  const handleCateChange = (event) => {
+    setCateId(event.target.value);
+  };
   return (
     <div id="ah_wrapper">
       <section className="hero">
@@ -109,5 +135,6 @@ const CategoriesPage = () => {
       </section>
     </div>
   );
-};
+}
+
 export default CategoriesPage;

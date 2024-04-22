@@ -1333,42 +1333,42 @@ ol {
 .anime__video__player .plyr--full-ui input[type=range] {
 	color: #ffffff;
 }
-/* 
+
 .anime__video__player .plyr__controls .plyr__controls__item.plyr__progress__container {
 	position: absolute;
 	left: 26px;
 	bottom: 45px;
 	width: calc(100% - 60px);
-} */
+}
 
-/* .anime__video__player .plyr__menu {
+.anime__video__player .plyr__menu {
 	margin-right: 70px;
-} */
+}
 
-/* .anime__video__player .plyr__controls .plyr__controls__item:first-child {
+.anime__video__player .plyr__controls .plyr__controls__item:first-child {
 	position: absolute;
 	left: 32px;
 	bottom: 8px;
-} */
+}
 
-/* .anime__video__player .plyr__controls .plyr__controls__item:last-child {
+.anime__video__player .plyr__controls .plyr__controls__item:last-child {
 	position: absolute;
 	right: 32px;
 	bottom: 8px;
-} */
+}
 
-/* .anime__video__player .plyr__volume {
+.anime__video__player .plyr__volume {
 	position: absolute;
 	width: auto;
 	left: 76px;
 	bottom: 8px;
-} */
+}
 
-/* .anime__video__player .plyr__controls .plyr__controls__item.plyr__time {
+.anime__video__player .plyr__controls .plyr__controls__item.plyr__time {
 	position: absolute;
 	left: 106px;
 	bottom: 12px;
-} */
+}
 
 .anime__video__player .plyr__control--overlaid {
 	background: transparent;
@@ -1385,11 +1385,10 @@ ol {
 }
 
 .anime__details__episodes a {
-
 	display: inline-block;
 	font-size: 15px;
 	color: #ffffff;
-	background: rgb(7 7 7 / 70%);
+	background: rgba(255, 255, 255, 0.2);
 	padding: 10px 20px;
 	border-radius: 4px;
 	margin-right: 15px;
@@ -1400,14 +1399,8 @@ ol {
 }
 
 .anime__details__episodes a:hover {
-	color: #ffffff;
-	background: rgb(255 16 167 / 70%);
-	text-decoration: none;
-
-}
-.activeEpisode{
-	color: #ffffff!important!important;
-	background: rgba(1, 172, 252, 0.7)!important;
+	color: #000000;
+	background: #ffffff;
 }
 
 /*---------------------
@@ -1441,7 +1434,7 @@ ol {
 
 .breadcrumb__links span {
 	font-size: 15px;
-	color: #ff049f!important;
+	color: #b7b7b7;
 	display: inline-block;
 }
 

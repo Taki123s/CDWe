@@ -1,5 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+// import '../component/bootstrap.min.css';
+// import '../component/owl.carousel.min.css';
+// import "react-multi-carousel/lib/styles.css";
 import '../css/moviedetail.css';
 import MovieComment from './MovieComment.js'; // Import MovieComment component
 import Footer from './Footer.js';

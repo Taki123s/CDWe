@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import './bootstrap.min.css';
+
 import './bootstrap.min.css'; // Import Bootstrap CSS
 
 const Topview = () => {

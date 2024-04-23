@@ -64,4 +64,8 @@ public class Movie {
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private Set<View> views;
+    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    private Set<Rate> rates;
+    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    private Set<Follow> follows;
 }

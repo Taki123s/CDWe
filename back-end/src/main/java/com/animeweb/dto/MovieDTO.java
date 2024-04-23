@@ -1,9 +1,6 @@
 package com.animeweb.dto;
 
-import com.animeweb.entity.Chapter;
-import com.animeweb.entity.Genre;
-import com.animeweb.entity.Serie;
-import com.animeweb.entity.View;
+import com.animeweb.entity.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,4 +31,6 @@ public class MovieDTO {
     private Set<Chapter> currentChapters;
     private Serie serie;
     private Set<View> views;
+    private Set<Rate> rates;
+    private Set<Follow> follows;
 }

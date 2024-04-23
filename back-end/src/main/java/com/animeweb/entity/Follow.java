@@ -12,18 +12,20 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "views")
-public class View {
+@Table(name = "follows")
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private int id ;
+    @Column(name = "follow_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime followAt;
+    @Column(name="status",columnDefinition = "int default 1")
+    private int status;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
-    private User user;
+    private User userId;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
     private Movie movie;
-    @Column(name = "watch_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime watchAt;
 }

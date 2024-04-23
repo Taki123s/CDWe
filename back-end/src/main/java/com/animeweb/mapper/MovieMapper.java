@@ -22,7 +22,9 @@ public class MovieMapper {
                 movie.getGenres(),
                 movie.getCurrentChapters(),
                 movie.getSerie(),
-                movie.getViews());
+                movie.getViews(),
+                movie.getRates(),
+                movie.getFollows());
     }
     public static Movie mapToMovie(MovieDTO movieDTO){
         return new Movie(
@@ -42,7 +44,9 @@ public class MovieMapper {
                 movieDTO.getGenres(),
                 movieDTO.getCurrentChapters(),
                 movieDTO.getSerie(),
-                movieDTO.getViews());
+                movieDTO.getViews(),
+                movieDTO.getRates(),
+                movieDTO.getFollows());
 
     }
 

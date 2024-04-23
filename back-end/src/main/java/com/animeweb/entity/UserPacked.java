@@ -13,18 +13,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user_packed")
+@Table(name = "users_packed")
 public class UserPacked {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "service_pack_id", referencedColumnName = "id")
     private ServicePack servicePackId;
 

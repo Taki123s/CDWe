@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "service_pack")
+@Table(name = "service_packs")
 public class ServicePack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

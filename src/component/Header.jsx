@@ -3,6 +3,7 @@ import axios from "axios";
 import "./bootstrap.min.css";
 import "./owl.carousel.min.css";
 import "../css/ds/style.css";
+
 import logo from '../img/logo.png'
 // let searchResultsVisible = false;
 // function toggleSearchResults() {
@@ -61,13 +62,13 @@ function HeaderPage() {
                         <nav className="header__menu mobile-menu" id="nav">
                             <ul style={{justifyContent:`flex-start`,textWrap:`nowrap`}}>
                                 <li><a href="">Trang chủ</a></li>
-                                <li><a href="#"><span
-                                        className="arrow_carrot-down">Thể loại</span></a>
+                                <li><a href="#"
+                                        className="arrow_carrot-down">Thể loại</a>
                                     <div className="dropdown">
                                         <ul className="genreDropdown">
                                             {/* Render ra the loai */}
                                         <li><a href="/categories">Hành động</a></li>
-                                        <li><a href="/categories">Lãng mạn</a></li>
+                                        <li><a href="/servicePack">Lãng mạn</a></li>
                                         <li><a href="/categories">Học đường</a></li>
                                         <li><a href="/categories">Kinh dị</a></li>
                                         <li><a href="/categories">Viễn tưởng</a></li>

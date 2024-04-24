@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import './bootstrap.min.css';
 
+import './bootstrap.min.css'; // Import Bootstrap CSS
 const Topview = () => {
   const { t } = useTranslation();
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    loadTopViewMoviesDay();
+    loadTopViewMovies();
   }, []);
 
   const loadTopViewMovies = async (action) => {
@@ -27,7 +27,7 @@ const Topview = () => {
       <div className="product__sidebar">
         <div className="product__sidebar__view">
           <div className="section-title">
-            <h5>{t('content.topview')}</h5>
+            <h5>{t('Topview')}</h5>
           </div>
           <ul className="filter__controls">
             <li className="active" data-filter=".day" onClick={() => loadTopViewMovies('topDay')}>{t('day')}</li>

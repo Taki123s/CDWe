@@ -1,9 +1,14 @@
 package com.animeweb.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -23,7 +28,7 @@ public class Movie {
     private String name;
 
     @Column(name = "total_chapters")
-    private int totalChapters;
+    private Integer totalChapters;
 
     @Column(name = "vietnamese_descriptions")
     private String vietnameseDescriptions;
@@ -53,19 +58,24 @@ public class Movie {
     private String seriesDescriptions;
 
     @Column(name = "price")
-    private double price;
-    @ManyToMany(cascade = CascadeType.ALL)
+    private Double price;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name="movie_genre",joinColumns = {@JoinColumn(name="movie_id")},inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private Set<Genre> genres;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Chapter> currentChapters;
     @ManyToOne
     @JoinColumn(name ="serie_id",referencedColumnName = "id")
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<View> views;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Rate> rates;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Follow> follows;
 }

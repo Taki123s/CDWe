@@ -1,23 +1,30 @@
 package com.animeweb.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 import java.time.LocalDateTime;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "user_packed")
+@Table(name = "users_packed")
 public class UserPacked {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "service_pack_id", referencedColumnName = "id")
     private ServicePack servicePackId;
 
@@ -33,72 +40,4 @@ public class UserPacked {
     @Column(name = "delete_at")
     private LocalDateTime deletedAt;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
-
-    public ServicePack getServicePackId() {
-        return servicePackId;
-    }
-
-    public void setServicePackId(ServicePack servicePackId) {
-        this.servicePackId = servicePackId;
-    }
-
-    public LocalDateTime getExpiredTime() {
-        return expiredTime;
-    }
-
-    public void setExpiredTime(LocalDateTime expiredTime) {
-        this.expiredTime = expiredTime;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "UserPacked{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", servicePackId=" + servicePackId +
-                ", expiredTime=" + expiredTime +
-                ", createdAt=" + createdAt +
-                ", status=" + status +
-                ", deletedAt=" + deletedAt +
-                '}';
-    }
 }

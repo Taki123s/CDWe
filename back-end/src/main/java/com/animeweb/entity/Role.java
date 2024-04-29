@@ -1,10 +1,20 @@
 package com.animeweb.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,20 +22,6 @@ public class Role {
     private int id ;
     @Column(name= "description")
     private String description;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @OneToMany(mappedBy = "role",cascade = CascadeType.ALL)
+    private Set<User> users;
 }

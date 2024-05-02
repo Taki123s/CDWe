@@ -15,14 +15,16 @@ import java.util.List;
 public class MovieController {
     @Autowired
     private MovieService movieService;
+
     @PostMapping
-    public ResponseEntity<MovieDTO> createMovie(@RequestBody MovieDTO movieDTO){
+    public ResponseEntity<MovieDTO> createMovie(@RequestBody MovieDTO movieDTO) {
         MovieDTO savedMovie = movieService.createMovie(movieDTO);
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
+
+
     @GetMapping("/index")
-    public ResponseEntity<List<MovieDTO>> getMovie(){
-        return ResponseEntity.ok(movieService.getAllMovie());
-
-
-
+    public ResponseEntity<List<MovieDTO>> getMovie() {
+        return new ResponseEntity<>(movieService.index(), HttpStatus.OK);
+    }
+}

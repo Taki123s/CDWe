@@ -1,15 +1,12 @@
-package com.animeweb.entity;
+package com.animeweb.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -23,5 +20,6 @@ public class Role {
     @Column(name= "description")
     private String description;
     @OneToMany(mappedBy = "role",cascade = CascadeType.ALL)
-    private Set<User> users;
+    @JsonIgnore
+    private List<User> users;
 }

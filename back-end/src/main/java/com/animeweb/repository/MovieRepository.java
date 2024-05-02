@@ -1,7 +1,7 @@
 package com.animeweb.repository;
 
 
-import com.animeweb.entity.Movie;
+import com.animeweb.entities.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

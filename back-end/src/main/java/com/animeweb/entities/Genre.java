@@ -1,4 +1,4 @@
-package com.animeweb.entity;
+package com.animeweb.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -6,20 +6,23 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
+
 @NoArgsConstructor
 @AllArgsConstructor
-
 @Entity
-@Table(name = "roles")
-public class Role {
+@Data
+@Table(name = "genres")
+public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id ;
-    @Column(name= "description")
+    private int id;
+    @Column(name = "description")
     private String description;
-    @OneToMany(mappedBy = "role",cascade = CascadeType.ALL)
+    @Column(name = "status",columnDefinition = "int default 1")
+    private int status;
+    @ManyToMany(mappedBy = "genres")
     @JsonIgnore
-    private List<User> users;
-}
+    private List<Movie> movieList;
+
+    }

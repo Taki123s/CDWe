@@ -1,7 +1,6 @@
 package com.animeweb.dto;
 
-import com.animeweb.entity.*;
-import jakarta.persistence.*;
+import com.animeweb.entities.*;
 import lombok.*;
 
 import java.time.LocalDateTime;

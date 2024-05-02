@@ -1,4 +1,4 @@
-package com.animeweb.entity;
+package com.animeweb.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,8 +1,7 @@
 package com.animeweb.dto;
 
-import com.animeweb.entity.Comment;
-import com.animeweb.entity.Movie;
-import jakarta.persistence.*;
+import com.animeweb.entities.Comment;
+import com.animeweb.entities.Movie;
 import lombok.*;
 
 import java.util.List;

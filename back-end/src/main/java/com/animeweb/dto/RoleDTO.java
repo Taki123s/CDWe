@@ -1,6 +1,6 @@
 package com.animeweb.dto;
 
-import com.animeweb.entity.User;
+import com.animeweb.entities.User;
 import lombok.*;
 
 import java.util.List;

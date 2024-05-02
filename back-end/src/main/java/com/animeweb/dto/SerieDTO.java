@@ -1,6 +1,6 @@
 package com.animeweb.dto;
 
-import com.animeweb.entity.Movie;
+import com.animeweb.entities.Movie;
 import lombok.*;
 
 import java.util.List;

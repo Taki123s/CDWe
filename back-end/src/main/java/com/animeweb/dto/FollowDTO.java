@@ -1,7 +1,7 @@
 package com.animeweb.dto;
 
-import com.animeweb.entity.Movie;
-import com.animeweb.entity.User;
+import com.animeweb.entities.Movie;
+import com.animeweb.entities.User;
 import java.time.LocalDateTime;
 
 import lombok.*;

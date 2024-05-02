@@ -66,7 +66,7 @@ public class Movie {
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Chapter> currentChapters;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="serie_id",referencedColumnName = "id")
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)

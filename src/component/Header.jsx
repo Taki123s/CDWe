@@ -3,53 +3,20 @@ import axios from "axios";
 import "./bootstrap.min.css";
 import "./owl.carousel.min.css";
 import "../css/ds/style.css";
+import Scrollbar from 'react-scrollbars-custom';
 
 import logo from '../img/logo.png'
-// let searchResultsVisible = false;
-// function toggleSearchResults() {
-//     if (searchResultsVisible) {
-//         document.getElementById("search-results").classList.add("hidden");
-//         searchResultsVisible = false;
-//     } else {
-//         document.getElementById("search-results").classList.remove("hidden");
-//         searchResultsVisible = true;
-//     }
-// }
-// function searchByName(input) {
-//     let searchBox = $('#search-input').val();
-//     $.ajax({
-//         url: "/anime-main/SearchByName",
-//         type: "GET",
-//         data: {
-//             searchBox: searchBox,
-//         },
-//         success: function (data) {
-//             let jsonData = JSON.parse(data);
-//             // Render dữ liệu lên trang web
-//             let html = '';
-//             for (let i = 0; i < jsonData.length; i++) {
-//                 html += '<li class="result-input"><a href="MovieDetail?idMovie=' + jsonData[i].id + '">' + jsonData[i].name +
-//                     '<img src="' + jsonData[i].avatars[0].name + '"/></a></li>'
-//             }
-//             // $('#search-results').css("display", "block");
-//             html += '<a href="/anime-main/SearchByName?viewall=' + encodeURIComponent(searchBox) + '">Xem tất cả</a>';
-//             $('#search-results').html(html);
-//         },
-//         error: function () {
-//             // Xử lý lỗi khi không lấy được dữ liệu
-//             alert('Không lấy được dữ liệu');
-//         }
-//     });
-
-// }
-
 function HeaderPage() {
+    const [isViewAll, setViewAll] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/search?term=${searchTerm}`);
+                const response = await axios.get(`http://localhost:8080/movie/search?term=${searchTerm}`);
+                console.log(response.data);
                 setSearchResults(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -62,6 +29,11 @@ function HeaderPage() {
             setSearchResults([]);
         }
     }, [searchTerm]);
+    const isResult = () => {
+        if (searchResults.length !== 0) setViewAll(!isViewAll);
+
+        return isViewAll;
+    }
     return (
         <header className="header">
 
@@ -110,9 +82,6 @@ function HeaderPage() {
                         </div>
                     </div>
 
-
-
-
                     <div className="col-lg-4">
                         <div className="header__right">
                             <form className="searchTag" id="search-name">
@@ -122,18 +91,26 @@ function HeaderPage() {
                                     />
                                     <span className="search-icon"><i className="fas fa-search"></i></span>
                                 </div>
-                                <div id="search-results">
 
-                                    <ul>
-                                        {searchResults.map((result) => (
-                                            <li key={result.id}>{result.name}</li>
-                                        ))}
-                                    </ul>
+                                <div id="search-results">
+                                    <Scrollbar style={{ width: 250, height: 250 }}>
+                                        <p>Hello world!</p>
+                                    </Scrollbar>
+                                    {searchResults.map((result) => (
+
+                                        <li className="result-input" key={result.id}>
+                                            <a href="">
+                                                <img className="image_result" src={result.avatarMovie} />{result.name}
+                                            </a>
+                                        </li>
+
+                                    ))}
+                                    {
+                                        isResult ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
+                                            <a className="view-all-result" style={{ display: "none" }} />
+                                    }
 
                                 </div>
-                                {/* <div className="iconSearch">
-                                    <table id="renderSearch"></table>
-                                </div> */}
                             </form>
                         </div>
 

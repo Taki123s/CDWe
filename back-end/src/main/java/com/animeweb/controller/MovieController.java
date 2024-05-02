@@ -27,6 +27,15 @@ public class MovieController {
     public ResponseEntity<String> getMovie(){
         return new ResponseEntity<>("Hello",HttpStatus.ACCEPTED);
     }
+    @GetMapping("/{id}")
+    public  ResponseEntity<Movie>findMovie(@PathVariable long id){
+        Movie m = movieService.findMovie(id);
+        if (m != null) {
+            return new ResponseEntity<>(m, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @GetMapping("/search")
     public ResponseEntity<List<Movie>> search(@RequestParam("term") String keyword) {
         List<Movie> movieList = null;

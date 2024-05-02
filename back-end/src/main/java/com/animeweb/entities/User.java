@@ -1,15 +1,12 @@
-package com.animeweb.entity;
+package com.animeweb.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -21,6 +18,7 @@ public class User {
     private int id;
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id",columnDefinition = "int default 1")
+    @JsonBackReference
     private Role role;
 
     @Column(name = "user_name", length = 500)

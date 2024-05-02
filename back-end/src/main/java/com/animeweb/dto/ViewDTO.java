@@ -1,16 +1,12 @@
 package com.animeweb.dto;
 
-import com.animeweb.entity.Movie;
-import com.animeweb.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.animeweb.entities.Movie;
+import com.animeweb.entities.User;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewDTO {

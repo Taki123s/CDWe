@@ -1,14 +1,11 @@
-package com.animeweb.entity;
+package com.animeweb.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -32,12 +29,15 @@ public class Comment {
     private int status;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_comment")
+    @JsonBackReference
     private User userComment;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_reply")
+    @JsonBackReference
     private User userReply;
     @ManyToOne
     @JoinColumn(name ="chapter_id",nullable = false,referencedColumnName = "id")
+    @JsonBackReference
     private Chapter chapter;
 
 

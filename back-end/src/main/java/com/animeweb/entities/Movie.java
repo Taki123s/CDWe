@@ -1,14 +1,13 @@
-package com.animeweb.entity;
+package com.animeweb.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import java.time.LocalDateTime;
-import java.util.Set;
+import lombok.*;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+import java.util.List;
+
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -55,17 +54,24 @@ public class Movie {
     @Column(name = "price")
     private double price;
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="movie_genre",joinColumns = {@JoinColumn(name="movie_id")},inverseJoinColumns = {@JoinColumn(name = "genre_id")})
-    private Set<Genre> genres;
+    @JoinTable(name="movie_genre",joinColumns = {@JoinColumn(name="movie_id")},inverseJoinColumns = {@JoinColumn(name = "genre_id")},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"movie_id", "genre_id"})})
+    @JsonIgnore
+    private List<Genre> genres;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private Set<Chapter> currentChapters;
+    @JsonIgnore
+    private List<Chapter> currentChapters;
     @ManyToOne
     @JoinColumn(name ="serie_id",referencedColumnName = "id")
+    @JsonIgnore
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private Set<View> views;
+    @JsonIgnore
+    private List<View> views;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private Set<Rate> rates;
+    @JsonIgnore
+    private List<Rate> rates;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private Set<Follow> follows;
+    @JsonIgnore
+    private List<Follow> follows;
 }

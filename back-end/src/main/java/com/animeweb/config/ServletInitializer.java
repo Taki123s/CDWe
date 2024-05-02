@@ -1,5 +1,6 @@
 package com.animeweb.config;
 
+import com.animeweb.DemoApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 

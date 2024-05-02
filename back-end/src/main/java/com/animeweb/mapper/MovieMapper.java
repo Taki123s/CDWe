@@ -1,7 +1,7 @@
 package com.animeweb.mapper;
 
 import com.animeweb.dto.MovieDTO;
-import com.animeweb.entity.Movie;
+import com.animeweb.entities.Movie;
 
 public class MovieMapper {
     public static MovieDTO mapToMovieDTO(Movie movie){

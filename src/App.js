@@ -7,16 +7,19 @@ import CategoriesPage from "./page/Categorie";
 import HeaderPage from "./component/Header";
 import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
+import LoginGoogle from "./component/LoginGoogle";
 import React from 'react';
 function App() {
   return (
     <Router>
       <HeaderPage />
       <Routes>
+
         <Route path="/movie/:id" Component={MovieDetail} />
         <Route path="/item" element={ProductItem} />
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/" element={<AnimePage />} />
+          <Route path="/login" element={<LoginGoogle />} />
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
         <Route path="/watching/:id/:chapter" element={<MovieWatching />} />

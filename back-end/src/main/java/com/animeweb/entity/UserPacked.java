@@ -1,15 +1,12 @@
 package com.animeweb.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.time.LocalDateTime;
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -22,10 +19,12 @@ public class UserPacked {
     private int id;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
     private User userId;
 
     @ManyToOne
     @JoinColumn(name = "service_pack_id", referencedColumnName = "id")
+    @JsonBackReference
     private ServicePack servicePackId;
 
     @Column(name = "expired_time")

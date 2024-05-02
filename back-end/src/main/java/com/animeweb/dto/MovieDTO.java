@@ -2,15 +2,12 @@ package com.animeweb.dto;
 
 import com.animeweb.entity.*;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import java.time.LocalDateTime;
-import java.util.Set;
+import lombok.*;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieDTO {
@@ -27,10 +24,10 @@ public class MovieDTO {
     private String avatarMovie;
     private String seriesDescriptions;
     private double price;
-    private Set<Genre> genres;
-    private Set<Chapter> currentChapters;
+    private List<Genre> genres;
+    private List<Chapter> currentChapters;
     private Serie serie;
-    private Set<View> views;
-    private Set<Rate> rates;
-    private Set<Follow> follows;
+    private List<View> views;
+    private List<Rate> rates;
+    private List<Follow> follows;
 }

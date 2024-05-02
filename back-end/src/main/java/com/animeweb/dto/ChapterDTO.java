@@ -3,15 +3,11 @@ package com.animeweb.dto;
 import com.animeweb.entity.Comment;
 import com.animeweb.entity.Movie;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChapterDTO {
@@ -21,6 +17,6 @@ public class ChapterDTO {
     private int status;
     private int type;
     private Movie movie;
-    private Set<Comment> comments;
+    private List<Comment> comments;
 
 }

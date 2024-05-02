@@ -1,20 +1,16 @@
 package com.animeweb.dto;
 
 import com.animeweb.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 
 public class RoleDTO {
     private int id ;
     private String description;
-    private Set<User> users;
+    private List<User> users;
 }

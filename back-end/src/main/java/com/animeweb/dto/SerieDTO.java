@@ -1,19 +1,15 @@
 package com.animeweb.dto;
 
 import com.animeweb.entity.Movie;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SerieDTO {
     private int id;
     private String descriptions;
-    private Set<Movie> movieSet;
+    private List<Movie> movieSet;
 }

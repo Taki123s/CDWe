@@ -1,14 +1,11 @@
 package com.animeweb.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -24,8 +21,10 @@ public class Follow {
     private int status;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
+    @JsonBackReference
     private User userId;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
+    @JsonBackReference
     private Movie movie;
 }

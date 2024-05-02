@@ -1,12 +1,12 @@
 package com.animeweb.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
-@Getter
-@Setter
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -22,6 +22,7 @@ public class Genre {
     @Column(name = "status",columnDefinition = "int default 1")
     private int status;
     @ManyToMany(mappedBy = "genres")
-    private Set<Movie> movieList;
+    @JsonIgnore
+    private List<Movie> movieList;
 
     }

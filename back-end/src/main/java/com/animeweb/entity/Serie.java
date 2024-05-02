@@ -1,15 +1,12 @@
 package com.animeweb.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -22,6 +19,7 @@ public class Serie {
     @Column(name = "descriptions")
     private String descriptions;
     @OneToMany(mappedBy = "serie",cascade = CascadeType.ALL)
-    private Set<Movie> movieSet;
+    @JsonIgnore
+    private List<Movie> movieSet;
 
 }

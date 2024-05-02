@@ -1,15 +1,13 @@
-package com.animeweb.entity;
+package com.animeweb.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -33,7 +31,9 @@ public class Chapter {
 
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
+    @JsonBackReference
     private Movie movie;
     @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
-    private Set<Comment> comments;
+    @JsonIgnore
+    private List<Comment> comments;
 }

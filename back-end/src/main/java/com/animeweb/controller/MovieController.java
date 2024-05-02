@@ -20,9 +20,9 @@ public class MovieController {
         MovieDTO savedMovie = movieService.createMovie(movieDTO);
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
-
     @GetMapping("/index")
     public ResponseEntity<List<MovieDTO>> getMovie(){
-        return new ResponseEntity<>(movieService.index(),HttpStatus.ACCEPTED);
-    }
-}
+        return ResponseEntity.ok(movieService.getAllMovie());
+
+
+

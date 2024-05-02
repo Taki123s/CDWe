@@ -45,7 +45,6 @@ function AnimePage() {
                                         </div>
                                     </div>
                                     <div className="col-lg-4 col-md-4 col-sm-4">
-
                                     </div>
                                 </div>
                                 <ProductItem/>

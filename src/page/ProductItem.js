@@ -8,7 +8,7 @@ function ProductItem(props) {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/anime')
+    fetch('http://localhost:8080/movie/index')
     .then(response => {
       console.log('Response:', response.json);
       return response.json();
@@ -25,8 +25,8 @@ function ProductItem(props) {
       {movies.map(movies => (
         <div className="col-lg-4 col-md-6 col-sm-6" key={movies.id}>
           <div className="product__item">
-            <div className="product__item__pic set-bg" style={{ backgroundImage: `url(${movies.image})` }}>
-              <div className="ep">{movies.episode} / {movies.totalEpisodes}</div>
+            <div className="product__item__pic set-bg" style={{ backgroundImage: `url(${movies.avatarMovie})` }}>
+              <div className="ep">{movies.currentChapters.length } / {movies.totalChapters}</div>
               <div className="view"><i className="fa fa-eye"></i> {movies.views}</div>
             </div>
             <div className="product__item__text">

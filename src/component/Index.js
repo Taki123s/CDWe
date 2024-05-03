@@ -12,7 +12,7 @@ function AnimePage() {
     const [movies, setMovies] = useState([]);
     const [filter, setFilter] = useState('isAtoZ');
     useEffect(() => {
-        fetch('http://localhost:8080/anime')
+        fetch('http://localhost:8080/movie/index')
             .then(response => {
                 console.log('Response:', response.json);
                 return response.json();
@@ -27,8 +27,8 @@ function AnimePage() {
     return (
 
         <div id="ah_wrapper">
-            <section class="hero">
-                <div class="container">
+            <section className="hero">
+                <div className="container">
 
                     <div><Carousel/></div>
                 </div>

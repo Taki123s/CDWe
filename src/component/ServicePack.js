@@ -3,44 +3,42 @@ import axios from 'axios'; // You may need to install axios for HTTP requests
 import './bootstrap.min.css'; // Import Bootstrap CSS
 import './owl.carousel.min.css';
 import Carousel from './Carousel';
-import Topview from './Topview';
+import ServicePackItems from './ServicePackDetail';
 
 import '../css/ds/style.css'
+import ProductItem from "../page/ProductItem";
 
 function ServicePack() {
     return (
         <>
-            <div className="inter-pack">
-                <div className="content">
-                    <div className="it-head">
-                        <h3 className="it-sub">
-                            Các gói cước tốc độ cao, tích hợp giải pháp Mesh wifi
-                        </h3>
+            <div id="ah_wrapper">
+                <section className="hero">
+                    <div className="container">
+
+                        <div><Carousel/></div>
                     </div>
-                    <div className="inter-pack__content">
-                        <div className="lists-slider slider">
-                            <ul className="owl-carousel col4 supernet owl-loaded owl-drag">
-                                {/* Your package items go here */}
-                            </ul>
+                </section>
+                <section className="product spad">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-lg-12">
+                                <div className="trending__product">
+                                    <div className="row">
+                                        <div className="col-lg-8 col-md-8 col-sm-8">
+                                            <div className="section-title">
+                                                <h4>Các loại gói xem</h4>
+                                            </div>
+                                        </div>
+                                        <div className="col-lg-4 col-md-4 col-sm-4">
+                                        </div>
+                                    </div>
+                                    <ServicePackItems/>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="inter-pack inter-pack--plus">
-                <div className="content">
-                    <div className="it-head">
-                        <h3 className="it-sub">
-                            Gói cước tốc độ cao
-                        </h3>
-                    </div>
-                    <div className="inter-pack__content">
-                        <div className="lists-slider slider">
-                            <ul className="owl-carousel col3 netplus owl-loaded owl-drag">
-                                {/* Your package items go here */}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                </section>
             </div>
         </>
 

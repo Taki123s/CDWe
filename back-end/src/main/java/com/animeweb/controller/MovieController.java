@@ -22,7 +22,6 @@ public class MovieController {
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
 
-
     @GetMapping("/index")
     public ResponseEntity<List<MovieDTO>> getMovie() {
         return new ResponseEntity<>(movieService.index(), HttpStatus.OK);

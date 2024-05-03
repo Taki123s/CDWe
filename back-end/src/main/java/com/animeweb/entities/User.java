@@ -1,10 +1,10 @@
 package com.animeweb.entities;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,12 +15,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id",columnDefinition = "int default 1")
+    @JoinColumn(name = "role_id", referencedColumnName = "id",columnDefinition = "bigint default 1")
     @JsonBackReference
     private Role role;
-
     @Column(name = "user_name", length = 500)
     private String userName;
 
@@ -40,22 +39,27 @@ public class User {
     private String phone;
 
     @Column(name = "user_type", columnDefinition = "int default 1")
-    private int userType;
+    private Integer userType;
 
     @Column(name = "create_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @Column(name = "update_at")
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     @Column(name = "delete_at")
-    private LocalDateTime deletedAt;
+    private Date deletedAt;
 
     @Column(name = "status", columnDefinition = "tinyint default 1")
-    private boolean status;
+    private Boolean status;
 
     @Column(name="externalId")
     private String externalId;
-
+    @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
+    private List<View> views;
+    @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
+    private List<Rate> rates;
+    @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
+    private List<Follow> follows;
 
 }

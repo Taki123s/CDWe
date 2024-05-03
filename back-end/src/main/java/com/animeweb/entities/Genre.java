@@ -1,6 +1,6 @@
 package com.animeweb.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,13 +16,13 @@ public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Column(name = "description")
     private String description;
-    @Column(name = "status",columnDefinition = "int default 1")
-    private int status;
+    @Column(name = "status",columnDefinition = "tinyint default 1")
+    private Boolean status;
     @ManyToMany(mappedBy = "genres")
-    @JsonIgnore
+    @JsonBackReference
     private List<Movie> movieList;
 
     }

@@ -1,14 +1,19 @@
 package com.animeweb.dto;
 
+import com.animeweb.entities.Follow;
+import com.animeweb.entities.Rate;
 import com.animeweb.entities.Role;
+import com.animeweb.entities.View;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private int id;
+    private Long id;
     private Role role;
     private String userName;
     private String avatarPicture;
@@ -16,10 +21,13 @@ public class UserDTO {
     private String email;
     private String fullName;
     private String phone;
-    private int userType;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
-    private boolean status;
+    private Integer userType;
+    private Date createdAt;
+    private Date updatedAt;
+    private Date deletedAt;
+    private Boolean status;
     private String externalId;
+    private List<View> views;
+    private List<Rate> rates;
+    private List<Follow> follows;
 }

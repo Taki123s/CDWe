@@ -4,14 +4,15 @@ import com.animeweb.entities.Movie;
 import com.animeweb.entities.User;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewDTO {
-    private int id;
-    private User user;
+    private Long id;
+    private User userId;
     private Movie movie;
-    private LocalDateTime watchAt;
+    private Date watchAt;
 }

@@ -10,11 +10,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChapterDTO {
-    private int id;
-    private int ordinal;
+    private Long id;
+    private Integer ordinal;
     private String link;
-    private int status;
-    private int type;
+    private Boolean status;
+    private Integer type;
     private Movie movie;
     private List<Comment> comments;
 

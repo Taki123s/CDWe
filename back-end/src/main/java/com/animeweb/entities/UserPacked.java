@@ -3,9 +3,8 @@ package com.animeweb.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.Date;
 
-
-import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +15,7 @@ public class UserPacked {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonBackReference
@@ -28,15 +27,15 @@ public class UserPacked {
     private ServicePack servicePackId;
 
     @Column(name = "expired_time")
-    private LocalDateTime expiredTime;
+    private Date expiredTime;
 
     @Column(name = "create_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
-    @Column(name = "status",columnDefinition = "int default 1")
-    private boolean status;
+    @Column(name = "status",columnDefinition = "tinyint default 1")
+    private Boolean status;
 
     @Column(name = "delete_at")
-    private LocalDateTime deletedAt;
+    private Date deletedAt;
 
 }

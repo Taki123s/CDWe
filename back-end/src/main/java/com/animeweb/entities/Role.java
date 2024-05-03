@@ -1,6 +1,6 @@
 package com.animeweb.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -20,6 +19,5 @@ public class Role {
     @Column(name= "description")
     private String description;
     @OneToMany(mappedBy = "role",cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<User> users;
 }

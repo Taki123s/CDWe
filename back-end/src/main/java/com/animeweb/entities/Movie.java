@@ -1,11 +1,10 @@
 package com.animeweb.entities;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,16 +32,16 @@ public class Movie {
     private String englishDescriptions;
 
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createAt;
+    private Date createAt;
 
     @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    private Date updateAt;
 
     @Column(name = "delete_at")
-    private LocalDateTime deleteAt;
+    private Date deleteAt;
 
-    @Column(name = "status",columnDefinition = "int default 1")
-    private Integer status;
+    @Column(name = "status",columnDefinition = "tinyint default 1")
+    private Boolean status;
 
     @Column(name = "producer")
     private String producer;
@@ -53,32 +52,21 @@ public class Movie {
     @Column(name = "series_descriptions")
     private String seriesDescriptions;
 
-    @Column(name = "price")
-    private Double price;
-
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="movie_genre",joinColumns = {@JoinColumn(name="movie_id")},inverseJoinColumns = {@JoinColumn(name = "genre_id")},
             uniqueConstraints = {@UniqueConstraint(columnNames = {"movie_id", "genre_id"})})
-    @Builder.Default
-    private List<Genre> genres=new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "movie",cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Chapter> currentChapters=new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name ="serie_id",referencedColumnName = "id")
-    private Serie serie;
-
+    @JsonManagedReference
+    private List<Genre> genres;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<View> views=new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "movie",cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Rate> rates=new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "movie",cascade = CascadeType.ALL)
-    private List<Follow> follows=new ArrayList<>();
+    private List<Chapter> currentChapters;
+    @ManyToOne()
+    @JoinColumn(name ="serie_id",referencedColumnName = "id")
+    @JsonBackReference
+    private Serie serie;
+    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    private List<View> views;
+    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    private List<Rate> rates;
+    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
+    private List<Follow> follows;
 }

@@ -8,8 +8,9 @@ import com.animeweb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -22,7 +23,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDTO> getAllMovie() {
-        return movieRepository.findAll().stream().map((MovieMapper::mapToMovieDTO)).collect(Collectors.toList());
+        List<Movie> movieList = movieRepository.findAll();
+        List<MovieDTO> movieDTOList  = new ArrayList<>();
+        for(Movie movie : movieList){
+            movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
+        }
+        return movieDTOList;
     }
 
     @Override

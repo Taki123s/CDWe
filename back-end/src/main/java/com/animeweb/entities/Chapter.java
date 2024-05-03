@@ -2,6 +2,7 @@ package com.animeweb.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,17 +24,17 @@ public class Chapter {
     @Column(name = "link")
     private String link;
 
-    @Column(name = "status",columnDefinition = "int default 1")
-    private Integer status;
+    @Column(name = "status",columnDefinition = "tinyint default 1")
+    private Boolean status;
 
     @Column(name = "type")
     private Integer type;
 
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
-    //@JsonBackReference
+    @JsonBackReference
     private Movie movie;
     @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonBackReference
     private List<Comment> comments;
 }

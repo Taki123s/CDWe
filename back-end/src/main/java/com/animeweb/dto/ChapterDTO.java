@@ -13,7 +13,7 @@ public class ChapterDTO {
     private Long id;
     private Integer ordinal;
     private String link;
-    private Integer status;
+    private Boolean status;
     private Integer type;
     private Movie movie;
     private List<Comment> comments;

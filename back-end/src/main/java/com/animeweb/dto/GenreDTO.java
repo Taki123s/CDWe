@@ -11,6 +11,6 @@ import java.util.List;
 public class GenreDTO {
     private Long id;
     private String description;
-    private Integer status;
+    private Boolean status;
     private List<Movie> movieList;
 }

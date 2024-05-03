@@ -2,9 +2,10 @@ package com.animeweb.dto;
 
 import com.animeweb.entities.Movie;
 import com.animeweb.entities.User;
-import java.time.LocalDateTime;
 
 import lombok.*;
+
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -12,8 +13,8 @@ import lombok.*;
 
 public class FollowDTO {
     private Long id ;
-    private LocalDateTime followAt;
-    private Integer status;
+    private Date followAt;
+    private Boolean status;
     private User userId;
     private Movie movie;
 }

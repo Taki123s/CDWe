@@ -2,7 +2,8 @@ package com.animeweb.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
 
 @Data
 @NoArgsConstructor
@@ -11,5 +12,5 @@ public class ServicePackDTO {
     private Long id;
     private String service_type;
     private Double price;
-    private LocalDateTime createdAt;
+    private Date createdAt;
 }

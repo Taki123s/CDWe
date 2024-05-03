@@ -1,9 +1,11 @@
 package com.animeweb.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -19,7 +21,17 @@ public class Serie {
     @Column(name = "descriptions")
     private String descriptions;
     @OneToMany(mappedBy = "serie",cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonBackReference
     private List<Movie> movieSet;
+    @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date createAt;
+
+    @Column(name = "update_at")
+    private Date updateAt;
+
+    @Column(name = "delete_at")
+    private Date deleteAt;
+    @Column(name = "status",columnDefinition = "tinyint default 1")
+    private Boolean status;
 
 }

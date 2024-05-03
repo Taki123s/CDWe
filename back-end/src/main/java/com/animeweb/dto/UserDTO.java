@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private int id;
+    private Long id;
     private Role role;
     private String userName;
     private String avatarPicture;
@@ -16,10 +16,10 @@ public class UserDTO {
     private String email;
     private String fullName;
     private String phone;
-    private int userType;
+    private Integer userType;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
-    private boolean status;
+    private Boolean status;
     private String externalId;
 }

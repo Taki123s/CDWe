@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 
 public class RoleDTO {
-    private int id ;
+    private Long id ;
     private String description;
     private List<User> users;
 }

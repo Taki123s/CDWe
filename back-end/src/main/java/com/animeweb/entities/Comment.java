@@ -14,9 +14,9 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Column(name = "parent_id")
-    private int parentId;
+    private Integer parentId;
     @Column(name = "content")
     private String content;
     @Column(name = "comment_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -26,18 +26,18 @@ public class Comment {
     @Column(name = "delete_at")
     private LocalDateTime deleteAt;
     @Column(name="status",columnDefinition = "int default 1")
-    private int status;
+    private Integer status;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_comment")
-    @JsonBackReference
+  //  @JsonBackReference
     private User userComment;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_reply")
-    @JsonBackReference
+   // @JsonBackReference
     private User userReply;
     @ManyToOne
     @JoinColumn(name ="chapter_id",nullable = false,referencedColumnName = "id")
-    @JsonBackReference
+   // @JsonBackReference
     private Chapter chapter;
 
 

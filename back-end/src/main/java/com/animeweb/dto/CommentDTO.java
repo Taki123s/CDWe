@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDTO {
-    private int id;
-    private int parentId;
+    private Long id;
+    private Integer parentId;
     private String content;
     private LocalDateTime commentAt;
     private LocalDateTime updateAt;
     private LocalDateTime deleteAt;
-    private int status;
+    private Integer status;
     private User userComment;
     private User userReply;
     private Chapter chapter;

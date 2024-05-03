@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServicePackDTO {
-    private int id;
+    private Long id;
     private String service_type;
-    private double price;
+    private Double price;
     private LocalDateTime createdAt;
 }

@@ -16,22 +16,22 @@ public class Chapter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Column(name = "ordinal")
-    private int ordinal;
+    private Integer ordinal;
 
     @Column(name = "link")
     private String link;
 
     @Column(name = "status",columnDefinition = "int default 1")
-    private int status;
+    private Integer status;
 
     @Column(name = "type")
-    private int type;
+    private Integer type;
 
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
-    @JsonBackReference
+    //@JsonBackReference
     private Movie movie;
     @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
     @JsonIgnore

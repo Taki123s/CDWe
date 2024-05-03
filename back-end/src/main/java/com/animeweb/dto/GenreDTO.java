@@ -9,8 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GenreDTO {
-    private int id;
+    private Long id;
     private String description;
-    private int status;
+    private Integer status;
     private List<Movie> movieList;
 }

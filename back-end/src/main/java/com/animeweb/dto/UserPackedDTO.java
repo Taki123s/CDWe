@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPackedDTO {
-    private int id;
+    private Long id;
     private User userId;
     private ServicePack servicePackId;
     private LocalDateTime expiredTime;
 
     private LocalDateTime createdAt;
-    private boolean status;
+    private Boolean status;
     private LocalDateTime deletedAt;
 }

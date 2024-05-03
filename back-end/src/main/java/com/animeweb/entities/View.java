@@ -14,14 +14,14 @@ public class View {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
-    @JsonBackReference
+  //  @JsonBackReference
     private User user;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
-    @JsonBackReference
+ //   @JsonBackReference
     private Movie movie;
     @Column(name = "watch_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime watchAt;

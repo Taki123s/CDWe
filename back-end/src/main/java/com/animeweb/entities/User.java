@@ -15,10 +15,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id",columnDefinition = "int default 1")
-    @JsonBackReference
+   // @JoinColumn(name = "role_id", referencedColumnName = "id",columnDefinition = "int default 1")
+    @JoinColumn(name = "role_id")
+  //  @JsonBackReference
     private Role role;
 
     @Column(name = "user_name", length = 500)
@@ -40,7 +41,7 @@ public class User {
     private String phone;
 
     @Column(name = "user_type", columnDefinition = "int default 1")
-    private int userType;
+    private Integer userType;
 
     @Column(name = "create_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
@@ -52,7 +53,7 @@ public class User {
     private LocalDateTime deletedAt;
 
     @Column(name = "status", columnDefinition = "tinyint default 1")
-    private boolean status;
+    private Boolean status;
 
     @Column(name="externalId")
     private String externalId;

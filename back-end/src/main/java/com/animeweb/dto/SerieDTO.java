@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SerieDTO {
-    private int id;
+    private Long id;
     private String descriptions;
     private List<Movie> movieSet;
 }

@@ -15,9 +15,9 @@ public class Rate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id ;
+    private Long id ;
     @Column(name= "score")
-    private int score;
+    private Integer score;
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createAt;
     @Column(name = "update_at")
@@ -30,7 +30,7 @@ public class Rate {
     private User userId;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
-    @JsonBackReference
+  //  @JsonBackReference
     private Movie movie;
 }
 

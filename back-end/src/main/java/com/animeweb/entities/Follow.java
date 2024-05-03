@@ -14,17 +14,17 @@ public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id ;
+    private Long id ;
     @Column(name = "follow_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime followAt;
     @Column(name="status",columnDefinition = "int default 1")
-    private int status;
+    private Integer status;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
-    @JsonBackReference
+  //  @JsonBackReference
     private User userId;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
-    @JsonBackReference
+   // @JsonBackReference
     private Movie movie;
 }

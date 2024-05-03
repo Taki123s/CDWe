@@ -13,11 +13,11 @@ public class ServicePack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Column(name = "service_type")
     private String service_type;
     @Column(name="price")
-    private double price;
+    private Double price;
     @Column(name = "create_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 

@@ -16,15 +16,15 @@ public class UserPacked {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonBackReference
+ //   @JsonBackReference
     private User userId;
 
     @ManyToOne
     @JoinColumn(name = "service_pack_id", referencedColumnName = "id")
-    @JsonBackReference
+ //   @JsonBackReference
     private ServicePack servicePackId;
 
     @Column(name = "expired_time")
@@ -34,7 +34,7 @@ public class UserPacked {
     private LocalDateTime createdAt;
 
     @Column(name = "status",columnDefinition = "int default 1")
-    private boolean status;
+    private Boolean status;
 
     @Column(name = "delete_at")
     private LocalDateTime deletedAt;

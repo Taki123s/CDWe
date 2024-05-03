@@ -11,9 +11,9 @@ import lombok.*;
 @AllArgsConstructor
 
 public class FollowDTO {
-    private int id ;
+    private Long id ;
     private LocalDateTime followAt;
-    private int status;
+    private Integer status;
     private User userId;
     private Movie movie;
 }

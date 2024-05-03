@@ -16,11 +16,11 @@ public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Column(name = "description")
     private String description;
     @Column(name = "status",columnDefinition = "int default 1")
-    private int status;
+    private Integer status;
     @ManyToMany(mappedBy = "genres")
     @JsonIgnore
     private List<Movie> movieList;

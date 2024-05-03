@@ -3,19 +3,19 @@ import com.animeweb.entities.Chapter;
 import com.animeweb.entities.User;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDTO {
-    private int id;
-    private int parentId;
+    private Long id;
+    private Integer parentId;
     private String content;
-    private LocalDateTime commentAt;
-    private LocalDateTime updateAt;
-    private LocalDateTime deleteAt;
-    private int status;
+    private Date commentAt;
+    private Date updateAt;
+    private Date deleteAt;
+    private Boolean status;
     private User userComment;
     private User userReply;
     private Chapter chapter;

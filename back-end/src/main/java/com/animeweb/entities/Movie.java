@@ -1,9 +1,10 @@
 package com.animeweb.entities;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 
@@ -22,7 +23,7 @@ public class Movie {
     private String name;
 
     @Column(name = "total_chapters")
-    private int totalChapters;
+    private Integer totalChapters;
 
     @Column(name = "vietnamese_descriptions")
     private String vietnameseDescriptions;
@@ -31,16 +32,16 @@ public class Movie {
     private String englishDescriptions;
 
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createAt;
+    private Date createAt;
 
     @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    private Date updateAt;
 
     @Column(name = "delete_at")
-    private LocalDateTime deleteAt;
+    private Date deleteAt;
 
-    @Column(name = "status",columnDefinition = "int default 1")
-    private int status;
+    @Column(name = "status",columnDefinition = "tinyint default 1")
+    private Boolean status;
 
     @Column(name = "producer")
     private String producer;
@@ -51,27 +52,21 @@ public class Movie {
     @Column(name = "series_descriptions")
     private String seriesDescriptions;
 
-    @Column(name = "price")
-    private double price;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="movie_genre",joinColumns = {@JoinColumn(name="movie_id")},inverseJoinColumns = {@JoinColumn(name = "genre_id")},
             uniqueConstraints = {@UniqueConstraint(columnNames = {"movie_id", "genre_id"})})
-    @JsonIgnore
+    @JsonManagedReference
     private List<Genre> genres;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Chapter> currentChapters;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name ="serie_id",referencedColumnName = "id")
-    @JsonIgnore
+    @JsonBackReference
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<View> views;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Rate> rates;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Follow> follows;
 }

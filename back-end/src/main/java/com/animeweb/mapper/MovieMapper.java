@@ -1,7 +1,10 @@
 package com.animeweb.mapper;
 
 import com.animeweb.dto.MovieDTO;
-import com.animeweb.entities.Movie;
+import com.animeweb.entities.*;
+
+import java.util.Date;
+import java.util.List;
 
 public class MovieMapper {
     public static MovieDTO mapToMovieDTO(Movie movie){
@@ -18,7 +21,6 @@ public class MovieMapper {
                 movie.getProducer(),
                 movie.getAvatarMovie(),
                 movie.getSeriesDescriptions(),
-                movie.getPrice(),
                 movie.getGenres(),
                 movie.getCurrentChapters(),
                 movie.getSerie(),
@@ -40,7 +42,6 @@ public class MovieMapper {
                 movieDTO.getProducer(),
                 movieDTO.getAvatarMovie(),
                 movieDTO.getSeriesDescriptions(),
-                movieDTO.getPrice(),
                 movieDTO.getGenres(),
                 movieDTO.getCurrentChapters(),
                 movieDTO.getSerie(),

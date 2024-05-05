@@ -3,11 +3,9 @@ import axios from "axios";
 import "./bootstrap.min.css";
 import "./owl.carousel.min.css";
 import "../css/ds/style.css";
-import Scrollbar from 'react-scrollbars-custom';
 
 import logo from '../img/logo.png'
 function HeaderPage() {
-    const [isViewAll, setViewAll] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
@@ -15,7 +13,7 @@ function HeaderPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/movie/search?term=${searchTerm}`);
+                const response = await axios.get(`http://localhost:8080/api/movies/search?term=${searchTerm}`);
                 console.log(response.data);
                 setSearchResults(response.data);
             } catch (error) {
@@ -29,14 +27,10 @@ function HeaderPage() {
             setSearchResults([]);
         }
     }, [searchTerm]);
-    const isResult = () => {
-        if (searchResults.length !== 0) setViewAll(!isViewAll);
-
-        return isViewAll;
-    }
+  
     return (
+        
         <header className="header">
-
             <div className="container" style={{ maxWidth: `unset` }}>
 
                 <div className="row" style={{ flexWrap: `nowrap` }}>
@@ -93,9 +87,7 @@ function HeaderPage() {
                                 </div>
 
                                 <div id="search-results">
-                                    <Scrollbar style={{ width: 250, height: 250 }}>
-                                        <p>Hello world!</p>
-                                    </Scrollbar>
+                                   
                                     {searchResults.map((result) => (
 
                                         <li className="result-input" key={result.id}>
@@ -106,7 +98,7 @@ function HeaderPage() {
 
                                     ))}
                                     {
-                                        isResult ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
+                                        searchResults.length !== 0 ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
                                             <a className="view-all-result" style={{ display: "none" }} />
                                     }
 

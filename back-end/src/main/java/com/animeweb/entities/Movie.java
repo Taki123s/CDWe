@@ -55,13 +55,13 @@ public class Movie {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="movie_genre",joinColumns = {@JoinColumn(name="movie_id")},inverseJoinColumns = {@JoinColumn(name = "genre_id")},
             uniqueConstraints = {@UniqueConstraint(columnNames = {"movie_id", "genre_id"})})
-    @JsonManagedReference
+ //   @JsonManagedReference
     private List<Genre> genres;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<Chapter> currentChapters;
     @ManyToOne()
     @JoinColumn(name ="serie_id",referencedColumnName = "id")
-    @JsonBackReference
+ //   @JsonBackReference
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<View> views;

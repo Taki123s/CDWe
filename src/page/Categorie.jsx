@@ -3,7 +3,7 @@ import "../../src/component/bootstrap.min.css";
 import Carousel from "../../src/component/Carousel";
 import "../css/ds/style.css";
 
-const CategoriesPage = () => {
+export const CategoriesPage = () => {
   return (
     <div id="ah_wrapper">
       <section className="hero">
@@ -110,4 +110,4 @@ const CategoriesPage = () => {
     </div>
   );
 };
-export default CategoriesPage;
+

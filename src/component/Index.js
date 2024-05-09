@@ -9,25 +9,25 @@ import '../css/ds/style.css'
 import ProductItem from '../page/ProductItem';
 
 function AnimePage() {
-    const [movies, setMovies] = useState([]);
-    const [filter, setFilter] = useState('isAtoZ');
-    useEffect(() => {
-        fetch('http://localhost:8080/anime')
-            .then(response => {
-                console.log('Response:', response.json);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Data:', data);
-                setMovies(data);
-            })
-            .catch(error => console.error('Error:', error));
-    }, []); //
+    // const [movies, setMovies] = useState([]);
+    // const [filter, setFilter] = useState('isAtoZ');
+    // useEffect(() => {
+    //     fetch('http://localhost:8080/anime')
+    //         .then(response => {
+    //             console.log('Response:', response.json);
+    //             return response.json();
+    //         })
+    //         .then(data => {
+    //             console.log('Data:', data);
+    //             setMovies(data);
+    //         })
+    //         .catch(error => console.error('Error:', error));
+    // }, []); //
 
     return (
 
         <div id="ah_wrapper">
-            <section class="hero">
+            {/* <section class="hero">
                 <div class="container">
 
                     <div><Carousel/></div>
@@ -53,7 +53,7 @@ function AnimePage() {
                         <Topview/>
                     </div>
                 </div>
-            </section>
+            </section> */}
         </div>
 
     );

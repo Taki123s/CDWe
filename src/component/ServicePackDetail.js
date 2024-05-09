@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './bootstrap.min.css'; // Import Bootstrap CSS
-
+import PayPal from './PayPal';
 
 
 function ProductItem(props) {
@@ -28,7 +28,7 @@ function ProductItem(props) {
                         <div className="product__item__text">
                             <h5><Link to="/" >{servicePack.service_type}</Link></h5>
                             <h5><Link to="/" >{servicePack.price} VND</Link></h5>
-                            <h5><Link to="/" >BUY NOW</Link></h5>
+                            <h5><PayPal/></h5>
                         </div>
                     </div>
                 </div>

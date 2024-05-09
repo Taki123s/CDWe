@@ -6,6 +6,9 @@ import com.animeweb.mapper.MovieMapper;
 import com.animeweb.repository.MovieRepository;
 import com.animeweb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +25,18 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieDTO> index() {
+    public List<MovieDTO> index(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> moviePage = movieRepository.findAll(pageable);
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        for (Movie m : moviePage.getContent()) {
+            movieDTOS.add(MovieMapper.mapToMovieDTO(m));
+        }
+        return movieDTOS;
+    }
+
+    @Override
+    public List<MovieDTO> findAll() {
         List<Movie> list = movieRepository.findAll();
         List<MovieDTO> movieDTOS = new ArrayList<>();
         for (Movie m : list) {

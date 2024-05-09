@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface MovieService  {
     MovieDTO createMovie(MovieDTO movieDTO);
-    List<MovieDTO> index();
+    List<MovieDTO> index(int page, int size);
+    List<MovieDTO> findAll();
 }

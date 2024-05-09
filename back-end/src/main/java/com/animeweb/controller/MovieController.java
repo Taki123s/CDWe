@@ -23,7 +23,7 @@ public class MovieController {
     }
 
     @GetMapping("/index")
-    public ResponseEntity<List<MovieDTO>> getMovie() {
-        return new ResponseEntity<>(movieService.index(), HttpStatus.OK);
+    public ResponseEntity<List<MovieDTO>> getMovie(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size) {
+        return new ResponseEntity<>(movieService.index(page, size), HttpStatus.OK);
     }
 }

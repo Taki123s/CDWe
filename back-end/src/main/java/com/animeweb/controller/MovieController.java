@@ -24,4 +24,12 @@ public class MovieController {
     public ResponseEntity<List<MovieDTO>> getMovie(){
         return ResponseEntity.ok(movieService.getAllMovie());
     }
+    @GetMapping("/{movieId}")
+    public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId){
+        return ResponseEntity.ok(movieService.findMovieById(movieId));
+    }
+    @GetMapping("/watching/{movieId}")
+    public ResponseEntity<MovieDTO> findMovieWatching(@PathVariable Long movieId){
+        return ResponseEntity.ok(movieService.findMovieWatching(movieId));
+    }
 }

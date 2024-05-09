@@ -2,6 +2,7 @@ package com.animeweb.service.impl;
 
 import com.animeweb.dto.MovieDTO;
 import com.animeweb.entities.Movie;
+import com.animeweb.exception.ResourceNotFoundException;
 import com.animeweb.mapper.MovieMapper;
 import com.animeweb.repository.MovieRepository;
 import com.animeweb.service.MovieService;
@@ -29,5 +30,16 @@ public class MovieServiceImpl implements MovieService {
             movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
         }
         return movieDTOList;
+    }
+    @Override
+    public MovieDTO findMovieById(Long movieId) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()-> new ResourceNotFoundException("Movie not found"));
+        return MovieMapper.mapToMovieDTO(movie);
+    }
+
+    @Override
+    public MovieDTO findMovieWatching(Long movieId) {
+        Movie movie = movieRepository.findMovieWatching(movieId);
+        return MovieMapper.mapToMovieWatching(movie);
     }
 }

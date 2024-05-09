@@ -3,9 +3,6 @@ package com.animeweb.mapper;
 import com.animeweb.dto.MovieDTO;
 import com.animeweb.entities.*;
 
-import java.util.Date;
-import java.util.List;
-
 public class MovieMapper {
     public static MovieDTO mapToMovieDTO(Movie movie){
         return new MovieDTO(
@@ -27,6 +24,9 @@ public class MovieMapper {
                 movie.getViews(),
                 movie.getRates(),
                 movie.getFollows());
+    }
+    public static MovieDTO mapToMovieWatching(Movie movie){
+        return new MovieDTO(movie.getId(),movie.getName(),movie.getTotalChapters(),movie.getCurrentChapters());
     }
     public static Movie mapToMovie(MovieDTO movieDTO){
         return new Movie(
@@ -50,6 +50,7 @@ public class MovieMapper {
                 movieDTO.getFollows());
 
     }
+
 
 
 }

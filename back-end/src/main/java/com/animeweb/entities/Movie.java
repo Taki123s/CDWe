@@ -25,10 +25,10 @@ public class Movie {
     @Column(name = "total_chapters")
     private Integer totalChapters;
 
-    @Column(name = "vietnamese_descriptions")
+    @Column(name = "vietnamese_descriptions", columnDefinition = "MEDIUMTEXT")
     private String vietnameseDescriptions;
 
-    @Column(name = "english_descriptions")
+    @Column(name = "english_descriptions", columnDefinition = "MEDIUMTEXT")
     private String englishDescriptions;
 
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

@@ -26,4 +26,12 @@ public class MovieController {
     public ResponseEntity<List<MovieDTO>> getMovie(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size) {
         return new ResponseEntity<>(movieService.index(page, size), HttpStatus.OK);
     }
+    @GetMapping("/{movieId}")
+    public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId){
+        return ResponseEntity.ok(movieService.findMovieById(movieId));
+    }
+    @GetMapping("/watching/{movieId}")
+    public ResponseEntity<MovieDTO> findMovieWatching(@PathVariable Long movieId){
+        return ResponseEntity.ok(movieService.findMovieWatching(movieId));
+    }
 }

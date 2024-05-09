@@ -1,42 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 import Footer from "./Footer";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import MovieComment from "./MovieComment";
-import MovieComponent from "../component/movieComponent";
 import { useEffect } from "react";
 import { FaFastForward } from "react-icons/fa";
-import ReactDOM from 'react-dom';
-import { FaHome } from 'react-icons/fa';
-
-const data = [
-  { idMovie: 1, episode: 1 },
-  { idMovie: 1, episode: 2 },
-  { idMovie: 1, episode: 3 },
-
-];
+import { createRoot } from "react-dom/client";
+import { FaHome } from "react-icons/fa";
+import { findMovieWatching } from "../service/MovieServices";
+import { usePlyr } from "plyr-react";
+import "plyr-react/plyr.css";
 
 const MovieWatching = () => {
-  const { id, chapter} = useParams();
+  const { movieId, chapterId } = useParams();
+  const [movie, setMovie] = useState([]);
+  const [chapters, setChapters] = useState([]);
+  const [videoSrc, setVideoSrc] = useState([]);
+  const PlyrPlayer = React.forwardRef((props, ref) => {
+    const { source, options = null, ...rest } = props;
+
+    const playerRef = React.useRef(videoSrc);
+    usePlyr(playerRef, {
+      source,
+      options,
+    });
+    React.useImperativeHandle(ref, () => ({}));
+    return (
+      <div id="player">
+        <video ref={ref} className="plyr-react plyr" {...rest} />
+      </div>
+    );
+  });
+  useEffect(() => {
+    findMovieWatching(movieId)
+      .then((response) => {
+        setMovie(response.data);
+        setChapters(response.data.currentChapters);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [movieId, chapterId]);
+  useEffect(() => {
+    setVideoSrc(chapters[chapterId - 1]?.link);
+  }, [chapters]);
   useEffect(() => {
     const skip = () => {
       const vd = document.querySelector("#player video");
       vd.currentTime = document.getElementById("openingValue").value;
     };
-
     const addSkipButton = () => {
       const controls = document.querySelector(".plyr__controls");
       const container = document.createElement("div");
-      ReactDOM.render(
-        <button id="skipOpening" className="plyr__controls__item plyr__control" aria-hidden="true" onClick={skip}>
+      const root = createRoot(container);
+      root.render(
+        <button
+          id="skipOpening"
+          className="plyr__controls__item plyr__control"
+          aria-hidden="true"
+          onClick={skip}
+        >
           <FaFastForward />
-        </button>,
-        container
+        </button>
       );
-  
-   
       controls.prepend(container);
     };
-  
     addSkipButton();
   }, []);
 
@@ -46,9 +73,10 @@ const MovieWatching = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <div className="breadcrumb__links">
-              <a href="/"><i><FaHome /></i></a> 
-              <span>Phim gì ai mà biết</span>
+            <div className="breadcrumb__links" style={{display:"flex"}}>
+              <p>Trang chủ</p>
+              <p>----</p>
+              <p>{movie.name}</p>
             </div>
           </div>
         </div>
@@ -58,30 +86,60 @@ const MovieWatching = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="anime__video__player">
-              <MovieComponent/>
-                <input type="text" id="openingValue" readOnly value="10" hidden />
+                <PlyrPlayer
+                  source={{
+                    type: "video",
+                    sources: [
+                      {
+                        src: videoSrc,
+                        type: "video/mp4",
+                      },
+                    ],
+                  }}
+                  options={{
+                    controls: [
+                      "play-large",
+                      "play",
+                      "progress",
+                      "current-time",
+                      "mute",
+                      "volume",
+                      "captions",
+                      "settings",
+                      "pip",
+                      "airplay",
+                      "fullscreen",
+                    ],
+                    autoplay: true,
+                    settings: ["captions", "quality", "speed", "loop"],
+                  }}
+                />
               </div>
               <div className="anime__details__episodes">
                 <div className="section-title">
                   <h5>Danh sách tập</h5>
                 </div>
-                {data.map((dt) => {
-                const isActive = dt.episode == chapter;
-                return (
-                <a href={`/watching/${id}/${dt.episode}`} className={isActive ? 'activeEpisode' : ''}>Ep {dt.episode}</a>
-
-                );
+                {chapters.map((chap) => {
+                  const isActive = chap.ordinal == chapterId;
+                  return (
+                    <a
+                      key={chap.ordinal}
+                      href={`/movie/watching/${chapterId}/${chap.ordinal}`}
+                      className={isActive ? "activeEpisode" : ""}
+                    >
+                      Ep {chap.ordinal}
+                    </a>
+                  );
                 })}
-
               </div>
             </div>
           </div>
           <div className="">
-              <MovieComment/>
+            <MovieComment />
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
       <div className="search-model">
         <div className="h-100 d-flex align-items-center justify-content-center">
           <div className="search-close-switch">
@@ -97,9 +155,7 @@ const MovieWatching = () => {
           </form>
         </div>
       </div>
-
     </div>
-
   );
 };
 

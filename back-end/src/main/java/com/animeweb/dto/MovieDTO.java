@@ -31,5 +31,10 @@ public class MovieDTO {
     private List<Follow> follows;
 
 
-
+    public MovieDTO(Long id, String name, Integer totalChapters, List<Chapter> currentChapters) {
+        this.id = id;
+        this.name = name;
+        this.totalChapters = totalChapters;
+        this.currentChapters = currentChapters;
+    }
 }

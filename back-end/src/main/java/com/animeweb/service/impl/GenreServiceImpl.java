@@ -19,7 +19,7 @@ public class GenreServiceImpl implements GenreService {
         List<Genre> genreList = genreRepository.findAll();
         List<GenreDTO> genreDTOList = new ArrayList<>();
         for(Genre genre : genreList){
-            genreDTOList.add(GenreMapper.mapToGenreDto(genre));
+            genreDTOList.add(GenreMapper.mapToTitleGenreDto(genre));
         }
         return genreDTOList;
     }

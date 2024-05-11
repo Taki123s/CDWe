@@ -90,8 +90,8 @@ function HeaderPage() {
                                    
                                     {searchResults.map((result) => (
 
-                                        <li className="result-input" key={result.id}>
-                                            <a href="">
+                                        <li className="result-input" key={result.id} >
+                                            <a href={`/api/movies/${result.id}`}>
                                                 <img className="image_result" src={result.avatarMovie} />{result.name}
                                             </a>
                                         </li>

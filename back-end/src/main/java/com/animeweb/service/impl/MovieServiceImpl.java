@@ -32,17 +32,17 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> searchMovie(String name) {
+    public List<MovieDTO> searchMovie(String name) {
         return movieRepository.findByNameContainingIgnoreCase(name);
     }
 
     @Override
-    public List<Movie> getAll() {
-        return movieRepository.findAll();
+    public List<MovieDTO> getAll() {
+        return null;
     }
 
     @Override
-    public Movie findMovie(long id) {
+    public Movie findMovie(Long id) {
         return movieRepository.getById(id);
     }
 }

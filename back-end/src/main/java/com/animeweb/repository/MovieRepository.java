@@ -1,6 +1,7 @@
 package com.animeweb.repository;
 
 
+import com.animeweb.dto.MovieDTO;
 import com.animeweb.entities.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,5 +12,5 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie,Long> {
     @Query("select m from Movie m where m.name like %:term%" )
-    List<Movie> findByNameContainingIgnoreCase(@Param("term")String term);
+    List<MovieDTO> findByNameContainingIgnoreCase(@Param("term")String term);
 }

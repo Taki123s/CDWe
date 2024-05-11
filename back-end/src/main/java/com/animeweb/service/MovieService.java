@@ -8,7 +8,7 @@ import java.util.List;
 public interface MovieService {
     MovieDTO createMovie(MovieDTO movieDTO);
     List<MovieDTO> getAllMovie();
-    List<Movie> searchMovie(String name);
-    List<Movie> getAll();
-    Movie findMovie(long id);
+    List<MovieDTO> searchMovie(String name);
+    List<MovieDTO> getAll();
+    Movie findMovie(Long id);
 }

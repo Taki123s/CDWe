@@ -33,24 +33,14 @@ public class MovieController {
     public ResponseEntity<MovieDTO> findMovieWatching(@PathVariable Long movieId){
         return ResponseEntity.ok(movieService.findMovieWatching(movieId));
     }
-    @GetMapping("/{id}")
-    public  ResponseEntity<Movie>findMovie(@PathVariable Long id){
-        System.out.println(id);
-        Movie m = movieService.findMovie(id);
 
-        if (m != null) {
-            return new ResponseEntity<>(m, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
     @GetMapping("/search")
     public ResponseEntity<List<MovieDTO>> search(@RequestParam("term") String keyword) {
         List<MovieDTO> movieList = null;
         if (keyword != null && !keyword.isEmpty()) {
             movieList = movieService.searchMovie(keyword);
         } else {
-            movieList = movieService.getAll();
+            movieList = movieService.getAllMovie();
         }
 
         if (movieList != null && !movieList.isEmpty()) {

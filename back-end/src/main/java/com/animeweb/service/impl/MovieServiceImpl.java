@@ -2,6 +2,7 @@ package com.animeweb.service.impl;
 
 import com.animeweb.dto.MovieDTO;
 import com.animeweb.entities.Movie;
+import com.animeweb.exception.ResourceNotFoundException;
 import com.animeweb.mapper.MovieMapper;
 import com.animeweb.repository.MovieRepository;
 import com.animeweb.service.MovieService;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -44,16 +44,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDTO> searchMovie(String name) {
-        return movieRepository.findByNameContainingIgnoreCase(name);
+        List<Movie> movieList=movieRepository.findByNameContainingIgnoreCase(name);
+        List<MovieDTO> movieDTOList  = new ArrayList<>();
+        for(Movie movie : movieList){
+            movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
+        }
+        return movieDTOList;
     }
 
-    @Override
-    public List<MovieDTO> getAll() {
-        return null;
-    }
 
-    @Override
-    public Movie findMovie(Long id) {
-        return movieRepository.getById(id);
-    }
 }

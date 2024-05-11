@@ -19,6 +19,7 @@ public class DemoApplication {
 //        System.out.println(messageSource.getMessage("hello", null, Locale.ENGLISH));
 
         SpringApplication.run(DemoApplication.class, args);
+
     }
 
 }

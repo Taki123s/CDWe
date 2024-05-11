@@ -30,6 +30,17 @@ public class MovieServiceImpl implements MovieService {
         }
         return movieDTOList;
     }
+    @Override
+    public MovieDTO findMovieById(Long movieId) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()-> new ResourceNotFoundException("Movie not found"));
+        return MovieMapper.mapToMovieDTO(movie);
+    }
+
+    @Override
+    public MovieDTO findMovieWatching(Long movieId) {
+        Movie movie = movieRepository.findMovieWatching(movieId);
+        return MovieMapper.mapToMovieWatching(movie);
+    }
 
     @Override
     public List<MovieDTO> searchMovie(String name) {

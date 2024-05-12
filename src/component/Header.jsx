@@ -21,7 +21,7 @@ export const HeaderPage = () => {
       .catch((error) => {
         console.log(error);
       });
-  });
+  },[]);
 
   const handleMouseLeave = () => {
     setDropdownOpen(false);
@@ -200,7 +200,7 @@ export const HeaderPage = () => {
                     onMouseLeave={handleMouseLeave}
                   >
                     <ul className="categories-dropdown">
-                      {genreList?.map((genre) => {
+                      {Array.isArray(genreList) && genreList?.map((genre) => {
                         return (
                           <li className="px-4 py-2 cursor-pointer categories-dropdown-item">
                             {genre.description}

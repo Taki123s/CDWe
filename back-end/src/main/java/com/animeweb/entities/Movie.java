@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class Movie {
     @JoinTable(name="movie_genre",joinColumns = {@JoinColumn(name="movie_id")},inverseJoinColumns = {@JoinColumn(name = "genre_id")},
             uniqueConstraints = {@UniqueConstraint(columnNames = {"movie_id", "genre_id"})})
     @JsonManagedReference
-    private List<Genre> genres;
+    private List<Genre> genres = new ArrayList<>();
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<Chapter> currentChapters;
     @ManyToOne()

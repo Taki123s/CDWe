@@ -36,7 +36,7 @@ public class Comment {
     @JsonBackReference
     private User userReply;
     @ManyToOne
-    @JoinColumn(name ="chapter_id",nullable = false,referencedColumnName = "id")
+    @JoinColumn(name ="chapter_id",referencedColumnName = "id")
     @JsonBackReference
     private Chapter chapter;
 

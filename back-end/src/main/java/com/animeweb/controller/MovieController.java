@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/movie")
@@ -23,8 +25,18 @@ public class MovieController {
     }
 
     @GetMapping("/index")
-    public ResponseEntity<List<MovieDTO>> getMovie(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size) {
-        return new ResponseEntity<>(movieService.index(page, size), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int size) {
+
+        List<MovieDTO> movies = movieService.index(page, size);
+        int totalMovies = movieService.findAll().size(); // Assume you have a method to get the total number of movies
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("movies", movies);
+        response.put("totalMovies", totalMovies);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/{movieId}")
     public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId){

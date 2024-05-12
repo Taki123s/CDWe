@@ -7,6 +7,7 @@ import {CategoriesPage} from "./page/Categorie";
 import {HeaderPage} from "./component/Header";
 import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
+import LoginGoogle from "./component/LoginGoogle"
 
 import React from 'react';
 import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<AnimePage />} />
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
+          <Route path="/login-google" element={<LoginGoogle />} />
               <Route path="/execute-payment" element={<ExecutePaymentComponent/>} />
 
         <Route path="/movie/watching/:movieId/:chapterId" element={<MovieWatching />} />

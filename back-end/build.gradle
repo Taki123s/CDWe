@@ -31,7 +31,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
-
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.14'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation group: 'com.paypal.sdk', name: 'checkout-sdk', version: '1.0.2'
     implementation group: 'com.paypal.sdk', name: 'paypal-core', version: '1.6.5'
     compileOnly 'org.projectlombok:lombok'

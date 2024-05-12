@@ -22,24 +22,6 @@ const PayPalButton = ({ amount, userId }) => {
             console.error('Error creating invoice:', error);
         }
     };
-    const handleExecutePayment = async () => {
-        try {
-            // Gọi API execute từ phía client
-            const response = await axios.get('http://localhost:8080/payment/execute', {
-                params: {
-                    paymentId: 'YOUR_PAYMENT_ID', // Thay YOUR_PAYMENT_ID bằng giá trị thực tế của paymentId
-                    PayerID: 'YOUR_PAYER_ID' // Thay YOUR_PAYER_ID bằng giá trị thực tế của PayerID
-                }
-            });
-            // Log phản hồi từ server
-            console.log('Payment executed:', response.data);
-
-            // Hiển thị thông báo hoặc thực hiện các xử lý khác tại đây
-
-        } catch (error) {
-            console.error('Error executing payment:', error);
-        }
-    };
 
     return <button onClick={handleBuyNow}>Mua Ngay</button>;
 };

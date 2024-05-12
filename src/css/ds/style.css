@@ -3044,10 +3044,11 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked {
 	background-color: cornflowerblue;
 }
+
 #search-results {
 	margin-top: 7%;
 	/*margin-left: 20%;*/
-	position: absolute;
+	/* position: absolute; */
 	text-align: left;
 
 	z-index: 9999 !important;
@@ -3055,7 +3056,7 @@ input[type="checkbox"]:checked {
 	/*margin: 10%;*/
 	font-family: inherit;
 	width: 90%;
-	background-color: whitesmoke;
+	background-color: white;
 	border-radius: 2%;
 }
 #search-results  a{

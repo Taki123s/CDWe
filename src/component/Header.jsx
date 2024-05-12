@@ -9,10 +9,32 @@ import { LoginComponent } from "./LoginComponent";
 import { getGenreList } from "../service/CategoryServices";
 
 export const HeaderPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/movies/search?term=${searchTerm}`);
+        console.log(response.data);
+        setSearchResults(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    if (searchTerm !== '') {
+      fetchData();
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchTerm]);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genreList, setGenreList] = useState([]);
   const handleMouseEnter = () => {
-    setDropdownOpen(true);
+    // setDropdownOpen(true);
   };
   useEffect(() => {
     getGenreList()
@@ -22,135 +44,7 @@ export const HeaderPage = () => {
       .catch((error) => {
         console.log(error);
       });
-  });
-
-import logo from '../img/logo.png'
-function HeaderPage() {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/movies/search?term=${searchTerm}`);
-                console.log(response.data);
-                setSearchResults(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        if (searchTerm !== '') {
-            fetchData();
-        } else {
-            setSearchResults([]);
-        }
-    }, [searchTerm]);
-  
-    return (
-        
-        <header className="header">
-            <div className="container" style={{ maxWidth: `unset` }}>
-
-                <div className="row" style={{ flexWrap: `nowrap` }}>
-                    <div className="col-lg-2">
-                        <div className="header__logo">
-                            <a href="#index"> <img src={logo} alt="" /></a>
-                        </div>
-                    </div>
-
-
-                    <div className="col-lg-3">
-                        <div className="header__nav">
-                            <nav className="header__menu mobile-menu" id="nav">
-                                <ul style={{ justifyContent: `flex-start`, textWrap: `nowrap` }}>
-                                    <li><a href="">Trang chủ</a></li>
-                                    <li><a href="#"
-                                        className="arrow_carrot-down">Thể loại</a>
-                                        <div className="dropdown">
-                                            <ul className="genreDropdown">
-                                                {/* Render ra the loai */}
-                                                <li><a href="/categories">Hành động</a></li>
-                                                <li><a href="/servicePack">Lãng mạn</a></li>
-                                                <li><a href="/categories">Học đường</a></li>
-                                                <li><a href="/categories">Kinh dị</a></li>
-                                                <li><a href="/categories">Viễn tưởng</a></li>
-                                                <li><a href="/categories">Phiêu lưu</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li><a href="https://www.facebook.com/profile.php?id=100093516980874"> Liên hệ</a>
-                                    </li>
-                                    <li><a href="#">Ngôn ngữ</a>
-                                        <div className="dropdown2">
-                                            <ul>
-
-                                                <li style={{ color: 'black' }}><a href="">Tiếng Việt</a></li>
-                                                <li style={{ color: 'black' }}><a href="">English</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-
-                    <div className="col-lg-4">
-                        <div className="header__right">
-                            <form className="searchTag" id="search-name">
-                                <div className="search-container searchInput">
-                                    <input type="text" className="search-input" id="search-input" placeholder="Tìm kiếm..."
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                    <span className="search-icon"><i className="fas fa-search"></i></span>
-                                </div>
-
-                                <div id="search-results">
-                                   
-                                    {searchResults.map((result) => (
-
-                                        <li className="result-input" key={result.id} >
-                                            <a href={`/api/movies/${result.id}`}>
-                                                <img className="image_result" src={result.avatarMovie} />{result.name}
-                                            </a>
-                                        </li>
-
-                                    ))}
-                                    {
-                                        searchResults.length !== 0 ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
-                                            <a className="view-all-result" style={{ display: "none" }} />
-                                    }
-
-                                </div>
-                            </form>
-                        </div>
-
-                        <div id="search-results"></div>
-                        <div className="iconSearch">
-                            <table id="renderSearch"></table>
-
-                        </div>
-                    </div>
-                    <div className="col-lg-4">
-                        <div className="header__right">
-                            <div className="" style={{ textWrap: `noWrap` }}>
-                                <a href="login.jsp">Đăng nhập</a><font color="#e53637"> / </font><a href="signup.jsp">Đăng ký</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div id="mobile-menu-wrap"></div>
-
-            </div>
-            <div id="loadingAnime">
-                <div className="loadingAnime"></div>
-            </div>
-
-        </header>);
-}
+  },[]);
   const handleMouseLeave = () => {
     setDropdownOpen(false);
   };
@@ -248,6 +142,8 @@ function HeaderPage() {
                     type="text"
                     name="search"
                     autoComplete="off"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -265,12 +161,30 @@ function HeaderPage() {
                   </svg>
                 </div>
                 <div
-                  className="search-result bg-transparent min-h-[80px] pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg hidden"
-                  id="search-result"
+                  className="search-result  pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
+                  id="search-results"
                 >
-                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]"></div>
-                  <div className="result-noitem hidden font-extralight text-center"></div>
-                  <div className="loading animate-spin hidden"></div>
+
+
+                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
+                    {searchResults.map((result) => (
+
+                      <li className="result-input" key={result.id} >
+                        <a href={`/movie/${result.id}`}>
+                          <img className="image_result" src={result.avatarMovie} />{result.name}
+                        </a>
+                      </li>
+
+                    ))}
+                    {
+                      searchResults.length !== 0 ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
+                        <a className="view-all-result" style={{ display: "none" }} />
+                    }
+
+
+                  </div>
+                  <div className="result-noitem  font-extralight text-center"></div>
+                  <div className="loading animate-spin "></div>
                 </div>
               </div>
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
@@ -325,7 +239,7 @@ function HeaderPage() {
                 {dropdownOpen && (
                   <div
                     className="fixed bg-white shadow shadow-md mt-1 rounded-md py-1 z-10"
-                    onMouseLeave={handleMouseLeave}
+                   onMouseLeave={handleMouseLeave}
                   >
                     <ul className="categories-dropdown">
                       {genreList?.map((genre) => {

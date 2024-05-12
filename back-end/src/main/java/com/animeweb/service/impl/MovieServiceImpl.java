@@ -45,6 +45,9 @@ public class MovieServiceImpl implements MovieService {
         }
         return movieDTOS;
     }
+
+
+
     @Override
     public MovieDTO findMovieById(Long movieId) {
         Movie movie = movieRepository.findById(movieId).orElseThrow(()-> new ResourceNotFoundException("Movie not found"));

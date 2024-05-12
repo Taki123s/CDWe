@@ -21,14 +21,13 @@ public class PaymentController {
     @Autowired
     private PayPalService payPalService;
 
-    private PaymentResponeDTO paymentResponeDTO;
     @Autowired
     private UserPackedRepository userRepository;
 
     @PostMapping("/create-payment")
-    public ResponseEntity<?> createPayment(@RequestBody PaymentRequestDTO request) {
+    public ResponseEntity<?> createAndExecutePayment(@RequestBody PaymentRequestDTO request) {
         try {
-            Payment payment = payPalService.createPayment(request.getAmount(), request.getCurrency(), request.getMethod(), request.getIntent(), request.getDescription(), "http://localhost:8080/movie/index", "http://localhost:3000");
+            Payment payment = payPalService.createPayment(request.getAmount(), request.getCurrency(), request.getMethod(), request.getIntent(), request.getDescription(), "http://localhost:8080/payment/execute", "http://localhost:3000/execute-payment");
             String approvalUrl = null;
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equalsIgnoreCase("approval_url")) {
@@ -39,10 +38,11 @@ public class PaymentController {
 
             // Kiểm tra nếu approval_url đã được trích xuất thành công
             if (approvalUrl != null) {
-                paymentResponeDTO = new PaymentResponeDTO();
-                paymentResponeDTO.setPaymentId(payment.getId());
-                paymentResponeDTO.setUrl(approvalUrl);
-                return ResponseEntity.ok(paymentResponeDTO);
+                // Lấy userId từ request
+                Long userId = request.getId();
+                // Lưu thông tin cần thiết vào query parameters và trả về approvalUrl
+                String redirectUrl = approvalUrl + "?userId=" + userId;
+                return ResponseEntity.ok(redirectUrl);
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: approval_url not found");
             }
@@ -52,17 +52,17 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/execute-payment")
-    public ResponseEntity<?> executePayment(@RequestParam("paymentId") String paymentId, @RequestParam("payerId") String payerId, @RequestParam("userId") Long userId) {
+    @GetMapping("/execute")
+    public ResponseEntity<?> executePayment(@RequestParam("paymentId") String paymentId, @RequestParam("payerId") String payerId) {
         try {
             Payment payment = payPalService.executePayment(paymentId, payerId);
             String captureId = payment.getTransactions().get(0).getRelatedResources().get(0).getSale().getParentPayment();
-            UserPacked user = userRepository.findById(userId).orElse(null);
-            if (user != null) {
-                user.setCaptureId(Long.parseLong(captureId));
-                userRepository.save(user);
-            }
-            return ResponseEntity.ok(payment.getId()); // Trả về ID của giao dịch
+//            UserPacked user = userRepository.findById(userId).orElse(null);
+//            if (user != null) {
+//                user.setCaptureId(Long.parseLong(captureId));
+//                userRepository.save(user);
+//            }
+            return ResponseEntity.ok("http://localhost:3000/thank-you");
         } catch (PayPalRESTException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -21,7 +21,7 @@ export const HeaderPage = () => {
       .catch((error) => {
         console.log(error);
       });
-  });
+  }, []);
 
   const handleMouseLeave = () => {
     setDropdownOpen(false);
@@ -215,7 +215,7 @@ export const HeaderPage = () => {
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-5">
                 <a
                   className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
-                  href="/bang-xep-hang"
+                  href="/servicePack"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +237,7 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    BXH
+                   Service Pack
                   </span>
                 </a>
               </div>

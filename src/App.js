@@ -9,6 +9,7 @@ import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
 
 import React from 'react';
+import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
 function App() {
   return (
     <Router>
@@ -21,6 +22,8 @@ function App() {
         <Route path="/" element={<AnimePage />} />
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
+              <Route path="/execute-payment" element={<ExecutePaymentComponent/>} />
+
         <Route path="/movie/watching/:movieId/:chapterId" element={<MovieWatching />} />
       </Routes>
     </Router>

@@ -7,6 +7,7 @@ import Topview from './Topview';
 
 import '../css/ds/style.css'
 import ProductItem from '../page/ProductItem';
+import ExecutePaymentComponent from "./ExecutePaymentComponent";
 
 function AnimePage() {
     const [movies, setMovies] = useState([]);
@@ -53,6 +54,7 @@ function AnimePage() {
                         <Topview/>
                     </div>
                 </div>
+
             </section>
         </div>
 

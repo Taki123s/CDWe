@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import '../css/moviedetail.css';
 import MovieComment from './MovieComment.js'; // Import MovieComment component
 import Footer from './Footer.js';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import axios from "axios";
+
 import Icon, { HeartOutlined, HeartFilled, NotificationFilled, AppleFilled } from '@ant-design/icons';
 function MovieDetail() {
     // Lấy id của phim từ URL
@@ -11,29 +13,23 @@ function MovieDetail() {
     console.log(id)
 
     // Giả sử dữ liệu phim được truyền vào component
-    const movie = {
-        id: 1,
-        name: "The Seven Deadly Sins: Wrath of the Gods",
-        avatars: [
-            { name: "https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg" },
-            { name: "https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg" },
-            { name: "https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg" }
-        ],
-        type: { description: "Action" },
-        genres: [
-            { id: 1, description: "Action" },
-            { id: 2, description: "Adventure" },
-            { id: 3, description: "Fantasy" }
-        ],
-        listProducer: [
-            { name: "Producer 1" },
-            { name: "Producer 2" }
-        ],
-        views: 9141,
-        avgRate: 4.5,
-        description: "D-Fragments! là bộ phim kể về nhân vật Kazama Kenji luôn tưởng rằng mình là một tên lưu manh thứ dữ và ai cũng phải khiếp sợ cậu. Nhưng đến khi Kazama Kenji gặp phải tứ quái cô nương Chitose, Sakura, Minami và Roka thì cậu đã biết mình chẳng là gì so với những gì mà các cô nương quái chiêu đã gây ra cho anh. Bởi từ lâu Kenji đã lọt vào tầm ngắm của tứ quái cô nương và Kenji bị buộc phải tham gia vào CLB của họ. Cuộc đời học sinh của Kazama Kenji sẽ ra sao? Đón Xem D-Fragments! tại ứng dụng giải trí POPS. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat",
+    const [movie, setMovies] = useState('');
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/movies/${id}`);
+                console.log('response.data');
+                console.log(response.data);
 
-    };
+                setMovies(response.data);
+                console.log(movie);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+
+    }, []);
 
 
     const [flag, setFlag] = React.useState(false);
@@ -77,7 +73,7 @@ function MovieDetail() {
                             <div className="col-lg-3">
 
                                 <div className="image-container">
-                                    <img className='movie-image' src={movie.avatars.length > 0 ? movie.avatars[0].name : 'placeholder_image_url'} alt="movie" />
+                                    <img className='movie-image' src={movie.avatarMovie} alt="movie" />
                                     <div className="anime__details__btn icon-layer">
                                         {/* Your logic for follow button here */}
                                         {/* Your logic for purchase button here */}
@@ -99,19 +95,19 @@ function MovieDetail() {
                                             <ul>
                                                 <li>
                                                     <span>Type:</span>
-                                                    <span>{movie.type.description}</span>
+                                                    <span>{}</span>
                                                 </li>
                                                 <li>
                                                     <span>Categories:</span>
-                                                    {movie.genres.map((genre, index) => (
-                                                        <div key={index}><a href=""><button className="btn btn-outline-light" style={{ color: 'blue' }}>{genre.description}</button></a></div>
-                                                    ))}
+                                                    {/* {movie.genres.map((genre, index) => (
+                                                        <div key={index}><a href=""><button className="btn btn-outline-light" style={{ color: 'blue' }}>{}</button></a></div>
+                                                    ))} */}
                                                 </li>
                                                 <li>
                                                     <span>Producer:</span>
-                                                    {movie.listProducer.map((producer, index) => (
+                                                    {/* {movie.listProducer.map((producer, index) => (
                                                         <span key={index}>{producer.name}</span>
-                                                    ))}
+                                                    ))} */}
                                                 </li>
                                             </ul>
                                         </div>
@@ -135,14 +131,14 @@ function MovieDetail() {
                                     <h3>Mô tả:</h3>
                                 </div>
                                 <text className='des_detail'>
-                                    {movie.description.substring(0, 500)}
+                                    {(movie.vietnameseDescriptions!=null)?movie.vietnameseDescriptions.substring(0, 500):""}
                                 </text>
-                                {flag ?
+                                {/* {flag ?
                                     <>
-                                        <text> {movie.description.substring(500, movie.description.length)}</text>
+                                        <text> {movie.vietnameseDescriptions.substring(500, movie.vietnameseDescriptions.length)}</text>
                                         : <a onClick={() => ShowMore()}><i>Rút gọn</i> </a>
                                     </>
-                                    : <a onClick={() => ShowMore()}><i>Xem thêm</i> </a>}
+                                    : <a onClick={() => ShowMore()}><i>Xem thêm</i> </a>} */}
                             </div>
                         </div>
                     </div>

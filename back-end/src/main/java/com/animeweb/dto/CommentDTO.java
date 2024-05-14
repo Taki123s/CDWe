@@ -1,6 +1,5 @@
 package com.animeweb.dto;
-import com.animeweb.entities.Chapter;
-import com.animeweb.entities.User;
+import com.animeweb.entities.*;
 import lombok.*;
 
 import java.util.Date;
@@ -16,9 +15,11 @@ public class CommentDTO {
     private Date updateAt;
     private Date deleteAt;
     private Boolean status;
+    private Movie movie;
     private User userComment;
     private User userReply;
     private Chapter chapter;
+
 
 
 }

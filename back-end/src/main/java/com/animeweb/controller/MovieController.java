@@ -2,6 +2,7 @@ package com.animeweb.controller;
 
 
 import com.animeweb.dto.MovieDTO;
+import com.animeweb.entities.Movie;
 import com.animeweb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,4 +49,21 @@ public class MovieController {
     public ResponseEntity<MovieDTO> findMovieWatching(@PathVariable Long movieId){
         return ResponseEntity.ok(movieService.findMovieWatching(movieId));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<MovieDTO>> search(@RequestParam("term") String keyword) {
+        List<MovieDTO> movieList = null;
+        if (keyword != null && !keyword.isEmpty()) {
+            movieList = movieService.searchMovie(keyword);
+        } else {
+            movieList = movieService.getAllMovie();
+        }
+
+        if (movieList != null && !movieList.isEmpty()) {
+            return new ResponseEntity<>(movieList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

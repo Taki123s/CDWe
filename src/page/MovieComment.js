@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import axios from "axios";
 
 class MovieComment extends Component {
   constructor(props) {
@@ -17,46 +18,20 @@ class MovieComment extends Component {
   }
 
   fetchComments = () => {
-    // Sample comments data
-    const sampleComments = {
-      comments: [
-        {
-          id: 1,
-          accountComment: {
-            avatar: "https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg",
-            fullName: "John Doe"
-          },
-          diffTime: "2 hours ago",
-          content: "Phim hay quá điiii",
-          userComment: 1,
-          availableReply: true,
-          showReplyForm: false // Add showReplyForm property to each comment
-        },
-        {
-          id: 2,
-          accountComment: {
-            avatar: "https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg",
-            fullName: "Jane Doe"
-          },
-          diffTime: "1 day ago",
-          content: "Không bao giờ xem lại lần 2 >.<",
-          userComment: 2,
-          availableReply: false,
-          showReplyForm: false // Add showReplyForm property to each comment
-        }
-      ],
-      rendered: 2,
-      enableRender: 3
-    };
-
-    // Update state with sample comments data
-    this.setState({
-      comments: sampleComments.comments,
-      rendered: sampleComments.rendered,
-      enableRender: sampleComments.enableRender
-    });
+    // Make an AJAX call to fetch comments
+    axios.get(`http://localhost:8080/api/comments`)
+      .then(response => {
+        this.setState({
+          comments: response.data,
+          rendered: response.data.rendered,
+          enableRender: response.data.enableRender
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
   };
-
+  
   // Function to handle input change for new comment
   handleInputChange = (event) => {
     this.setState({ newComment: event.target.value });
@@ -66,28 +41,15 @@ class MovieComment extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const { newComment, comments } = this.state;
-    
-    // Create a new comment object
-    const newCommentObject = {
-        id: comments.length + 1, // Generate a unique ID for the new comment
-        accountComment: {
-            avatar: "https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg",
-            fullName: "New User" // Change the name/avatar as needed
-        },
-        diffTime: "Just now", // Assuming the comment was just submitted
-        content: newComment,
-        userComment: 1, // Assuming the user ID is 1
-        availableReply: false, // Assuming replies are not available immediately after posting
-        showReplyForm: false // Initially set to false to hide the reply form
-    };
-    
+
     // Update the state to include the new comment
     this.setState(prevState => ({
-        comments: [newCommentObject, ...prevState.comments], // Add the new comment at the beginning of the array
-        newComment: '' // Clear the input field after submission
+      comments: [{ id: comments.length + 1, content: newComment }, ...prevState.comments], // Assuming the structure of comments
+      newComment: '' // Clear the input field after submission
     }));
   };
 
+  // Function to remove a comment
   removeComment = idComment => {
     // Make an AJAX call to remove the comment
     // Replace the URL with your endpoint
@@ -108,66 +70,18 @@ class MovieComment extends Component {
       .catch(error => console.error('Error removing comment:', error));
   };
 
+  // Function to show reply form
   showForm = (idComment, userReply) => {
     // Show/hide form logic
     const { comments } = this.state;
     const updatedComments = comments.map(comment => {
-        if (comment.id === idComment) {
-            return { ...comment, showReplyForm: true };
-        } else {
-            return comment;
-        }
-    });
-    this.setState({ comments: updatedComments });
-  };
-
-  // Function to handle input change for reply comment
-  handleReplyInputChange = (event, id) => {
-    const { value } = event.target;
-    this.setState(prevState => ({
-      comments: prevState.comments.map(comment =>
-        comment.id === id ? { ...comment, replyContent: value } : comment
-      )
-    }));
-  };
-
-  // Function to handle submission of reply comment
-  handleSubmitReply = (event, id) => {
-    event.preventDefault();
-    // Handle submission of reply comment here
-    // You can access the reply content using this.state.comments.find(comment => comment.id === id).replyContent
-    const { comments } = this.state;
-    const updatedComments = comments.map(comment => {
-        if (comment.id === id) {
-            // Update the comment to show the reply content and hide the reply form
-            return { ...comment, replyContent: comment.replyContent, showReplyForm: false };
-        } else {
-            return comment;
-        }
-    });
-    this.setState({ comments: updatedComments });
-  };
-
-  showMore = (type, parentId) => {
-    // Make an AJAX call to fetch more comments
-    // Replace the URL with your endpoint
-    fetch('fetch-more-comments-endpoint', {
-      method: 'POST',
-      body: JSON.stringify({ type: type, parentId: parentId }),
-      headers: {
-        'Content-Type': 'application/json'
+      if (comment.id === idComment) {
+        return { ...comment, showReplyForm: true };
+      } else {
+        return comment;
       }
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Update comments with fetched data
-        this.setState(prevState => ({
-          comments: prevState.comments.concat(data.comments),
-          rendered: data.rendered,
-          enableRender: data.enableRender
-        }));
-      })
-      .catch(error => console.error('Error fetching more comments:', error));
+    });
+    this.setState({ comments: updatedComments });
   };
 
   render() {
@@ -190,7 +104,7 @@ class MovieComment extends Component {
               onChange={this.handleInputChange}
             ></textarea>
           </div>
-          <button type="submit" className="btn btn-primary">Gửi</button>
+          <button type="submit" className="btn btn-primary" >Gửi</button>
         </form>
 
         <div id="commentBase">
@@ -198,11 +112,11 @@ class MovieComment extends Component {
             <div className="anime__review__item root0" key={comment.id}>
               {/* Render comment details */}
               <div className="anime__review__item__pic">
-                <img src={comment.accountComment.avatar} alt="" />
+                <img src={comment.userComment.avatarPicture} alt="" />
               </div>
               <div className="anime__review__item__text commentDisplay">
                 <h6>
-                  {comment.accountComment.fullName} <span>- {comment.diffTime}</span>
+                  {comment.userComment.fullName} <span>- {comment.commentAt}</span>
                 </h6>
                 <p>{comment.content}</p>
               </div>
@@ -210,23 +124,23 @@ class MovieComment extends Component {
               <div className="replyBase">
                 <button
                   className="setValue btn btn-outline-info"
-                  onClick={() => this.showForm(comment.id, comment.accountComment.id)}>
+                  onClick={() => this.showForm(comment.id, comment.userComment.id)}>
                   Reply
                 </button>
                 {/* Render reply form */}
                 {comment.showReplyForm && (
-                    <form onSubmit={this.handleSubmit}>
-                        <div className="form-group">
-                            <textarea
-                                className="form-control"
-                                rows="3"
-                                placeholder="Trả lời bình luận"
-                                value={comment.replyContent || ''}
-                                onChange={(event) => this.handleReplyInputChange(event, comment.id)}
-                            ></textarea>
-                        </div>
-                        <button type="submit" className="btn btn-primary">Gửi</button>
-                    </form>
+                  <form onSubmit={this.handleSubmitReply}>
+                    <div className="form-group">
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        placeholder="Trả lời bình luận"
+                        // value={comment.replyContent || ''}
+                        onChange={(event) => this.handleReplyInputChange(event, comment.id)}
+                      ></textarea>
+                    </div>
+                    <button type="submit" className="btn btn-primary">Gửi</button>
+                  </form>
                 )}
               </div>
             </div>

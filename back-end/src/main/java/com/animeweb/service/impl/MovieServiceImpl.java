@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
 public class MovieServiceImpl implements MovieService {
     @Autowired
@@ -42,4 +41,16 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = movieRepository.findMovieWatching(movieId);
         return MovieMapper.mapToMovieWatching(movie);
     }
+
+    @Override
+    public List<MovieDTO> searchMovie(String name) {
+        List<Movie> movieList=movieRepository.findByNameContainingIgnoreCase(name);
+        List<MovieDTO> movieDTOList  = new ArrayList<>();
+        for(Movie movie : movieList){
+            movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
+        }
+        return movieDTOList;
+    }
+
+
 }

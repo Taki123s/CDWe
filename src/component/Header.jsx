@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./bootstrap.min.css";
 import "./owl.carousel.min.css";
 import "../css/ds/style.css";
@@ -8,10 +9,32 @@ import { LoginComponent } from "./LoginComponent";
 import { getGenreList } from "../service/CategoryServices";
 
 export const HeaderPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/movies/search?term=${searchTerm}`);
+        console.log(response.data);
+        setSearchResults(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    if (searchTerm !== '') {
+      fetchData();
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchTerm]);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genreList, setGenreList] = useState([]);
   const handleMouseEnter = () => {
-    setDropdownOpen(true);
+    // setDropdownOpen(true);
   };
   useEffect(() => {
     getGenreList()
@@ -21,8 +44,7 @@ export const HeaderPage = () => {
       .catch((error) => {
         console.log(error);
       });
-  });
-
+  },[]);
   const handleMouseLeave = () => {
     setDropdownOpen(false);
   };
@@ -120,6 +142,8 @@ export const HeaderPage = () => {
                     type="text"
                     name="search"
                     autoComplete="off"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -137,12 +161,30 @@ export const HeaderPage = () => {
                   </svg>
                 </div>
                 <div
-                  className="search-result bg-transparent min-h-[80px] pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg hidden"
-                  id="search-result"
+                  className="search-result  pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
+                  id="search-results"
                 >
-                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]"></div>
-                  <div className="result-noitem hidden font-extralight text-center"></div>
-                  <div className="loading animate-spin hidden"></div>
+
+
+                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
+                    {searchResults.map((result) => (
+
+                      <li className="result-input" key={result.id} >
+                        <a href={`/movie/${result.id}`}>
+                          <img className="image_result" src={result.avatarMovie} />{result.name}
+                        </a>
+                      </li>
+
+                    ))}
+                    {
+                      searchResults.length !== 0 ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
+                        <a className="view-all-result" style={{ display: "none" }} />
+                    }
+
+
+                  </div>
+                  <div className="result-noitem  font-extralight text-center"></div>
+                  <div className="loading animate-spin "></div>
                 </div>
               </div>
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
@@ -197,7 +239,7 @@ export const HeaderPage = () => {
                 {dropdownOpen && (
                   <div
                     className="fixed bg-white shadow shadow-md mt-1 rounded-md py-1 z-10"
-                    onMouseLeave={handleMouseLeave}
+                   onMouseLeave={handleMouseLeave}
                   >
                     <ul className="categories-dropdown">
                       {genreList?.map((genre) => {
@@ -333,3 +375,5 @@ export const HeaderPage = () => {
     </header>
   );
 };
+
+export default HeaderPage;

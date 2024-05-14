@@ -22,10 +22,10 @@ public class Follow {
     private Boolean status;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
-    @JsonBackReference
+//    @JsonBackReference
     private User userId;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
-    @JsonBackReference
+//    @JsonBackReference
     private Movie movie;
 }

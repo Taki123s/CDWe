@@ -30,7 +30,6 @@ public class EmailController {
 		return status;
 	}
 
-	// Sending email with attachment
 	@PostMapping("/sendMailWithAttachment")
 	public String sendMailWithAttachment(
 		@RequestBody EmailDetails details)

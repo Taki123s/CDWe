@@ -10,11 +10,15 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class FollowDTO {
     private Long id ;
     private Date followAt;
     private Boolean status;
-    private User userId;
-    private Movie movie;
+    private Long userId;
+    private Long movieId;
+
+
+
+
 }

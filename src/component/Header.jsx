@@ -7,24 +7,49 @@ import "../css/home.css";
 import logo from "../img/logo.png";
 import { LoginComponent } from "./LoginComponent";
 import { getGenreList } from "../service/CategoryServices";
+import { useTranslation, Trans } from "react-i18next";
+import { Dropdown, Space, Typography } from "antd";
 
 export const HeaderPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const lngs = {
+    en: {
+      nativeName: "English",
+    },
+    vi: {
+      nativeName: "Vietnamese",
+    },
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: "Vi",
+      onClick: () => i18n.changeLanguage("vi"),
+    },
+    {
+      key: "2",
+      label: "En",
+      onClick: () => i18n.changeLanguage("en"),
+    },
+  ];
+  const { t, i18n } = useTranslation();
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-
-
+  // const [language, setLanguage] = useState(lngs);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/movies/search?term=${searchTerm}`);
+        const response = await axios.get(
+          `http://localhost:8080/api/movies/search?term=${searchTerm}`
+        );
         console.log(response.data);
         setSearchResults(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    if (searchTerm !== '') {
+    if (searchTerm !== "") {
       fetchData();
     } else {
       setSearchResults([]);
@@ -44,7 +69,7 @@ export const HeaderPage = () => {
       .catch((error) => {
         console.log(error);
       });
-  },[]);
+  }, []);
   const handleMouseLeave = () => {
     setDropdownOpen(false);
   };
@@ -87,7 +112,7 @@ export const HeaderPage = () => {
 
   return (
     <header className="h-[60px]">
-      <nav className="fixed top-0 left-0 right-0 bg-white shadow dark:shadow-slate-700 bg-white dark:bg-slate-800 dark:shadow-slate-700  z-1000">
+      <nav className="top-0 left-0 right-0 bg-white shadow dark:shadow-slate-700 bg-white dark:bg-slate-800 dark:shadow-slate-700  z-1000">
         <div className="container px-[10px] s1024:px-0 mx-auto h-[60px] flex s375:gap-3 items-center">
           <div className="navbar-brand h-[50px] w-[200px] s768:w-[180px] flex justify-between shrink-0 s1280:mr-2 s1366:mr-3 z-50">
             <a className="" href="/">
@@ -114,7 +139,7 @@ export const HeaderPage = () => {
             </div>
           </div>
           <div
-            className="navbar-left fixed overflow-hidden h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300"
+            className="navbar-left overflow-hidden h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300"
             id="navbar-left"
           >
             <div className="navbar-close absolute top-4 right-4 hidden">
@@ -133,8 +158,8 @@ export const HeaderPage = () => {
                 />
               </svg>
             </div>
-            <div className="relative mt-[20px] pr-[10px] s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow s768:items-center gap-4 s768:gap-2 s1280:gap-3">
-              <div className="group/search navbar-search relative top-0 right-0 s768:order-last s768:ml-auto s1024:w-[300px] s1280:w-[320px]">
+            <div className="mt-[20px] pr-[10px] s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow s768:items-center gap-4 s768:gap-2 s1280:gap-3">
+              <div className="group/search navbar-search top-0 right-0 s768:order-last s768:ml-auto s1024:w-[300px] s1280:w-[320px]">
                 <div className="search-box">
                   <input
                     className="rounded-full w-full h-[30px] text-[14px] font-extralight border-red-200 focus:ring-red-300 focus:border-red-200 s768:border-gray-200 s768:focus:ring-red-300 s768:focus:border-red-200 bg-transparent dark:bg-transparent dark:border-teal-500 s768:dark:border-gray-700 dark:focus:border-teal-500 dark:focus:ring-teal-500"
@@ -143,7 +168,6 @@ export const HeaderPage = () => {
                     name="search"
                     autoComplete="off"
                     onChange={(e) => setSearchTerm(e.target.value)}
-
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -161,27 +185,36 @@ export const HeaderPage = () => {
                   </svg>
                 </div>
                 <div
-                  className="search-result  pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
+                  className="search-result pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
                   id="search-results"
                 >
-
-
-                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
+                  <div className="result-body scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
                     {searchResults.map((result) => (
-
-                      <li className="result-input" key={result.id} >
+                      <li className="result-input" key={result.id}>
                         <a href={`/movie/${result.id}`}>
-                          <img className="image_result" src={result.avatarMovie} />{result.name}
+                          <img
+                            className="image_result"
+                            src={result.avatarMovie}
+                          />
+                          {result.name}
                         </a>
                       </li>
-
                     ))}
-                    {
-                      searchResults.length !== 0 ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
-                        <a className="view-all-result" style={{ display: "none" }} />
-                    }
-
-
+                    {searchResults.length !== 0 ? (
+                      <a
+                        className="view-all-result"
+                        style={{ display: "block" }}
+                      >
+                        <Trans i18nKey={"viewall"}>
+                     {t("viewall")}
+                    </Trans>
+                      </a>
+                    ) : (
+                      <a
+                        className="view-all-result"
+                        style={{ display: "none" }}
+                      />
+                    )}
                   </div>
                   <div className="result-noitem  font-extralight text-center"></div>
                   <div className="loading animate-spin "></div>
@@ -207,7 +240,9 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    Trang chủ
+                    <Trans i18nKey={"menu.home"}>
+                     {t("menu.home")}
+                    </Trans>
                   </span>
                 </a>
               </div>
@@ -233,13 +268,14 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    Thể loại
+                  <Trans i18nKey={"menu.categories"}>{t("menu.categories")}</Trans>
+
                   </span>
                 </a>
                 {dropdownOpen && (
                   <div
                     className="fixed bg-white shadow shadow-md mt-1 rounded-md py-1 z-10"
-                   onMouseLeave={handleMouseLeave}
+                    onMouseLeave={handleMouseLeave}
                   >
                     <ul className="categories-dropdown">
                       {genreList?.map((genre) => {
@@ -275,6 +311,11 @@ export const HeaderPage = () => {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
+
+
+
+
+
                       d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"
                     />
                   </svg>
@@ -331,6 +372,53 @@ export const HeaderPage = () => {
                 />
               </svg>
             </div>
+
+            {/* <div class="flex w-2 gap">
+            <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+                <a href="">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" alt="Language" width="24px" fill="#666666">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" />
+                  </svg>
+                </a>
+              </div>
+              <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+                <a href="">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" alt="Language" width="24px" fill="#666666">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" />
+                  </svg>
+                </a>
+              </div>
+          </div>        */}
+            <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+              <Dropdown
+                menu={{
+                  items,
+                  selectable: true,
+                  defaultSelectedKeys: ["2"],
+                }}
+              >
+                <Typography.Link>
+                  <Space>
+                    <a>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 0 24 24"
+                        alt="Language"
+                        width="24px"
+                        fill="#666666"
+                      >
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" />
+                      </svg>
+                    </a>
+                  </Space>
+                </Typography.Link>
+              </Dropdown>
+            </div>
+
             <div className="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
               <a href="/page/chinh-sach-rieng-tu">
                 <svg
@@ -371,6 +459,8 @@ export const HeaderPage = () => {
           </div>
           <LoginComponent />
         </div>
+
+        <div></div>
       </nav>
     </header>
   );

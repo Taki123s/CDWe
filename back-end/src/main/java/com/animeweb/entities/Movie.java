@@ -54,9 +54,6 @@ public class Movie {
     private String seriesDescriptions;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="movie_genre",joinColumns = {@JoinColumn(name="movie_id")},inverseJoinColumns = {@JoinColumn(name = "genre_id")},
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"movie_id", "genre_id"})})
-    @JsonManagedReference
     private List<Genre> genres = new ArrayList<>();
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<Chapter> currentChapters;

@@ -1,5 +1,6 @@
 package com.animeweb.security;
 
+import com.animeweb.entities.Role;
 import com.animeweb.entities.User;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -8,9 +9,12 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import io.jsonwebtoken.*;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
+import java.util.StringJoiner;
 
 @Component
 public class JwtGenerator {
@@ -24,7 +28,7 @@ public class JwtGenerator {
                 .issueTime(currentDate)
                 .expirationTime(expireDate)
                 .claim("id",user.getId())
-                .claim("role",user.getRoleDetails()).build();
+                .claim("scope",(buildScopeUser(user.getRoles()))).build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header,payload);
         try{
@@ -34,12 +38,19 @@ public class JwtGenerator {
             throw new RuntimeException(e);
         }
     }
-    public String getUserNameFromJWT(String token){
-        Claims claims = Jwts.parser()
-                .setSigningKey(SecurityConstants.JWT_SECRET)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+    private String buildScopeUser(List<Role> roles){
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if (!CollectionUtils.isEmpty(roles)){
+            roles.forEach(role -> {
+                stringJoiner.add("ROLE_"+role.getName());
+                if(!CollectionUtils.isEmpty(role.getPermissions())){
+                    role.getPermissions().forEach(permission -> {
+                        stringJoiner.add(permission.getName());
+                    });
+                }
+            });
+        }
+        return stringJoiner.toString();
     }
     public boolean validateToken(String token) {
         try {

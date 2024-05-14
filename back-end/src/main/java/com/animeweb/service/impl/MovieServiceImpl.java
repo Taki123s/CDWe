@@ -3,10 +3,12 @@ package com.animeweb.service.impl;
 import com.animeweb.dto.MovieDTO;
 import com.animeweb.entities.Movie;
 import com.animeweb.mapper.MovieMapper;
+import com.animeweb.repository.GenreRepository;
 import com.animeweb.repository.MovieRepository;
 import com.animeweb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,6 +20,8 @@ import java.util.List;
 public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private GenreRepository genreRepository;
     @Override
     public MovieDTO createMovie(MovieDTO movieDTO) {
        return null;

@@ -15,7 +15,7 @@ public class UserPackedDTO {
     private User userId;
     private ServicePack servicePackId;
     private Date expiredTime;
-
+    private Long captureId;
     private Date createdAt;
     private Boolean status;
     private Date deletedAt;

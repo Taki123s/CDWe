@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,9 +27,20 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieDTO> index(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public List<MovieDTO> index(int page, int size, String sortBy, boolean ascending) {
+        if (sortBy == null || sortBy.isEmpty()) {
+            sortBy = "createAt"; // Mặc định sắp xếp theo thời gian tạo mới nhất
+        }
+
+        Pageable pageable;
+        if (ascending) {
+            pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        } else {
+            pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        }
+
         Page<Movie> moviePage = movieRepository.findAll(pageable);
+
         List<MovieDTO> movieDTOS = new ArrayList<>();
         for (Movie m : moviePage.getContent()) {
             movieDTOS.add(MovieMapper.mapToMovieDTO(m));

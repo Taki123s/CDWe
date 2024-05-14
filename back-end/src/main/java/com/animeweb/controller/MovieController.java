@@ -27,9 +27,11 @@ public class MovieController {
     @GetMapping("/index")
     public ResponseEntity<Map<String, Object>> getMovies(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "9") int size) {
+            @RequestParam(defaultValue = "9") int size,
+            @RequestParam(defaultValue = "createAt") String sortBy,
+            @RequestParam(defaultValue = "false") boolean ascending){
 
-        List<MovieDTO> movies = movieService.index(page, size);
+        List<MovieDTO> movies = movieService.index(page, size,sortBy,ascending);
         int totalMovies = movieService.findAll().size(); // Assume you have a method to get the total number of movies
 
         Map<String, Object> response = new HashMap<>();

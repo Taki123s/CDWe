@@ -1,29 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import './bootstrap.min.css'; // Import Bootstrap CSS
 
-function ProductItem({ movie }) {
-  movie = {
-      id: 1,
-      imageUrl: "https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg",
-      episodes: 18,
-      views: 9141,
-      title: "The Seven Deadly Sins: Wrath of the Gods"
-    };
+function ProductItem(props) {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/movie/index')
+        .then(response => response.json()) // Parse response data to JSON
+        .then(data => {
+          console.log('Data:', data);
+          setMovies(data.movies); // Set movies state
+        })
+        .catch(error => console.error('Error:', error));
+  }, []); // Empty dependency array means this effect runs once after the component mounts
+
   return (
-    <div className="col-lg-4 col-md-6 col-sm-6">
-<div className="product__item">
-    <Link to={`/movie/${movie.id}`}>
-        <div className="product__item__pic set-bg" style={{ backgroundImage: `url(${movie.imageUrl})` }}>
-          <div className="ep">{movie.episodes}</div>
-          <div className="view"><i className="fa fa-eye"></i> {movie.views}</div>
-        </div>
-        <div className="product__item__text">
-          <h5>{movie.title}</h5> 
-        </div>
-      </Link>
-    </div>
-    </div>
-    
+      <div className="row">
+        {movies.map(movie => (
+            <div className="col-lg-4 col-md-6 col-sm-6" key={movie.id}>
+              <div className="product__item">
+                <div className="product__item__pic set-bg" style={{ backgroundImage: `url(${movie.avatarMovie})` }}>
+                  <div className="ep">{movie.currentChapters.length} / {movie.totalChapters}</div>
+                  <div className="view"><i className="fa fa-eye"></i> {movie.views}</div>
+                </div>
+                <div className="product__item__text">
+                  <h5><Link to="/" >{movie.name}</Link></h5>
+                </div>
+              </div>
+            </div>
+        ))}
+      </div>
   );
 }
 

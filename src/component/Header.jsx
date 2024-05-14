@@ -35,7 +35,8 @@ export const HeaderPage = () => {
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  // const [language, setLanguage] = useState(lngs);
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -69,7 +70,7 @@ export const HeaderPage = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  },[]);
   const handleMouseLeave = () => {
     setDropdownOpen(false);
   };
@@ -293,7 +294,7 @@ export const HeaderPage = () => {
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-5">
                 <a
                   className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
-                  href="/bang-xep-hang"
+                  href="/servicePack"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -311,16 +312,11 @@ export const HeaderPage = () => {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-
-
-
-
-
                       d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    BXH
+                   Service Pack
                   </span>
                 </a>
               </div>
@@ -459,8 +455,6 @@ export const HeaderPage = () => {
           </div>
           <LoginComponent />
         </div>
-
-        <div></div>
       </nav>
     </header>
   );

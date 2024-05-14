@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation, Trans } from "react-i18next";
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import LoginGoogle from "./LoginGoogle";
 export const LoginComponent = () => {
   const { t, i18n } = useTranslation();
 

@@ -62,4 +62,6 @@ public class User {
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
     private List<Follow> follows;
 
+    public User(String accountName, String fullName, String password, String email, String image, String idOther, Date createAt, Integer type) {
+    }
 }

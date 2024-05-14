@@ -8,6 +8,8 @@ import {CategoriesPage} from "./page/Categorie";
 import {HeaderPage} from "./component/Header";
 import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
+import LoginGoogle from "./component/LoginGoogle"
+
 import React from 'react';
 import AdminPanel from "./admin/user/AdminPanel"
 import { translate, Trans } from 'react-i18next';
@@ -16,16 +18,21 @@ import { render } from '@testing-library/react';
 function App() {
   return (
     <Router>
-      <HeaderPage/>
+      <HeaderPage />
       <Routes>
+
         <Route path="/movie/:id" Component={MovieDetail} />
         <Route path="/item" element={ProductItem} />
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/" element={<AnimePage />} />
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
+          <Route path="/login-google" element={<LoginGoogle />} />
+              <Route path="/execute-payment" element={<ExecutePaymentComponent/>} />
+
         <Route path="/movie/watching/:movieId/:chapterId" element={<MovieWatching />} />
       <Route path="/AdminPanel" element={<AdminPanel/>} />
+
       <Route path="/follow" element={<Follow/>} />
       </Routes>
     </Router>

@@ -1,19 +1,38 @@
 import React, { useState, useEffect } from "react";
 import {login} from "../service/AuthServices"
-
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
 export const LoginComponent = () => {
   const [activeTab, setActiveTab] = useState("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loggedUser, setLoggedUser] = useState(null);
   const handleLogin = (event) => {
       const user = {"userName":username,"password":password}
       login(user).then((response)=>{
-        localStorage.setItem('jwt_token', response.data.accessToken);
+        const token = response.data.accessToken;
+        const decodedToken = jwtDecode(token);
+        const expires = new Date(decodedToken.exp * 1000);
+        Cookies.set('jwt_token', token, { 
+          expires: expires, 
+          sameSite: 'Strict'
+        });
+        decodeToken();
       }).catch(error=>{
         console.log(error)
-        })
+        })     
   };
-
+    const decodeToken = ()=>{
+    const token = Cookies.get('jwt_token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log("decode :", JSON.stringify(decodedToken, null, 2));
+      setLoggedUser(decodedToken);
+    }
+  }
+  useEffect(() => {
+    decodeToken();
+  }, []);
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };

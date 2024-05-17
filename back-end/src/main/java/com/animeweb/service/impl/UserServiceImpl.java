@@ -1,12 +1,17 @@
 package com.animeweb.service.impl;
 
 import com.animeweb.dto.LoginDTO;
+import com.animeweb.entities.ExpiredToken;
 import com.animeweb.entities.Role;
 import com.animeweb.entities.User;
+import com.animeweb.repository.ExpiredTokenRepository;
 import com.animeweb.repository.UserRepository;
 import com.animeweb.security.IntrospectRequest;
 import com.animeweb.security.IntrospectResponse;
 import com.animeweb.security.JwtGenerator;
+import com.animeweb.security.LogOutRequest;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +22,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +32,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ExpiredTokenRepository expiredTokenRepository;
     @Autowired
     private JwtGenerator jwtGenerator;
     @Override
@@ -42,10 +51,22 @@ public class UserServiceImpl implements UserDetailsService {
     public void saveUser(User user){
         userRepository.save(user);
     }
-    public IntrospectResponse introspect(IntrospectRequest introspectRequest){
+    public IntrospectResponse introspect(IntrospectRequest introspectRequest) throws ParseException, JOSEException {
         String token = introspectRequest.getToken();
-        boolean verified = jwtGenerator.validateToken(token);
-        return new IntrospectResponse(verified);
+        boolean isValid = true;
+        try{
+            SignedJWT verified = jwtGenerator.verifyToken(token);
+        }catch (Exception e){
+            isValid = false;
+
+        }
+        return new IntrospectResponse(isValid);
+    }
+    public void logout(LogOutRequest logOutRequest) throws ParseException, JOSEException {
+        SignedJWT verified = jwtGenerator.verifyToken(logOutRequest.getToken());
+        String jit = verified.getJWTClaimsSet().getJWTID();
+        Date expiredDate = verified.getJWTClaimsSet().getExpirationTime();
+        expiredTokenRepository.save(new ExpiredToken(jit,expiredDate));
     }
     public String authenticate(LoginDTO loginDTO){
         User user = userRepository.findByUserName(loginDTO.getUserName()).orElseThrow(()-> new RuntimeException("User not exits"));

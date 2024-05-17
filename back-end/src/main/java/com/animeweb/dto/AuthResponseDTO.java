@@ -1,5 +1,6 @@
 package com.animeweb.dto;
 
+import com.nimbusds.jose.JWSAlgorithm;
 import lombok.Data;
 
 @Data
@@ -12,4 +13,5 @@ public class AuthResponseDTO {
         this.accessToken = accessToken;
         this.authenticated = authenticated;
     }
+
 }

@@ -91,4 +91,8 @@ public class User {
                 .collect(Collectors.toList());
     }
 
+
+    public User(String accountName, String fullName, String password, String email, String image, String idOther, Date createAt, Integer type) {
+    }
+
 }

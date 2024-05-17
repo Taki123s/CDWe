@@ -28,7 +28,8 @@ public class UserPacked {
 
     @Column(name = "expired_time")
     private Date expiredTime;
-
+    @Column(name = "captureId")
+    private Long captureId;
     @Column(name = "create_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
 

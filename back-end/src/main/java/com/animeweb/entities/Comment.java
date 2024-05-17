@@ -27,6 +27,16 @@ public class Comment {
     private Date deleteAt;
     @Column(name="status",columnDefinition = "tinyint default 1")
     private Boolean status;
+
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="movie_id")
+    @JsonBackReference
+    private Movie movieId;
+
+
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_comment")
     @JsonBackReference
@@ -36,9 +46,10 @@ public class Comment {
     @JsonBackReference
     private User userReply;
     @ManyToOne
-    @JoinColumn(name ="chapter_id",referencedColumnName = "id")
+    @JoinColumn(name ="chapter_id",nullable=true,referencedColumnName = "id")
     @JsonBackReference
     private Chapter chapter;
+
 
 
 }

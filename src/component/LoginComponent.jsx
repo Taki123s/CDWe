@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import {login} from "../service/AuthServices"
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import LoginGoogle from "./LoginGoogle";
 export const LoginComponent = () => {
   const [activeTab, setActiveTab] = useState("login");
   const [username, setUsername] = useState("");
@@ -107,7 +109,7 @@ export const LoginComponent = () => {
         </div>
       </div>
       {activeTab === "login" && (
-        <form >
+        <form>
           <div
             className="navbar-user-body tab-login px-3 ps-container ps-theme-default"
             data-ps-id="1a9be0da-8957-4b2d-c90f-935a0efd2506"
@@ -194,29 +196,29 @@ export const LoginComponent = () => {
             </div>
             <hr className="mb-3 border-gray-300 dark:border-slate-600" />
             <div className="navbar-form-group relative mb-3 h-8 rounded bg-orange-600/90 text-center text-white text-[14px] font-light">
-              <a
-                className="social-login"
-                href="https://vuighe3.com/dang-nhap-google"
-              >
-                <input
-                  type="button"
-                  className="google w-full h-full rounded cursor-pointer"
-                  value="Đăng nhập với Google"
-                />
-              </a>
-            </div>
-            <div className="navbar-form-group relative mb-3 h-8 rounded bg-blue-600/90 text-center text-white text-[14px] font-light">
-              <a
-                className="social-login"
-                href="https://vuighe3.com/dang-nhap-facebook"
-              >
-                <input
-                  type="button"
-                  className="facebook w-full h-full rounded cursor-pointer"
-                  value="Đăng nhập với Facebook"
-                />
-              </a>
-            </div>
+
+<a  className="social-login"
+    href="/login-google">
+     <input
+       type="button"
+       className="google w-full h-full rounded cursor-pointer"
+       value="Đăng nhập với Google"
+     />
+   </a>
+ </div>
+
+ <div className="navbar-form-group relative mb-3 h-8 rounded bg-blue-600/90 text-center text-white text-[14px] font-light">
+   <a
+     className="social-login"
+     href="http://localhost:8080/login/facebook"
+   >
+     <input
+       type="button"
+       className="facebook w-full h-full rounded cursor-pointer"
+       value="Đăng nhập với Facebook"
+     />
+   </a>
+ </div>
             <div
               className="ps-scrollbar-x-rail"
               style={{ left: "0px", bottom: "0px" }}

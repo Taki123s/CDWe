@@ -1,4 +1,5 @@
 package com.animeweb.dto;
+import com.animeweb.entities.*;
 
 import lombok.*;
 
@@ -13,4 +14,6 @@ public class ServicePackDTO {
     private String service_type;
     private Double price;
     private Date createdAt;
+
+
 }

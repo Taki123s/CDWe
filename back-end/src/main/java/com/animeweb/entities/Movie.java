@@ -7,6 +7,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @Data
@@ -59,7 +60,7 @@ public class Movie {
     private List<Chapter> currentChapters;
     @ManyToOne()
     @JoinColumn(name ="serie_id",referencedColumnName = "id")
-    @JsonBackReference
+ //   @JsonBackReference
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<View> views;
@@ -67,4 +68,7 @@ public class Movie {
     private List<Rate> rates;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<Follow> follows;
+
+
+
 }

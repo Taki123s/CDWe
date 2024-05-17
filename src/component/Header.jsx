@@ -9,13 +9,54 @@ import "../css/home.css";
 import logo from "../img/logo.png";
 import { getGenreList } from "../service/CategoryServices";
 export const HeaderPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/movies/search?term=${searchTerm}`);
+        console.log(response.data);
+        setSearchResults(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    if (searchTerm !== '') {
+      fetchData();
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchTerm]);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genreList, setGenreList] = useState([]);
+
   const [loggedUser, setLoggedUser] = useState(null);
   const [activeTab, setActiveTab] = useState("login");
   const [token,setToken] = useState("")
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleMouseEnter = () => {
+    setDropdownOpen(true);
+  };
+  useEffect(() => {
+    getGenreList()
+      .then((response) => {
+        setGenreList(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const handleMouseLeave = () => {
+    setDropdownOpen(false);
+  };
+
   useEffect(() => {
     const navbarAvatar = document.getElementById("navbar-avatar");
     const navbarRight = document.getElementById("navbar-right");
@@ -41,9 +82,7 @@ export const HeaderPage = () => {
     };
   }, [loggedUser]);
 
-  const handleMouseEnter = () => {
-    setDropdownOpen(true);
-  };
+
   const handleLogout = (event)=>{
     const logoutToken = { token:token };
     logout(logoutToken).then((response)=>{
@@ -91,9 +130,6 @@ export const HeaderPage = () => {
   }, []);
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
-  };
-  const handleMouseLeave = () => {
-    setDropdownOpen(false);
   };
   useEffect(() => {
     const navbarLeft = document.getElementById("navbar-left");
@@ -168,6 +204,8 @@ export const HeaderPage = () => {
                     type="text"
                     name="search"
                     autoComplete="off"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -185,12 +223,30 @@ export const HeaderPage = () => {
                   </svg>
                 </div>
                 <div
-                  className="search-result bg-transparent min-h-[80px] pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg hidden"
-                  id="search-result"
+                  className="search-result  pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
+                  id="search-results"
                 >
-                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]"></div>
-                  <div className="result-noitem hidden font-extralight text-center"></div>
-                  <div className="loading animate-spin hidden"></div>
+
+
+                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
+                    {searchResults.map((result) => (
+
+                      <li className="result-input" key={result.id} >
+                        <a href={`/movie/${result.id}`}>
+                          <img className="image_result" src={result.avatarMovie} />{result.name}
+                        </a>
+                      </li>
+
+                    ))}
+                    {
+                      searchResults.length !== 0 ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
+                        <a className="view-all-result" style={{ display: "none" }} />
+                    }
+
+
+                  </div>
+                  <div className="result-noitem  font-extralight text-center"></div>
+                  <div className="loading animate-spin "></div>
                 </div>
               </div>
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
@@ -245,7 +301,7 @@ export const HeaderPage = () => {
                 {dropdownOpen && (
                   <div
                     className="fixed bg-white shadow shadow-md mt-1 rounded-md py-1 z-10"
-                    onMouseLeave={handleMouseLeave}
+                   onMouseLeave={handleMouseLeave}
                   >
                     <ul className="categories-dropdown">
                       {Array.isArray(genreList) &&
@@ -267,7 +323,7 @@ export const HeaderPage = () => {
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-5">
                 <a
                   className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
-                  href="/bang-xep-hang"
+                  href="/servicePack"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -289,7 +345,7 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    BXH
+                   Service Pack
                   </span>
                 </a>
               </div>

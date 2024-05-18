@@ -10,7 +10,7 @@ public class RegisterDTO {
     private String email;
     private String fullName;
     private String phone;
-    private Integer userType;
+    private Integer userType = 1;
     private String externalId;
 
 }

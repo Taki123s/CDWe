@@ -22,7 +22,7 @@ import java.util.Collections;
 
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     UserServiceImpl userService;
@@ -41,7 +41,6 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         Role roles = roleRepository.findByName("USER").get();
         user.setRoles(Collections.singletonList(roles));
-
         userService.saveUser(user);
         return new ResponseEntity<>("User registered success!",HttpStatus.OK);
     }

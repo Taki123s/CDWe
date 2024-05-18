@@ -1,7 +1,10 @@
 import React, { useState, useEffect, someStateIndicatingDOMReady } from "react";
-import { login,logout } from "../service/AuthServices";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { login, logout } from "../service/AuthServices";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import axios from "axios";
 import "./bootstrap.min.css";
 import "./owl.carousel.min.css";
 import "../css/ds/style.css";
@@ -9,22 +12,23 @@ import "../css/home.css";
 import logo from "../img/logo.png";
 import { getGenreList } from "../service/CategoryServices";
 export const HeaderPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/movies/search?term=${searchTerm}`);
+        const response = await axios.get(
+          `http://localhost:8080/api/movies/search?term=${searchTerm}`
+        );
         console.log(response.data);
         setSearchResults(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    if (searchTerm !== '') {
+    if (searchTerm !== "") {
       fetchData();
     } else {
       setSearchResults([]);
@@ -36,9 +40,10 @@ export const HeaderPage = () => {
 
   const [loggedUser, setLoggedUser] = useState(null);
   const [activeTab, setActiveTab] = useState("login");
-  const [token,setToken] = useState("")
+  const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [regiserUser,setRegisterUser] = useState(null)
 
   const handleMouseEnter = () => {
     setDropdownOpen(true);
@@ -82,23 +87,24 @@ export const HeaderPage = () => {
     };
   }, [loggedUser]);
 
-
-  const handleLogout = (event)=>{
-    const logoutToken = { token:token };
-    logout(logoutToken).then((response)=>{
-      console.log("response :"+response)
-      Cookies.remove("jwt_token");
-      setLoggedUser(null)
-    }).catch(error=>{
-      console.log(error)
-    })
-  }
+  const handleLogout = (event) => {
+    const logoutToken = { token: token };
+    logout(logoutToken)
+      .then((response) => {
+        console.log("response :" + response);
+        Cookies.remove("jwt_token");
+        setLoggedUser(null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const handleLogin = (event) => {
     const user = { userName: username, password: password };
     login(user)
       .then((response) => {
         const token = response.data.accessToken;
-        setToken(token)
+        setToken(token);
         const decodedToken = jwtDecode(token);
         const expires = new Date(decodedToken.exp * 1000);
         Cookies.set("jwt_token", token, {
@@ -114,7 +120,7 @@ export const HeaderPage = () => {
     const token = Cookies.get("jwt_token");
     if (token) {
       const decodedToken = jwtDecode(token);
-      setToken(token)
+      setToken(token);
       setLoggedUser(decodedToken);
     }
   };
@@ -205,7 +211,6 @@ export const HeaderPage = () => {
                     name="search"
                     autoComplete="off"
                     onChange={(e) => setSearchTerm(e.target.value)}
-
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -226,24 +231,31 @@ export const HeaderPage = () => {
                   className="search-result  pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
                   id="search-results"
                 >
-
-
                   <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
                     {searchResults.map((result) => (
-
-                      <li className="result-input" key={result.id} >
+                      <li className="result-input" key={result.id}>
                         <a href={`/movie/${result.id}`}>
-                          <img className="image_result" src={result.avatarMovie} />{result.name}
+                          <img
+                            className="image_result"
+                            src={result.avatarMovie}
+                          />
+                          {result.name}
                         </a>
                       </li>
-
                     ))}
-                    {
-                      searchResults.length !== 0 ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
-                        <a className="view-all-result" style={{ display: "none" }} />
-                    }
-
-
+                    {searchResults.length !== 0 ? (
+                      <a
+                        className="view-all-result"
+                        style={{ display: "block" }}
+                      >
+                        Xem tất cả
+                      </a>
+                    ) : (
+                      <a
+                        className="view-all-result"
+                        style={{ display: "none" }}
+                      />
+                    )}
                   </div>
                   <div className="result-noitem  font-extralight text-center"></div>
                   <div className="loading animate-spin "></div>
@@ -301,7 +313,7 @@ export const HeaderPage = () => {
                 {dropdownOpen && (
                   <div
                     className="fixed bg-white shadow shadow-md mt-1 rounded-md py-1 z-10"
-                   onMouseLeave={handleMouseLeave}
+                    onMouseLeave={handleMouseLeave}
                   >
                     <ul className="categories-dropdown">
                       {Array.isArray(genreList) &&
@@ -345,7 +357,7 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                   Service Pack
+                    Service Pack
                   </span>
                 </a>
               </div>
@@ -418,11 +430,11 @@ export const HeaderPage = () => {
                   0
                 </span>
               </div>
-              <div className="navbar-avatar w-[40px] h-[40px] rounded-full overflow-hidden"   id="navbar-avatar">
-                <img
-                  className="w-full h-full"
-                  src={loggedUser?.avt}
-                />
+              <div
+                className="navbar-avatar w-[40px] h-[40px] rounded-full overflow-hidden"
+                id="navbar-avatar"
+              >
+                <img className="w-full h-full" src={loggedUser?.avt} />
               </div>
             </div>
           )}
@@ -821,69 +833,16 @@ export const HeaderPage = () => {
                       <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
                     </div>
                     <div className="navbar-form-group relative mb-3">
-                      <label className="mb-1 block text-[14px]">
-                        Giới tính
-                      </label>
-                      <div className="flex items-center gap-5 text-[14px] font-light">
-                        <label className="navbar-form-radio flex items-center gap-2">
-                          <input
-                            className="rounded-full text-teal-600 border-gray-400 focus:ring-0 focus:ring-offset-0 focus:border-gray-400  dark:border-teal-600 dark:focus:border-teal-500 dark:focus:ring-0 dark:focus:ring-offset-0 "
-                            type="radio"
-                            name="gender"
-                            value="1"
-                          />
-                          <span>Nam</span>
-                        </label>
-                        <label className="navbar-form-radio flex items-center gap-2">
-                          <input
-                            className="rounded-full text-teal-600 border-gray-400 focus:ring-0 focus:ring-offset-0 focus:border-gray-400  dark:border-teal-600 dark:focus:border-teal-500 dark:focus:ring-0 dark:focus:ring-offset-0 "
-                            type="radio"
-                            name="gender"
-                            value="-1"
-                          />
-                          <span>Nữ</span>
-                        </label>
-                        <label className="navbar-form-radio flex items-center gap-2">
-                          <input
-                            className="rounded-full text-teal-600 border-gray-400 focus:ring-0 focus:ring-offset-0 focus:border-gray-400  dark:border-teal-600 dark:focus:border-teal-500 dark:focus:ring-0 dark:focus:ring-offset-0 "
-                            type="radio"
-                            name="gender"
-                            value="0"
-                            defaultChecked
-                          />
-                          <span>Không nói</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className="navbar-form-group relative birthday hidden mb-3">
-                      <div className="navbar-form-select day">
-                        <label className="mb-1 block text-[14px]">
-                          Ngày sinh
-                        </label>
-                        <input type="number" name="birthday" min="1" max="31" />
-                      </div>
-                      <div className="navbar-form-select month">
-                        <label className="mb-1 block text-[14px]">
-                          Tháng sinh
-                        </label>
-                        <input
-                          type="number"
-                          name="birthmonth"
-                          min="1"
-                          max="12"
-                        />
-                      </div>
-                      <div className="navbar-form-select year">
-                        <label className="mb-1 block text-[14px]">
-                          Năm sinh
-                        </label>
-                        <input
-                          type="number"
-                          name="birthyear"
-                          min="1970"
-                          max="2010"
-                        />
-                      </div>
+                      <label className="mb-1 block text-[14px]">Phone</label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6 rounded"
+                        type="number"
+                        name="phone"
+                      />
+                      <FontAwesomeIcon
+                        icon={faPhone}
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      />
                       <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
                     </div>
                     <div className="navbar-form-group relative hidden mb-3">
@@ -928,8 +887,14 @@ export const HeaderPage = () => {
           )}
 
           {loggedUser != null && (
-            <div id="navbar-right" className="navbar-right fixed overflow-hidden h-full shadow w-[300px] top-0 bottom-0 bg-white dark:bg-slate-800/90 dark:shadow-slate-700 z-50 transition-all duration-300 right-0">
-              <div className="navbar-close absolute top-2 left-2 w-8 h-8 opacity-60" id="navbar-close">
+            <div
+              id="navbar-right"
+              className="navbar-right fixed overflow-hidden h-full shadow w-[300px] top-0 bottom-0 bg-white dark:bg-slate-800/90 dark:shadow-slate-700 z-50 transition-all duration-300 right-0"
+            >
+              <div
+                className="navbar-close absolute top-2 left-2 w-8 h-8 opacity-60"
+                id="navbar-close"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -1169,7 +1134,8 @@ export const HeaderPage = () => {
                   <hr className="my-2 border-gray-200 dark:border-slate-700" />
                   <div
                     className="logout user-item flex gap-4 items-center h-[30px] cursor-pointer"
-                    id="logout" onClick={handleLogout}
+                    id="logout"
+                    onClick={handleLogout}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

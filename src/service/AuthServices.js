@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const AUTH_API_BASE_URL = "http://localhost:8080/api/auth";
+const AUTH_API_BASE_URL = "http://localhost:8080/auth";
 
 const axiosInstance = axios.create({
   baseURL: AUTH_API_BASE_URL

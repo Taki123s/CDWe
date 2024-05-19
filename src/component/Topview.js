@@ -1,58 +1,83 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 import './bootstrap.min.css'; // Import Bootstrap CSS
+
 const Topview = () => {
   const { t } = useTranslation();
   const [movies, setMovies] = useState([]);
+  const [activeFilter, setActiveFilter] = useState('day'); // Track active filter
 
   useEffect(() => {
-    loadTopViewMovies();
+    loadTopViewMovies('day'); // Load top movies for the day initially
   }, []);
 
-  const loadTopViewMovies = async (action) => {
+  const loadTopViewMovies = async (type) => {
     try {
-      const response = await axios.get('http://localhost:8080/topView', {
-        params: { action: action }
-      });
-      setMovies(response.data);
+      const response = await axios.get(`http://localhost:8080/movie/top-view?type=${type}`);
+      setMovies(response.data.topMovies);
+      setActiveFilter(type); // Set active filter
+      console.log(response);
     } catch (error) {
       console.error('Error fetching top view movies:', error);
     }
   };
 
   return (
-    <div className="col-lg-4 col-md-6 col-sm-8">
-      <div className="product__sidebar">
-        <div className="product__sidebar__view">
-          <div className="section-title">
-            <h5>{t('Topview')}</h5>
-          </div>
-          <ul className="filter__controls">
-            <li className="active" data-filter=".day" onClick={() => loadTopViewMovies('topDay')}>{t('day')}</li>
-            <li data-filter=".month" onClick={() => loadTopViewMovies('topMonth')}>{t('month')}</li>
-            <li data-filter=".years" onClick={() => loadTopViewMovies('topYear')}>{t('year')}</li>
-          </ul>
-          <br />
-          <div className="filter__gallery">
-            {movies.map(movie => (
-              <div key={movie.id} className="product__sidebar__view__item set-bg mix day"
-                style={{ backgroundImage: `url(${movie.avatars[0].name})`, backgroundPosition: 'center', backgroundSize: 'cover' }}>
-                <div className="ep">{movie.currentEpisode}/{movie.totalEpisode}</div>
-                <div className="rate">{movie.avgRate}<i className="fa fa-star" style={{ color: '#f3da35' }}></i></div>
-                <div className="view" style={{ bottom: '10px', right: '10px', top: 'unset' }}>
-                  <i className="fa fa-eye"></i> {movie.views}
-                </div>
-                <h5><a href={`/movieDetail?idMovie=${movie.id}`}>{movie.name}</a></h5>
-              </div>
-            ))}
+      <div className="col-lg-4 col-md-6 col-sm-8">
+        <div className="product__sidebar">
+          <div className="product__sidebar__view">
+            <div className="section-title">
+              <h5>Top view</h5>
+            </div>
+            <div className="red-box">
+              <ul className="filter__controls">
+                <li className={activeFilter === 'day' ? 'active' : ''} onClick={() => loadTopViewMovies('day')}>
+                  {t('Day')}
+                </li>
+                <li className={activeFilter === 'month' ? 'active' : ''} onClick={() => loadTopViewMovies('month')}>
+                  {t('Month')}
+                </li>
+                <li className={activeFilter === 'year' ? 'active' : ''} onClick={() => loadTopViewMovies('year')}>
+                  {t('Year')}
+                </li>
+              </ul>
+            </div>
+            <br />
+            <div className="filter__gallery">
+              {movies.map((movie) => (
+                  <div
+                      key={movie.id}
+                      className="product__sidebar__view__item set-bg mix day"
+                      style={{
+                        backgroundImage: `url(${movie.avatarMovie})`,
+                        backgroundPosition: 'top',
+                        backgroundSize: 'cover',
+                      }}
+                  >
+                    <div className="ep">
+                      {movie.currentChapters.length}/{movie.totalChapters}
+                    </div>
+                    <div className="view" style={{ bottom: '10px', right: '10px', top: 'unset' }}>
+                      <i className="fa fa-eye"></i> {movie.views.length}
+                    </div>
+                    <div className="rate">
+                      {movie.rates.length}
+                      <i className="fa fa-star" style={{ color: '#f3da35' }}></i>
+                    </div>
+
+                    <h5>
+                      <a href={`/movieDetail?idMovie=${movie.id}`}>{movie.name}</a>
+                    </h5>
+                  </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
-export default Topview
-;
+export default Topview;

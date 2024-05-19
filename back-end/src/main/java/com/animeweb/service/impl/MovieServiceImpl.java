@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -80,6 +82,48 @@ public class MovieServiceImpl implements MovieService {
             movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
         }
         return movieDTOList;
+    }
+
+    @Override
+    public List<MovieDTO> getTopViewDay() {
+        List<Movie> topMovies = movieRepository.findTopMoviesByDate();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        if (topMovies.size() > 5) {
+            topMovies = topMovies.subList(0, 5);
+            for (Movie m :topMovies
+            ) {
+                movieDTOS.add(MovieMapper.mapToMovieDTO(m));
+            }
+        }
+        return movieDTOS;
+    }
+
+    @Override
+    public List<MovieDTO> getTopViewMonth() {
+        List<Movie> topMovies = movieRepository.findTopMoviesMonth();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        if (topMovies.size() > 5) {
+            topMovies = topMovies.subList(0, 5);
+            for (Movie m :topMovies
+            ) {
+                movieDTOS.add(MovieMapper.mapToMovieDTO(m));
+            }
+        }
+        return movieDTOS;
+    }
+
+    @Override
+    public List<MovieDTO> getTopViewYear() {
+        List<Movie> topMovies = movieRepository.findTopMoviesYear();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        if (topMovies.size() > 5) {
+            topMovies = topMovies.subList(0, 5);
+            for (Movie m :topMovies
+            ) {
+                movieDTOS.add(MovieMapper.mapToMovieDTO(m));
+            }
+        }
+        return movieDTOS;
     }
 
 

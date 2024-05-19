@@ -851,7 +851,7 @@ ol {
 .product__sidebar__view .filter__controls li {
 	list-style: none;
 	font-size: 13px;
-	color: #b7b7b7;
+	color: black;
 	display: inline-block;
 	margin-right: 7px;
 	cursor: pointer;
@@ -859,6 +859,8 @@ ol {
 
 .product__sidebar__view .filter__controls li.active {
 	color: #ffffff;
+	background: #b21f2d;
+	border-radius: 2%;
 }
 
 .product__sidebar__view .filter__controls li:last-child {
@@ -3401,7 +3403,7 @@ table:not(#key-list-table) th {
 	padding-right: 30px; /* Đảm bảo không che phủ icon */
 }
 .product__sidebar {
-	background: #070720;
+	background: whitesmoke;
 	width: 100%;
 	padding: 20px 20px 3%;
 	border-radius: 5px;

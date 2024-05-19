@@ -4,33 +4,33 @@ import Swal from 'sweetalert2'; // Import thư viện sweetalert2
 
 const Login = () => {
     useEffect(() => {
-        const handleGoogleLogin = async () => {
-            // Chuyển hướng đến trang đăng nhập của Google
-            window.location.href = 'http://localhost:8080/oauth2/authorization/google';
-        };
-
-        // Gọi hàm handleGoogleLogin ngay khi component được render
-        handleGoogleLogin();
-
-        // Hàm callback sẽ được gọi sau khi quá trình đăng nhập hoàn thành và chuyển hướng về trang chủ
         const handleAfterLogin = async () => {
             try {
+                console.log('handleAfterLogin called');
                 // Gọi một phương thức khác sau khi đăng nhập thành công
-                const response = await axios.get('http://localhost:8080/login/google');
+                // const response = await axios.get('http://localhost:8080/login/google');
+                // // Thay 'localhost:8080' bằng địa chỉ backend của bạn
+
                 console.log('Response after login:', response.data);
 
-                // Hiển thị thông báo cho người dùng và chuyển hướng về trang chủ
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Payment Successful',
-                    text: `Success`,
-                    showConfirmButton: true,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'http://localhost:3000'; // Chuyển hướng về trang chủ
-                    }
-                });
+                // Kiểm tra nếu phản hồi thành công
+                if (response.status === 200) {
+                    // // Hiển thị thông báo cho người dùng
+                    // Swal.fire({
+                    //     icon: 'success',
+                    //     title: 'Login Successful',
+                    //     text: `Success`,
+                    //     showConfirmButton: true,
+                    //     confirmButtonText: 'OK'
+                    // }).then((result) => {
+                    //     if (result.isConfirmed) {
+                    //         // Chuyển hướng về trang chủ của frontend
+                    //         window.location.href = 'http://localhost:3000'; // Thay 'localhost:3000' bằng địa chỉ frontend của bạn
+                    //     }
+                    // });
+                } else {
+                    console.error('Error after login:', response.data);
+                }
             } catch (error) {
                 console.error('Error after login:', error);
             }
@@ -39,7 +39,6 @@ const Login = () => {
         // Đăng ký hàm callback để gọi sau khi đăng nhập thành công và chuyển hướng về trang chủ
         window.handleAfterLogin = handleAfterLogin;
     }, []); // useEffect chỉ chạy một lần sau khi component được render
-
-    return null; // Không có giao diện được render trong component này
 };
+
 export default Login;

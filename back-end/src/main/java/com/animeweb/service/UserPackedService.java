@@ -1,7 +1,7 @@
 package com.animeweb.service;
 
-import com.animeweb.dto.UserDTO;
+import com.animeweb.dto.SocialUser;
 
 public interface UserPackedService {
-    UserDTO saveUserPacked();
+    SocialUser saveUserPacked();
 }

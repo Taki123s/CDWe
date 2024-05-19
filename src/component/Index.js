@@ -96,11 +96,11 @@ function AnimePage() {
                                                      style={{backgroundImage: `url(${movie.avatarMovie})`}}>
                                                     <div
                                                         className="ep">{movie.currentChapters.length} / {movie.totalChapters}</div>
-                                                    <div className="view"><i className="fa fa-eye"></i> {movie.views}
+                                                    <div className="view"><i className="fa fa-eye"></i> {movie.views.length}
                                                     </div>
                                                 </div>
                                                 <div className="product__item__text">
-                                                    <h5><Link to="/">{movie.name}</Link></h5>
+                                                    <h5><Link to={`/movie/${movie.id}`}>{movie.name}</Link></h5>
                                                 </div>
                                             </div>
                                         </div>

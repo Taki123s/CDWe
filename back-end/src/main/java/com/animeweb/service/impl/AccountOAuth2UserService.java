@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @AllArgsConstructor
 public class AccountOAuth2UserService extends DefaultOAuth2UserService {
@@ -17,13 +16,13 @@ public class AccountOAuth2UserService extends DefaultOAuth2UserService {
     public User findByEmailGoogle(String email) {
         return userRepository.findByEmailGoogle(email);
     }
-    public User findByEmailFacebook(String email){
-       return userRepository.findByEmailFacebook(email);
+
+    public User findByEmailFacebook(String email) {
+        return userRepository.findByEmailFacebook(email);
     }
 
-    public SocialUser createAccount(SocialUser socialUser) {
-        User account = SocialUserMapper.mapToAccount(socialUser);
-        User addAccount = userRepository.save(account);
-        return SocialUserMapper.mapToDTO(addAccount);
+    public void createAccount(SocialUser socialUser) {
+        User account = SocialUserMapper.mapToEntity(socialUser);
+        userRepository.save(account);
     }
 }

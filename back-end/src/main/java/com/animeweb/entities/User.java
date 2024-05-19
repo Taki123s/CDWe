@@ -62,6 +62,22 @@ public class User {
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
     private List<Follow> follows;
 
-    public User(String accountName, String fullName, String password, String email, String image, String idOther, Date createAt, Integer type) {
+    public User(Role role, String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType, Date createdAt, Date updatedAt, Date deletedAt, Boolean status, String externalId, List<View> views, List<Rate> rates, List<Follow> follows) {
+        this.role = role;
+        this.userName = userName;
+        this.avatarPicture = avatarPicture;
+        this.password = password;
+        this.email = email;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.userType = userType;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+        this.status = status;
+        this.externalId = externalId;
+        this.views = views;
+        this.rates = rates;
+        this.follows = follows;
     }
 }

@@ -37,4 +37,6 @@ public class MovieDTO {
         this.totalChapters = totalChapters;
         this.currentChapters = currentChapters;
     }
+
+
 }

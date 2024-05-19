@@ -9,6 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +60,7 @@ public class MovieController {
         if (keyword != null && !keyword.isEmpty()) {
             movieList = movieService.searchMovie(keyword);
         } else {
-            movieList = movieService.getAllMovie();
+            movieList = movieService.findAll();
         }
 
         if (movieList != null && !movieList.isEmpty()) {
@@ -65,5 +69,22 @@ public class MovieController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/top-view")
+    public ResponseEntity<Map<String, Object>> getTopMovies(@RequestParam("type") String type) {
+        Map<String, Object> response = new HashMap<>();
+        if ("day".equals(type)) {
+            List<MovieDTO> topMovies = movieService.getTopViewDay();
+            response.put("topMovies", topMovies);
+        } else if ("month".equals(type)) {
+            List<MovieDTO> topMovies = movieService.getTopViewMonth();
+            response.put("topMovies", topMovies);
+        } else if ("year".equals(type)) {
+            List<MovieDTO> topMovies = movieService.getTopViewYear();
+            response.put("topMovies", topMovies);
+        }        // Thêm thông tin khác vào map nếu cần
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }

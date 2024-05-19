@@ -7,9 +7,12 @@ import {CategoriesPage} from "./page/Categorie";
 import {HeaderPage} from "./component/Header";
 import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
-import LoginGoogle from "./component/LoginGoogle"
-
+import LoginGoogle from "./component/LoginGoogleSuccess"
+import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
 import React from 'react';
+import Follow from "./page/Follow";
+import AdminPanel from "./admin/user/AdminPanel";
+
 function App() {
   return (
 
@@ -24,7 +27,7 @@ function App() {
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
           <Route path="/login-google" element={<LoginGoogle />} />
-              <Route path="/execute-payment" element={<ExecutePaymentComponent/>} />
+          <Route path="/execute-payment" element={<ExecutePaymentComponent/>} />
 
         <Route path="/movie/watching/:movieId/:chapterId" element={<MovieWatching />} />
       <Route path="/AdminPanel" element={<AdminPanel/>} />

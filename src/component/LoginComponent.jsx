@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import LoginGoogle from "./LoginGoogle";
+
 export const LoginComponent = () => {
   const [activeTab, setActiveTab] = useState("login");
   const handleTabClick = (tabName) => {
@@ -161,7 +161,7 @@ export const LoginComponent = () => {
           <div className="navbar-form-group relative mb-3 h-8 rounded bg-orange-600/90 text-center text-white text-[14px] font-light">
 
          <a  className="social-login"
-             href="/login-google">
+             href="http://localhost:8080/oauth2/authorization/google">
               <input
                 type="button"
                 className="google w-full h-full rounded cursor-pointer"

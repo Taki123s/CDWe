@@ -25,7 +25,12 @@ public class MovieMapper {
                 movie.getRates(),
                 movie.getFollows());
     }
+
+
     public static MovieDTO mapToMovieWatching(Movie movie){
+        return new MovieDTO(movie.getId(),movie.getName(),movie.getTotalChapters(),movie.getCurrentChapters());
+    }
+    public static MovieDTO mapToMovieTopview(Movie movie){
         return new MovieDTO(movie.getId(),movie.getName(),movie.getTotalChapters(),movie.getCurrentChapters());
     }
     public static Movie mapToMovie(MovieDTO movieDTO){

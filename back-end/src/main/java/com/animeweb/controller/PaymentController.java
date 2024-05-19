@@ -62,7 +62,8 @@ public class PaymentController {
 //                user.setCaptureId(Long.parseLong(captureId));
 //                userRepository.save(user);
 //            }
-            return ResponseEntity.ok("http://localhost:3000/thank-you");
+            System.out.println(captureId);
+            return ResponseEntity.ok("success");
         } catch (PayPalRESTException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

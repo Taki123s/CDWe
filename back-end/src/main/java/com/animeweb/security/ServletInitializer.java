@@ -1,4 +1,4 @@
-package com.animeweb;
+package com.animeweb.security;
 
 import com.animeweb.DemoApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

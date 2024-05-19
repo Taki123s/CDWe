@@ -6,6 +6,7 @@ import com.animeweb.mapper.GenreMapper;
 import com.animeweb.repository.GenreRepository;
 import com.animeweb.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

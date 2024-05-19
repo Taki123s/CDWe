@@ -1,8 +1,10 @@
 package com.animeweb.dto;
 
-import com.animeweb.entities.User;
+
+import com.animeweb.entities.Permission;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,6 +13,7 @@ import java.util.List;
 
 public class RoleDTO {
     private Long id ;
+    private String name;
     private String description;
-    private List<User> users;
+    private List<Permission> permissions = new ArrayList<>();
 }

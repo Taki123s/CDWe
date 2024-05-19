@@ -1,10 +1,8 @@
 package com.animeweb.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 
 @NoArgsConstructor
@@ -21,8 +19,4 @@ public class Genre {
     private String description;
     @Column(name = "status",columnDefinition = "tinyint default 1")
     private Boolean status;
-    @ManyToMany(mappedBy = "genres")
-    @JsonBackReference
-    private List<Movie> movieList;
-
     }

@@ -7,8 +7,7 @@ public class GenreMapper {
    public static GenreDTO mapToGenreDto(Genre genre){
        return new GenreDTO(genre.getId(),
                genre.getDescription(),
-               genre.getStatus(),
-               genre.getMovieList());
+               genre.getStatus());
    }
    public static GenreDTO mapToTitleGenreDto(Genre genre){
        return new GenreDTO(genre.getId(),genre.getDescription());

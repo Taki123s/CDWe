@@ -2,7 +2,6 @@ package com.animeweb.controller;
 
 
 import com.animeweb.dto.MovieDTO;
-import com.animeweb.entities.Movie;
 import com.animeweb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,10 @@ public class MovieController {
         MovieDTO savedMovie = movieService.createMovie(movieDTO);
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
-
+    @GetMapping
+    public ResponseEntity<List<MovieDTO>> getMovie(){
+        return ResponseEntity.ok(movieService.getAllMovie());
+    }
     @GetMapping("/index")
     public ResponseEntity<Map<String, Object>> getMovies(
             @RequestParam(defaultValue = "0") int page,

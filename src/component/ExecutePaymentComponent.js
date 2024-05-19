@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom'; // Import useLocation từ react-router-dom
-
+import Swal from 'sweetalert2';
 const ExecutePaymentComponent = () => {
     const location = useLocation(); // Sử dụng useLocation để lấy location
 

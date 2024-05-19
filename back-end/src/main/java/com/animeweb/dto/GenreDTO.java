@@ -12,7 +12,6 @@ public class GenreDTO {
     private Long id;
     private String description;
     private Boolean status;
-    private List<Movie> movieList;
 
     public GenreDTO(Long id, String description) {
         this.id = id;

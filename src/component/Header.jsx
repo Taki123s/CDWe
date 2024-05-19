@@ -1,29 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, someStateIndicatingDOMReady } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { login, logout } from "../service/AuthServices";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
+import axios from "axios";
 import "./bootstrap.min.css";
 import "./owl.carousel.min.css";
 import "../css/ds/style.css";
 import "../css/home.css";
 import logo from "../img/logo.png";
-import { LoginComponent } from "./LoginComponent";
 import { getGenreList } from "../service/CategoryServices";
-
 export const HeaderPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/movies/search?term=${searchTerm}`);
+        const response = await axios.get(
+          `http://localhost:8080/api/movies/search?term=${searchTerm}`
+        );
         console.log(response.data);
         setSearchResults(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    if (searchTerm !== '') {
+    if (searchTerm !== "") {
       fetchData();
     } else {
       setSearchResults([]);
@@ -32,8 +37,16 @@ export const HeaderPage = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genreList, setGenreList] = useState([]);
+
+  const [loggedUser, setLoggedUser] = useState(null);
+  const [activeTab, setActiveTab] = useState("login");
+  const [token, setToken] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [regiserUser,setRegisterUser] = useState(null)
+
   const handleMouseEnter = () => {
-    // setDropdownOpen(true);
+    setDropdownOpen(true);
   };
   useEffect(() => {
     getGenreList()
@@ -48,25 +61,17 @@ export const HeaderPage = () => {
   const handleMouseLeave = () => {
     setDropdownOpen(false);
   };
+
   useEffect(() => {
     const navbarAvatar = document.getElementById("navbar-avatar");
     const navbarRight = document.getElementById("navbar-right");
-    const navbarLeft = document.getElementById("navbar-left");
     const close = document.getElementById("navbar-close");
-    const navbarRes = document.getElementById("navbar-Res");
-
-    const showNavbar = () => {
-      navbarLeft.classList.toggle("-left-[300px]");
-    };
     const toggleNavbar = () => {
       navbarRight.classList.toggle("-right-[300px]");
     };
 
     if (navbarAvatar) {
       navbarAvatar.addEventListener("click", toggleNavbar);
-    }
-    if (navbarRes) {
-      navbarRes.addEventListener("click", showNavbar);
     }
 
     if (close) {
@@ -79,6 +84,69 @@ export const HeaderPage = () => {
       if (close) {
         close.removeEventListener("click", toggleNavbar);
       }
+    };
+  }, [loggedUser]);
+
+  const handleLogout = (event) => {
+    const logoutToken = { token: token };
+    logout(logoutToken)
+      .then((response) => {
+        console.log("response :" + response);
+        Cookies.remove("jwt_token");
+        setLoggedUser(null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const handleLogin = (event) => {
+    const user = { userName: username, password: password };
+    login(user)
+      .then((response) => {
+        const token = response.data.accessToken;
+        setToken(token);
+        const decodedToken = jwtDecode(token);
+        const expires = new Date(decodedToken.exp * 1000);
+        Cookies.set("jwt_token", token, {
+          expires: expires,
+        });
+        decodeToken();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const decodeToken = () => {
+    const token = Cookies.get("jwt_token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setToken(token);
+      setLoggedUser(decodedToken);
+    }
+  };
+  useEffect(() => {
+    getGenreList()
+      .then((response) => {
+        setGenreList(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    decodeToken();
+  }, []);
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName);
+  };
+  useEffect(() => {
+    const navbarLeft = document.getElementById("navbar-left");
+    const navbarRes = document.getElementById("navbar-Res");
+    const showNavbar = () => {
+      navbarLeft.classList.toggle("-left-[300px]");
+    };
+    if (navbarRes) {
+      navbarRes.addEventListener("click", showNavbar);
+    }
+    return () => {
       if (navbarRes) {
         navbarRes.removeEventListener("click", showNavbar);
       }
@@ -143,7 +211,6 @@ export const HeaderPage = () => {
                     name="search"
                     autoComplete="off"
                     onChange={(e) => setSearchTerm(e.target.value)}
-
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -164,24 +231,31 @@ export const HeaderPage = () => {
                   className="search-result  pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
                   id="search-results"
                 >
-
-
                   <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
                     {searchResults.map((result) => (
-
-                      <li className="result-input" key={result.id} >
+                      <li className="result-input" key={result.id}>
                         <a href={`/movie/${result.id}`}>
-                          <img className="image_result" src={result.avatarMovie} />{result.name}
+                          <img
+                            className="image_result"
+                            src={result.avatarMovie}
+                          />
+                          {result.name}
                         </a>
                       </li>
-
                     ))}
-                    {
-                      searchResults.length !== 0 ? <a className="view-all-result" style={{ display: "block" }}>Xem tất cả</a> :
-                        <a className="view-all-result" style={{ display: "none" }} />
-                    }
-
-
+                    {searchResults.length !== 0 ? (
+                      <a
+                        className="view-all-result"
+                        style={{ display: "block" }}
+                      >
+                        Xem tất cả
+                      </a>
+                    ) : (
+                      <a
+                        className="view-all-result"
+                        style={{ display: "none" }}
+                      />
+                    )}
                   </div>
                   <div className="result-noitem  font-extralight text-center"></div>
                   <div className="loading animate-spin "></div>
@@ -239,16 +313,20 @@ export const HeaderPage = () => {
                 {dropdownOpen && (
                   <div
                     className="fixed bg-white shadow shadow-md mt-1 rounded-md py-1 z-10"
-                   onMouseLeave={handleMouseLeave}
+                    onMouseLeave={handleMouseLeave}
                   >
                     <ul className="categories-dropdown">
-                      {genreList?.map((genre) => {
-                        return (
-                          <li className="px-4 py-2 cursor-pointer categories-dropdown-item">
-                            {genre.description}
-                          </li>
-                        );
-                      })}
+                      {Array.isArray(genreList) &&
+                        genreList?.map((genre) => {
+                          return (
+                            <li
+                              key={genre.id}
+                              className="px-4 py-2 cursor-pointer categories-dropdown-item"
+                            >
+                              {genre.description}
+                            </li>
+                          );
+                        })}
                     </ul>
                   </div>
                 )}
@@ -279,7 +357,7 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                   Service Pack
+                    Service Pack
                   </span>
                 </a>
               </div>
@@ -311,28 +389,29 @@ export const HeaderPage = () => {
               </div>
             </div>
           </div>
-          <div className="navbar-user relative shrink-0 h-[40px] s1024:w-[145px] s1280:w-[294px] s1366:w-[320px] ml-auto flex justify-end gap-2">
-            <div
-              className="overflow-hidden w-[40px] h-[40px] p-[10px] rounded-full bg-gray-100 dark:bg-slate-700 user-theme hidden s360:block"
-              id="user-theme"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-full h-full fill-slate-800 dark:fill-none dark:stroke-white"
+
+          {loggedUser != null && (
+            <div className="navbar-user relative shrink-0 h-[40px] s1024:w-[145px] s1280:w-[294px] s1366:w-[320px] ml-auto flex justify-end gap-2">
+              <div
+                className="overflow-hidden w-[40px] h-[40px] p-[10px] rounded-full bg-gray-100 dark:bg-slate-700 user-theme hidden s360:block"
+                id="user-theme"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
-                />
-              </svg>
-            </div>
-            <div className="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
-              <a href="/page/chinh-sach-rieng-tu">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-full h-full fill-slate-800 dark:fill-none dark:stroke-white"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                  ></path>
+                </svg>
+              </div>
+              <div className="user-notification relative w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center hidden s412:flex s1024:hidden s1280:flex">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -344,32 +423,803 @@ export const HeaderPage = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                    d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+                  ></path>
+                </svg>
+                <span className="absolute top-0 right-0 bg-red-600 rounded-full px-1 text-white text-[10px]  hidden ">
+                  0
+                </span>
+              </div>
+              <div
+                className="navbar-avatar w-[40px] h-[40px] rounded-full overflow-hidden"
+                id="navbar-avatar"
+              >
+                <img className="w-full h-full" src={loggedUser?.avt} />
+              </div>
+            </div>
+          )}
+
+          {loggedUser == null && (
+            <div className="navbar-user relative shrink-0 h-[40px] s1024:w-[145px] s1280:w-[294px] s1366:w-[320px] ml-auto flex justify-end gap-2">
+              <div
+                className="overflow-hidden w-[40px] h-[40px] p-[10px] rounded-full bg-gray-100 dark:bg-slate-700 user-theme hidden s360:block"
+                id="user-theme"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-full h-full fill-slate-800 dark:fill-none dark:stroke-white"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
                   />
                 </svg>
-              </a>
-            </div>
-            <div
-              className="navbar-avatar overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center"
-              id="navbar-avatar"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
+              </div>
+              <div className="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+                <a href="/page/chinh-sach-rieng-tu">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                    />
+                  </svg>
+                </a>
+              </div>
+              <div
+                className="navbar-avatar overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center"
+                id="navbar-avatar"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                  />
+                </svg>
+              </div>
             </div>
-          </div>
-          <LoginComponent />
+          )}
+          {loggedUser == null && (
+            <div
+              className="navbar-right fixed overflow-hidden h-full shadow w-[300px] top-0 bottom-0 bg-white dark:bg-slate-800/90 dark:shadow-slate-700 z-50 transition-all duration-300 right-0 -right-[300px]"
+              id="navbar-right"
+            >
+              <div
+                className="navbar-close absolute top-2 left-2 w-8 h-8 opacity-60"
+                id="navbar-close"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                </svg>
+              </div>
+              <div className="navbar-user navbar-user-header px-3 pt-[55px] bg-white ">
+                <div className="user-avatar big-avatar absolute top-3 right-3 w-20 h-20 flex items-center justify-center bg-gray-600 text-white rounded-full overflow-hidden">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-10 h-10 inline-block self-center"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                    ></path>
+                  </svg>
+                </div>
+                <div className="navbar-user-welcome mb-4">
+                  <span className="w-[165px] line-clamp-1 text-[14px]">
+                    Chào khách!
+                  </span>
+                </div>
+                <div
+                  className="navbar-user-tab flex gap-4 h-6 mb-2 uppercase text-[13px] font-medium"
+                  id="chooseTab"
+                >
+                  <div
+                    className={`navbar-user-tab-item navbar-tab-login ${
+                      activeTab === "login" ? "activated border-red-500" : ""
+                    } h-full cursor-pointer border-b-2`}
+                    data-tab="login"
+                    onClick={() => handleTabClick("login")}
+                  >
+                    Đăng nhập
+                  </div>
+                  <div
+                    className={`navbar-user-tab-item navbar-tab-signup ${
+                      activeTab === "signup" ? "activated border-red-500" : ""
+                    } h-full cursor-pointer border-b-2`}
+                    data-tab="signup"
+                    onClick={() => handleTabClick("signup")}
+                  >
+                    Đăng ký
+                  </div>
+                </div>
+              </div>
+              {activeTab === "login" && (
+                <form>
+                  <div
+                    className="navbar-user-body tab-login px-3 ps-container ps-theme-default"
+                    data-ps-id="1a9be0da-8957-4b2d-c90f-935a0efd2506"
+                    style={{ maxHeight: "842px" }}
+                  >
+                    <div className="navbar-form-group relative mb-3">
+                      <label className="mb-1 block text-[14px]">
+                        Tên đăng nhập
+                      </label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6 rounded"
+                        type="text"
+                        name="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                        ></path>
+                      </svg>
+                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
+                    </div>
+                    <div className="navbar-form-group relative mb-3">
+                      <label className="mb-1 block text-[14px]">Mật khẩu</label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
+                        type="password"
+                        name="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                        ></path>
+                      </svg>
+                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
+                    </div>
+                    <div className="navbar-form-group relative mb-3 flex justify-between text-[14px] font-light">
+                      <label className="navbar-form-checkbox flex items-center gap-2">
+                        <input
+                          className="rounded text-teal-600 border-gray-400 focus:ring-0 focus:ring-offset-0 focus:border-gray-400  dark:border-teal-600 dark:focus:border-teal-500 dark:focus:ring-0 dark:focus:ring-offset-0 "
+                          type="checkbox"
+                          name="remember"
+                          defaultChecked
+                        />
+                        <span>Ghi nhớ</span>
+                      </label>
+                      <a href="/quen-mat-khau" className="forgot-password">
+                        Quên mật khẩu
+                      </a>
+                    </div>
+                    <div className="navbar-form-group relative mb-3 hidden">
+                      <ul id="form-login-warning"></ul>
+                    </div>
+                    <div className="navbar-form-group relative mb-3 h-8 rounded bg-red-600/90 text-center text-white text-[14px] font-light submit">
+                      <input
+                        className="vuighe w-full h-full rounded cursor-pointer"
+                        id="login"
+                        type="button"
+                        name="submit"
+                        value="Đăng nhập"
+                        onClick={handleLogin}
+                      />
+                    </div>
+                    <hr className="mb-3 border-gray-300 dark:border-slate-600" />
+                    <div className="navbar-form-group relative mb-3 h-8 rounded bg-orange-600/90 text-center text-white text-[14px] font-light">
+                      <a
+                        className="social-login"
+                        href="https://vuighe3.com/dang-nhap-google"
+                      >
+                        <input
+                          type="button"
+                          className="google w-full h-full rounded cursor-pointer"
+                          value="Đăng nhập với Google"
+                        />
+                      </a>
+                    </div>
+                    <div className="navbar-form-group relative mb-3 h-8 rounded bg-blue-600/90 text-center text-white text-[14px] font-light">
+                      <a
+                        className="social-login"
+                        href="https://vuighe3.com/dang-nhap-facebook"
+                      >
+                        <input
+                          type="button"
+                          className="facebook w-full h-full rounded cursor-pointer"
+                          value="Đăng nhập với Facebook"
+                        />
+                      </a>
+                    </div>
+                    <div
+                      className="ps-scrollbar-x-rail"
+                      style={{ left: "0px", bottom: "0px" }}
+                    >
+                      <div
+                        className="ps-scrollbar-x"
+                        tabIndex="0"
+                        style={{ left: "0px", width: " 0px" }}
+                      ></div>
+                    </div>
+                    <div
+                      className="ps-scrollbar-y-rail"
+                      style={{ top: "0px", right: "0px" }}
+                    >
+                      <div
+                        className="ps-scrollbar-y"
+                        tabIndex="0"
+                        style={{ top: "0px", height: "0px" }}
+                      ></div>
+                    </div>
+                  </div>
+                </form>
+              )}
+              {activeTab === "signup" && (
+                <form>
+                  <div
+                    className="navbar-user-body tab-signup px-3 ps-container ps-theme-default"
+                    data-ps-id="02318dc8-08c6-d9ba-7736-072f7f3ee729"
+                    style={{ maxHeight: "842px" }}
+                  >
+                    <div className="navbar-form-group relative mb-3">
+                      <label className="mb-1 block text-[14px]">
+                        Tên đăng nhập
+                      </label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
+                        type="text"
+                        name="username"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                        ></path>
+                      </svg>
+                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
+                    </div>
+                    <div className="navbar-form-group relative mb-3">
+                      <label className="mb-1 block text-[14px]">Mật khẩu</label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
+                        type="password"
+                        name="password"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                        ></path>
+                      </svg>
+                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
+                    </div>
+                    <div className="navbar-form-group relative mb-3">
+                      <label className="mb-1 block text-[14px]">
+                        Nhập lại mật khẩu
+                      </label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
+                        type="password"
+                        name="password_confirm"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                        ></path>
+                      </svg>
+                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
+                    </div>
+                    <div className="navbar-form-group relative mb-3">
+                      <label className="mb-1 block text-[14px]">
+                        Tên hiển thị
+                      </label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
+                        type="text"
+                        name="full_name"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
+                        ></path>
+                      </svg>
+                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
+                    </div>
+                    <div className="navbar-form-group relative mb-3">
+                      <label className="mb-1 block text-[14px]">Email</label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
+                        type="text"
+                        name="email"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"
+                        ></path>
+                      </svg>
+                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
+                    </div>
+                    <div className="navbar-form-group relative mb-3">
+                      <label className="mb-1 block text-[14px]">Phone</label>
+                      <input
+                        className="text-[14px] font-extralight w-full h-8 pl-6 rounded"
+                        type="number"
+                        name="phone"
+                      />
+                      <FontAwesomeIcon
+                        icon={faPhone}
+                        className="w-4 h-4 absolute left-1 bottom-2"
+                      />
+                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
+                    </div>
+                    <div className="navbar-form-group relative hidden mb-3">
+                      <ul id="form-signup-warning"></ul>
+                    </div>
+                    <div className="navbar-form-group relative mb-3 h-8 rounded bg-red-600/90 text-center text-white text-[14px] font-light submit">
+                      <input
+                        className="vuighe w-full h-full rounded"
+                        id="signup"
+                        type="button"
+                        name="submit"
+                        value="Đăng ký"
+                      />
+                    </div>
+                    <div
+                      className="ps-scrollbar-x-rail"
+                      style={{ left: "0px", bottom: "0px" }}
+                    >
+                      <div
+                        className="ps-scrollbar-x"
+                        tabIndex="0"
+                        style={{ left: "0px", width: "0px" }}
+                      ></div>
+                    </div>
+                    <div
+                      className="ps-scrollbar-y-rail"
+                      style={{ top: "0px", right: "0px" }}
+                    >
+                      <div
+                        className="ps-scrollbar-y"
+                        tabIndex="0"
+                        style={{ top: "0px", height: "0px" }}
+                      ></div>
+                    </div>
+                  </div>
+                </form>
+              )}
+              <div className="loading hidden"></div>
+
+              <div className="loading animate-spin hidden"></div>
+            </div>
+          )}
+
+          {loggedUser != null && (
+            <div
+              id="navbar-right"
+              className="navbar-right fixed overflow-hidden h-full shadow w-[300px] top-0 bottom-0 bg-white dark:bg-slate-800/90 dark:shadow-slate-700 z-50 transition-all duration-300 right-0"
+            >
+              <div
+                className="navbar-close absolute top-2 left-2 w-8 h-8 opacity-60"
+                id="navbar-close"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                </svg>
+              </div>
+              <div className="navbar-user navbar-user-header px-3 pt-[55px] bg-white dark:bg-transparent">
+                <div className="group/avatar user-avatar big-avatar absolute top-3 right-3 w-20 h-20">
+                  <img
+                    className="self-avatar w-full h-full rounded-full"
+                    src={loggedUser.avt}
+                  />
+                  <div className="user-avatar-update absolute w-8 h-8 top-6 left-6 rounded-lg bg-black/50 text-white opacity-50 flex items-center text-center hidden group-hover/avatar:block">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-5 h-5 inline-block"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    className="user-avatar-file absolute w-8 h-8 top-6 left-6 z-10 opacity-0"
+                    id="avatar-upload"
+                    type="file"
+                    name="avatar_file"
+                    accept="image/png,image/jpeg"
+                  />
+                </div>
+                <div className="navbar-user-welcome mb-4">
+                  <span className="w-[165px] line-clamp-1 text-[14px]">
+                    Chào {loggedUser?.fullName}!
+                  </span>
+                  <input id="user-id" type="hidden" value="995002" />
+                  <input id="user-role" type="hidden" value="10" />
+                  <input
+                    id="user-date"
+                    type="hidden"
+                    value="2024-05-17 13:35:24"
+                  />
+                  <input
+                    id="user-last-login"
+                    type="hidden"
+                    value="2024-05-17 13:35:24"
+                  />
+                </div>
+                <div className="navbar-user-tab flex gap-4 h-6 mb-2 uppercase text-[13px] font-medium border-b border-gray-200 dark:border-slate-700">
+                  <div
+                    className="navbar-user-tab-item navbar-tab-information activated border-red-500 h-full cursor-pointer border-b-2"
+                    data-tab="information"
+                  >
+                    Thông tin
+                  </div>
+                </div>
+              </div>
+              <div
+                className="navbar-user-body tab-information px-3 ps-container ps-theme-default"
+                data-ps-id="a2c9df2c-3f6a-f0a5-5905-8233369b1549"
+                style={{ maxHeight: "842px" }}
+              >
+                <div className="navbar-user-content font-light text-[14px] s1024:text-[15px]">
+                  <div className="user-item">
+                    <a
+                      className="block flex gap-4 items-center h-8"
+                      href="/sua-thong-tin"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 shrink-0"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                        ></path>
+                      </svg>
+                      <span>Sửa thông tin</span>
+                    </a>
+                  </div>
+                  <div className="user-item">
+                    <a
+                      className="block flex gap-4 items-center h-8"
+                      href="/doi-mat-khau"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 shrink-0"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                        ></path>
+                      </svg>
+                      <span>Đổi mật khẩu</span>
+                    </a>
+                  </div>
+                  <hr className="my-2 border-gray-200 dark:border-slate-700" />
+                  <div className="user-item">
+                    <a
+                      className="block flex gap-4 items-center h-8"
+                      href="/phim-da-xem"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 shrink-0"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                      <span>Phim đã xem</span>
+                    </a>
+                  </div>
+                  <div className="user-item">
+                    <a
+                      className="block flex gap-4 items-center h-8"
+                      href="/phim-da-thich"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 shrink-0"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                        ></path>
+                      </svg>
+                      <span>Phim đã thích</span>
+                    </a>
+                  </div>
+                  <div className="user-item">
+                    <a
+                      className="block flex gap-4 items-center h-8"
+                      href="/phim-dang-theo-doi"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 shrink-0"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
+                        ></path>
+                      </svg>
+                      <span>Phim đang theo dõi</span>
+                    </a>
+                  </div>
+                  <hr className="my-2 border-gray-200 dark:border-slate-700" />
+
+                  <div className="user-item">
+                    <a
+                      className="block flex gap-4 items-center h-8"
+                      href="/shop/don-hang"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 shrink-0"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                        ></path>
+                      </svg>
+                      <span>Đơn hàng đã mua</span>
+                    </a>
+                  </div>
+
+                  <div className="user-item">
+                    <a
+                      className="block flex gap-4 items-center h-8"
+                      href="https://vuighe3.com/lich-su-giao-dich"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 shrink-0"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"
+                        ></path>
+                      </svg>
+                      <span>Lịch sử giao dịch</span>
+                    </a>
+                  </div>
+
+                  <hr className="my-2 border-gray-200 dark:border-slate-700" />
+                  <div
+                    className="logout user-item flex gap-4 items-center h-[30px] cursor-pointer"
+                    id="logout"
+                    onClick={handleLogout}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-4 h-4 shrink-0"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"
+                      ></path>
+                    </svg>
+                    <span>Đăng xuất</span>
+                  </div>
+                </div>
+                <div
+                  className="ps-scrollbar-x-rail"
+                  style={{ left: "0px", bottom: "0px" }}
+                >
+                  <div
+                    className="ps-scrollbar-x"
+                    tabIndex="0"
+                    style={{ left: "0px", width: "0px" }}
+                  ></div>
+                </div>
+                <div
+                  className="ps-scrollbar-y-rail"
+                  style={{ top: "0px", right: "0px" }}
+                >
+                  <div
+                    className="ps-scrollbar-y"
+                    tabIndex="0"
+                    style={{ top: "0px", height: "0px" }}
+                  ></div>
+                </div>
+              </div>
+
+              <div
+                className="navbar-user-body tab-notification px-3 ps-container ps-theme-default hidden"
+                data-ps-id="32ac0d5a-852c-c8cf-3d67-95e2563c59f9"
+                style={{ maxHeight: "842px" }}
+              >
+                <div className="notification-list pt-3"></div>
+                <div className="notification-none font-extralight text-center leading-10 text-[14px] s1024:text-[15px]">
+                  Không có thông báo
+                </div>
+                <div className="flex gap-2 s1024:justify-between mb-5">
+                  <div className="notification-more hidden bg-red-600/80 text-white px-3 py-1 text-[12px] font-extralight">
+                    xem thêm
+                  </div>
+                  <div className="notification-clear hidden bg-gray-900/80 text-white px-3 py-1 text-[12px] font-extralight opacity-50 hover:opacity-100 rounded-full">
+                    xóa hết
+                  </div>
+                </div>
+
+                <div
+                  className="ps-scrollbar-x-rail"
+                  style={{ left: "0px", bottom: "0px" }}
+                >
+                  <div
+                    className="ps-scrollbar-x"
+                    tabIndex="0"
+                    style={{ left: "0px", width: "0px" }}
+                  ></div>
+                </div>
+                <div
+                  className="ps-scrollbar-y-rail"
+                  style={{ top: "0px", right: "0px" }}
+                >
+                  <div
+                    className="ps-scrollbar-y"
+                    tabIndex="0"
+                    style={{ top: "0px", height: "0px" }}
+                  ></div>
+                </div>
+              </div>
+
+              <div className="loading animate-spin hidden"></div>
+              <div className="loading animate-spin hidden"></div>
+            </div>
+          )}
         </div>
       </nav>
     </header>

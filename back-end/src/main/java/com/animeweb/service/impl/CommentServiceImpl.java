@@ -34,4 +34,10 @@ public class CommentServiceImpl implements CommentService {
         }
         return commentDTOList;
     }
+
+    @Override
+    public CommentDTO createComment(Comment comment) {
+
+        return null;
+    }
 }

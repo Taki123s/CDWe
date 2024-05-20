@@ -56,7 +56,7 @@ public class MovieController {
         if (keyword != null && !keyword.isEmpty()) {
             movieList = movieService.searchMovie(keyword);
         } else {
-            movieList = movieService.getAllMovie();
+            movieList = movieService.searchMovie(keyword);
         }
 
         if (movieList != null && !movieList.isEmpty()) {

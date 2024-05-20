@@ -1,12 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation, Trans } from "react-i18next";
 
+import {login} from "../service/AuthServices"
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginGoogle from "./LoginGoogle";
 export const LoginComponent = () => {
   const { t, i18n } = useTranslation();
 
   const [activeTab, setActiveTab] = useState("login");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loggedUser, setLoggedUser] = useState(null);
+  const handleLogin = (event) => {
+      const user = {"userName":username,"password":password}
+      login(user).then((response)=>{
+        const token = response.data.accessToken;
+        const decodedToken = jwtDecode(token);
+        const expires = new Date(decodedToken.exp * 1000);
+        Cookies.set('jwt_token', token, {
+          expires: expires,
+          sameSite: 'Strict'
+        });
+        decodeToken();
+      }).catch(error=>{
+        console.log(error)
+        })
+  };
+    const decodeToken = ()=>{
+    const token = Cookies.get('jwt_token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log("decode :", JSON.stringify(decodedToken, null, 2));
+      setLoggedUser(decodedToken);
+    }
+  }
+  useEffect(() => {
+    decodeToken();
+  }, []);
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
@@ -88,14 +120,14 @@ export const LoginComponent = () => {
             style={{ maxHeight: "842px" }}
           >
             <div className="navbar-form-group relative mb-3">
-              <label className="mb-1 block text-[14px]">
-                {" "}
-                <Trans i18nKey={"login.username"}>{t("login.username")}</Trans>
-              </label>
+              <label className="mb-1 block text-[14px]">Tên đăng nhập</label>
               <input
                 className="text-[14px] font-extralight w-full h-8 pl-6 rounded"
                 type="text"
                 name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -114,14 +146,14 @@ export const LoginComponent = () => {
               <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
             </div>
             <div className="navbar-form-group relative mb-3">
-              <label className="mb-1 block text-[14px]">
-                {" "}
-                <Trans i18nKey={"login.password"}>{t("login.password")}</Trans>
-              </label>
+              <label className="mb-1 block text-[14px]">Mật khẩu</label>
               <input
                 className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                 type="password"
                 name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -147,17 +179,10 @@ export const LoginComponent = () => {
                   name="remember"
                   defaultChecked
                 />
-                <span>
-                  {" "}
-                  <Trans i18nKey={"login.remember"}>
-                    {t("login.remember")}
-                  </Trans>
-                </span>
+                <span>Ghi nhớ</span>
               </label>
               <a href="/quen-mat-khau" className="forgot-password">
-                <Trans i18nKey={"content.forgotpassword"}>
-                  {t("content.forgotpassword")}:
-                </Trans>
+                Quên mật khẩu
               </a>
             </div>
             <div className="navbar-form-group relative mb-3 hidden">
@@ -169,34 +194,35 @@ export const LoginComponent = () => {
                 id="login"
                 type="button"
                 name="submit"
-                value={t("menu.login")}
+                value="Đăng nhập"
+                onClick={handleLogin}
               />
             </div>
             <hr className="mb-3 border-gray-300 dark:border-slate-600" />
             <div className="navbar-form-group relative mb-3 h-8 rounded bg-orange-600/90 text-center text-white text-[14px] font-light">
-              <a
-                className="social-login"
-                href="https://vuighe3.com/dang-nhap-google"
-              >
-                <input
-                  type="button"
-                  className="google w-full h-full rounded cursor-pointer"
-                  value={t("content.logingg")}
-                />
-              </a>
-            </div>
-            <div className="navbar-form-group relative mb-3 h-8 rounded bg-blue-600/90 text-center text-white text-[14px] font-light">
-              <a
-                className="social-login"
-                href="https://vuighe3.com/dang-nhap-facebook"
-              >
-                <input
-                  type="button"
-                  className="facebook w-full h-full rounded cursor-pointer"
-                  value={t("content.fb")}
-                />
-              </a>
-            </div>
+
+<a  className="social-login"
+    href="/login-google">
+     <input
+       type="button"
+       className="google w-full h-full rounded cursor-pointer"
+       value="Đăng nhập với Google"
+     />
+   </a>
+ </div>
+
+ <div className="navbar-form-group relative mb-3 h-8 rounded bg-blue-600/90 text-center text-white text-[14px] font-light">
+   <a
+     className="social-login"
+     href="http://localhost:8080/login/facebook"
+   >
+     <input
+       type="button"
+       className="facebook w-full h-full rounded cursor-pointer"
+       value="Đăng nhập với Facebook"
+     />
+   </a>
+ </div>
             <div
               className="ps-scrollbar-x-rail"
               style={{ left: "0px", bottom: "0px" }}
@@ -228,7 +254,7 @@ export const LoginComponent = () => {
             style={{ maxHeight: "842px" }}
           >
             <div className="navbar-form-group relative mb-3">
-              <label className="mb-1 block text-[14px]">{t("login.username")}</label>
+              <label className="mb-1 block text-[14px]">Tên đăng nhập</label>
               <input
                 className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                 type="text"
@@ -251,7 +277,7 @@ export const LoginComponent = () => {
               <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
             </div>
             <div className="navbar-form-group relative mb-3">
-              <label className="mb-1 block text-[14px]">{t("login.password")}</label>
+              <label className="mb-1 block text-[14px]">Mật khẩu</label>
               <input
                 className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                 type="password"

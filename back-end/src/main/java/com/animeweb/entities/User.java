@@ -1,10 +1,14 @@
 package com.animeweb.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -16,10 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id",columnDefinition = "bigint default 1")
-    @JsonBackReference
-    private Role role;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Role> roles = new ArrayList<>();
     @Column(name = "user_name", length = 500)
     private String userName;
 
@@ -62,6 +64,35 @@ public class User {
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
     private List<Follow> follows;
 
+    public User(Long id, String userName, String avatarPicture, String email, String fullName, String phone, Integer userType, Boolean status, String externalId) {
+        this.id = id;
+        this.userName = userName;
+        this.avatarPicture = avatarPicture;
+        this.email = email;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.userType = userType;
+        this.status = status;
+        this.externalId = externalId;
+    }
+
+    public User(String userName, String avatarPicture, String email, String fullName, String phone, Integer userType, String externalId) {
+        this.userName = userName;
+        this.avatarPicture = avatarPicture;
+        this.email = email;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.userType = userType;
+        this.externalId = externalId;
+    }
+    public List<Role> getRoleDetails() {
+        return this.roles.stream()
+                .map(role -> new Role(role.getId(), role.getName()))
+                .collect(Collectors.toList());
+    }
+
+
     public User(String accountName, String fullName, String password, String email, String image, String idOther, Date createAt, Integer type) {
     }
+
 }

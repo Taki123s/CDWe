@@ -9,7 +9,9 @@ import {HeaderPage} from "./component/Header";
 import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
 import LoginGoogle from "./component/LoginGoogle"
-
+import AdminPanel from "./admin/user/AdminPanel"
+import Follow from "./page/Follow"
+import ExecutePaymentComponent from "./component/ExecutePaymentComponent"
 import React from 'react';
 import AdminPanel from "./admin/user/AdminPanel"
 import { translate, Trans } from 'react-i18next';

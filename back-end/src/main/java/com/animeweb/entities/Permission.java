@@ -1,16 +1,16 @@
 package com.animeweb.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "permissions")
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -19,10 +19,4 @@ public class Role {
     private String name;
     @Column(name="description")
     private String description;
-    @ManyToMany
-    List<Permission> permissions;
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }

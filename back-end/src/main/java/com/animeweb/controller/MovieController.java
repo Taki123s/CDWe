@@ -45,7 +45,12 @@ public class MovieController {
     }
     @GetMapping("/{movieId}")
     public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId){
-        return ResponseEntity.ok(movieService.findMovieById(movieId));
+        MovieDTO movieDTO=movieService.findMovieById(movieId);
+        if (movieDTO != null) {
+            return new ResponseEntity<>(movieDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     @GetMapping("/watching/{movieId}")
     public ResponseEntity<MovieDTO> findMovieWatching(@PathVariable Long movieId){

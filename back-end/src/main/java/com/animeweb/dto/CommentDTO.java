@@ -7,6 +7,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CommentDTO {
     private Long id;
     private Integer parentId;
@@ -15,10 +16,10 @@ public class CommentDTO {
     private Date updateAt;
     private Date deleteAt;
     private Boolean status;
-    private Movie movie;
-    private User userComment;
-    private User userReply;
-    private Chapter chapter;
+    private Long movieId;
+    private Long userCommentId;
+    private Long userReplyId;
+    private Long chapterId;
 
 
 

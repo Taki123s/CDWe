@@ -1,11 +1,9 @@
 package com.animeweb.service.impl;
-
-import com.animeweb.dto.CommentDTO;
+import com.animeweb.dto.*;
 import com.animeweb.entities.Comment;
-import com.animeweb.mapper.CommentMapper;
-import com.animeweb.repository.CommentRepository;
-import com.animeweb.repository.GenreRepository;
-import com.animeweb.service.CommentService;
+import com.animeweb.mapper.*;
+import com.animeweb.repository.*;
+import com.animeweb.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +35,23 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO createComment(Comment comment) {
-
-        return null;
+        Comment commentResult = null;
+        if (comment != null) {
+            commentResult = this.commentRepository.save(comment);
+        }
+        CommentDTO commentDTO = CommentDTO.builder()
+                .id(commentResult.getId())
+                .parentId(commentResult.getParentId())
+                .commentAt(commentResult.getCommentAt())
+                .commentAt(commentResult.getCommentAt())
+                .updateAt(commentResult.getUpdateAt())
+                .deleteAt(commentResult.getDeleteAt())
+                .status(commentResult.getStatus())
+                .movieId(commentResult.getMovieId().getId())
+                .userCommentId(commentResult.getUserComment().getId())
+                .userReplyId(commentResult.getUserReply().getId())
+                .chapterId(commentResult.getChapter().getId())
+                .build();
+        return commentDTO;
     }
 }

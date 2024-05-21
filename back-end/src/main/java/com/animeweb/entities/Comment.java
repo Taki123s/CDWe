@@ -29,13 +29,10 @@ public class Comment {
     private Boolean status;
 
 
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="movie_id")
     @JsonBackReference
     private Movie movieId;
-
-
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_comment")

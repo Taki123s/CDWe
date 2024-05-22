@@ -5,7 +5,6 @@ import MovieComment from "./MovieComment";
 import { useEffect } from "react";
 import { FaFastForward } from "react-icons/fa";
 import { createRoot } from "react-dom/client";
-import { FaHome } from "react-icons/fa";
 import { findMovieWatching } from "../service/MovieServices";
 import { usePlyr } from "plyr-react";
 import "plyr-react/plyr.css";

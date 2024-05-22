@@ -40,7 +40,6 @@ public class MovieController {
         Map<String, Object> response = new HashMap<>();
         response.put("movies", movies);
         response.put("totalMovies", totalMovies);
-
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/{movieId}")

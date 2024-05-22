@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Follow from './page/Follow';
 import MovieDetail from "./page/MovieDetail";
 import ProductItem from "./page/ProductItem";
 import AnimePage from "./component/Index";
@@ -13,9 +12,7 @@ import AdminPanel from "./admin/user/AdminPanel"
 import Follow from "./page/Follow"
 import ExecutePaymentComponent from "./component/ExecutePaymentComponent"
 import React from 'react';
-import AdminPanel from "./admin/user/AdminPanel"
-import { translate, Trans } from 'react-i18next';
-import { render } from '@testing-library/react';
+
 
 function App() {
   return (
@@ -29,13 +26,12 @@ function App() {
         <Route path="/" element={<AnimePage />} />
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
-          <Route path="/login-google" element={<LoginGoogle />} />
-              <Route path="/execute-payment" element={<ExecutePaymentComponent/>} />
-
+        <Route path="/login-google" element={<LoginGoogle />} />
+        <Route path="/execute-payment" element={<ExecutePaymentComponent/>} />
         <Route path="/movie/watching/:movieId/:chapterId" element={<MovieWatching />} />
-      <Route path="/AdminPanel" element={<AdminPanel/>} />
+        <Route path="/AdminPanel" element={<AdminPanel/>} />
 
-      <Route path="/follow" element={<Follow/>} />
+        <Route path="/follow" element={<Follow/>} />
       </Routes>
     </Router>
   );

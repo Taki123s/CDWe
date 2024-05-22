@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios'; // You may need to install axios for HTTP requests
 import {Link} from 'react-router-dom';
 import Carousel from './Carousel';
-import Topview from './Topview';
+// import Topview from './Topview';
 
 function AnimePage() {
     const [movies, setMovies] = useState([]);
@@ -20,7 +20,12 @@ function AnimePage() {
         try {
             const response = await axios.get(`http://localhost:8080/movie/index?page=${currentPage - 1}&size=${pageSize}&sortBy=${sortBy}&ascending=${ascending}`);
             const responseData = response.data;
+            console.log(responseData)
+
             setMovies(responseData.movies);
+            console.log(movies)
+
+
             setTotalPages(Math.ceil(responseData.totalMovies / pageSize));
         } catch (error) {
             console.error('Error fetching movies:', error);
@@ -89,7 +94,7 @@ function AnimePage() {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    {movies.map(movie => (
+                                    {/* {movies.map(movie => (
                                         <div className="col-lg-4 col-md-6 col-sm-6" key={movie.id}>
                                             <div className="product__item">
                                                 <div className="product__item__pic set-bg"
@@ -104,11 +109,11 @@ function AnimePage() {
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}
+                                    ))} */}
                                 </div>
                             </div>
                         </div>
-                        <Topview/>
+                        {/* <Topview/> */}
                     </div>
                     <div className="col-md-6">
                         <nav aria-label="Page navigation example">

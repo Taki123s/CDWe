@@ -61,8 +61,6 @@ public class MovieController {
         List<MovieDTO> movieList = null;
         if (keyword != null && !keyword.isEmpty()) {
             movieList = movieService.searchMovie(keyword);
-        } else {
-            movieList = movieService.searchMovie(keyword);
         }
 
         if (movieList != null && !movieList.isEmpty()) {

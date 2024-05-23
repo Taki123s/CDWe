@@ -1,11 +1,13 @@
 package com.animeweb.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -15,18 +17,18 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+    @Autowired
+    CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
  @Bean
  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-     http .csrf(AbstractHttpConfigurer::disable)
-             .cors(cors ->cors.configurationSource(corsConfigurationSource())) // Kích hoạt cấu hình CORS
 
-
+     http.csrf(AbstractHttpConfigurer::disable)
+             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS configuration
              .authorizeHttpRequests(authorize -> authorize
                      .anyRequest().permitAll())
-             .oauth2Login()
-              // URL của trang đăng nhập tùy chỉnh
-             .defaultSuccessUrl("http://localhost:3000/login-google") // URL mặc định sau khi đăng nhập thành công
-             .permitAll(); // Cho phép truy cập đến trang đăng nhập và trang đăng nhập thành công
+             .oauth2Login(oauth2 -> oauth2
+                     .successHandler(customOAuth2SuccessHandler) // Use custom success handler
+                     .permitAll());
 
      return http.build();
  }

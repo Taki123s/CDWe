@@ -13,11 +13,14 @@ const ExecutePaymentComponent = () => {
                 const params = new URLSearchParams(location.search);
                 const paymentId = params.get('paymentId');
                 const payerId = params.get('PayerID');
-
+                const userId = params.get('userId');
+                const serviceId = params.get('key');
                 const response = await axios.get(`http://localhost:8080/payment/execute`, {
                     params: {
                         paymentId: paymentId,
-                        payerId: payerId
+                        payerId: payerId,
+                        userId:userId,
+                        serviceId:serviceId
                     }
                 });
 

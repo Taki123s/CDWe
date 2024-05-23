@@ -1,4 +1,5 @@
 package com.animeweb.entities;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -55,13 +56,13 @@ public class User {
     @Column(name = "status", columnDefinition = "tinyint default 1")
     private Boolean status;
 
-    @Column(name="externalId")
+    @Column(name = "externalId")
     private String externalId;
-    @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<View> views;
-    @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<Rate> rates;
-    @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<Follow> follows;
 
     public User(Long id, String userName, String avatarPicture, String email, String fullName, String phone, Integer userType, Boolean status, String externalId) {
@@ -85,16 +86,9 @@ public class User {
         this.userType = userType;
         this.externalId = externalId;
     }
-    public List<Role> getRoleDetails() {
-        return this.roles.stream()
-                .map(role -> new Role(role.getId(), role.getName()))
-                .collect(Collectors.toList());
-    }
 
+    public User( String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType, Date createdAt, Date updatedAt, Date deletedAt, Boolean status, String externalId, List<View> views, List<Rate> rates, List<Follow> follows) {
 
-    public User(String accountName, String fullName, String password, String email, String image, String idOther, Date createAt, Integer type) {
-    public User(Role role, String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType, Date createdAt, Date updatedAt, Date deletedAt, Boolean status, String externalId, List<View> views, List<Rate> rates, List<Follow> follows) {
-        this.role = role;
         this.userName = userName;
         this.avatarPicture = avatarPicture;
         this.password = password;
@@ -110,5 +104,16 @@ public class User {
         this.views = views;
         this.rates = rates;
         this.follows = follows;
+    }
+
+    public List<Role> getRoleDetails() {
+        return this.roles.stream()
+                .map(role -> new Role(role.getId(), role.getName()))
+                .collect(Collectors.toList());
+    }
+
+
+    public User(String accountName, String fullName, String password, String email, String image, String idOther, Date createAt, Integer type) {
+
     }
 }

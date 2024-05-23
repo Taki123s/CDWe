@@ -659,22 +659,18 @@ export const HeaderPage = () => {
                     </div>
                     <hr className="mb-3 border-gray-300 dark:border-slate-600" />
                     <div className="navbar-form-group relative mb-3 h-8 rounded bg-orange-600/90 text-center text-white text-[14px] font-light">
-                      <a
-                        className="social-login"
-                        href="https://vuighe3.com/dang-nhap-google"
-                      >
+                      <a  className="social-login"
+                          href="http://localhost:8080/oauth2/authorization/google">
                         <input
-                          type="button"
-                          className="google w-full h-full rounded cursor-pointer"
-                          value="Đăng nhập với Google"
+                            type="button"
+                            className="google w-full h-full rounded cursor-pointer"
+                            value="Đăng nhập với Google"
                         />
                       </a>
                     </div>
                     <div className="navbar-form-group relative mb-3 h-8 rounded bg-blue-600/90 text-center text-white text-[14px] font-light">
-                      <a
-                        className="social-login"
-                        href="https://vuighe3.com/dang-nhap-facebook"
-                      >
+                      <a  className="social-login"
+                          href="http://localhost:8080/oauth2/authorization/facebook">
                         <input
                           type="button"
                           className="facebook w-full h-full rounded cursor-pointer"

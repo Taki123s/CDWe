@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2'; // Import thư viện sweetalert2
+import Swal from 'sweetalert2';
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
 const Login = () => {
@@ -15,12 +15,10 @@ const Login = () => {
     const [regiserUser,setRegisterUser] = useState(null)
     useEffect(() => {
 
-        console.log('Login component rendered'); // Thêm dòng này để kiểm tra
-        // Rest of your code...
         try {
             console.log('handleAfterLogin called');
             // Gọi một phương thức khác sau khi đăng nhập thành công
-            axios.get('http://localhost:8080/login/google', { withCredentials: true })
+            axios.get('http://localhost:8080/login/facebook', { withCredentials: true })
                 .then((response) => {
                     console.log('Response after login:', response.data);
                     const token = response.data.accessToken;

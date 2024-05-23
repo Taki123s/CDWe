@@ -6,11 +6,8 @@ import com.animeweb.entities.User;
 public class SocialUserMapper {
 
     public static SocialUser mapToDTO(User user) {
-        if (user == null) {
-            return null;
-        }
+
         return new SocialUser(
-                user.getRole(),
                 user.getUserName(),
                 user.getAvatarPicture(),
                 user.getPassword(),
@@ -30,12 +27,7 @@ public class SocialUserMapper {
     }
 
     public static User mapToEntity(SocialUser socialUser) {
-        if (socialUser == null) {
-            return null;
-        }
-        return new User(
-                socialUser.getRole(),
-                socialUser.getUserName(),
+        return new User( socialUser.getUserName(),
                 socialUser.getAvatarPicture(),
                 socialUser.getPassword(),
                 socialUser.getEmail(),

@@ -8,6 +8,7 @@ import {HeaderPage} from "./component/Header";
 import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
 import LoginGoogle from "./component/LoginGoogleSuccess"
+import LoginFacebook from "./component/LoginFacebookSuccess"
 import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
 import React from 'react';
 import Follow from "./page/Follow";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
           <Route path="/login-google" element={<LoginGoogle />} />
+          <Route path="/login-facebook" element={<LoginFacebook />} />
           <Route path="/execute-payment" element={<ExecutePaymentComponent/>} />
 
         <Route path="/movie/watching/:movieId/:chapterId" element={<MovieWatching />} />

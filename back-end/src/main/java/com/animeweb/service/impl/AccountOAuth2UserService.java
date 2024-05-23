@@ -21,8 +21,8 @@ public class AccountOAuth2UserService extends DefaultOAuth2UserService {
         return userRepository.findByEmailFacebook(email);
     }
 
-    public void createAccount(SocialUser socialUser) {
-        User account = SocialUserMapper.mapToEntity(socialUser);
-        userRepository.save(account);
+    public void createAccount(User socialUser) {
+
+        userRepository.save(socialUser);
     }
 }

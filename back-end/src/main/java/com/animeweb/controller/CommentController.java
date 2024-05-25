@@ -37,4 +37,28 @@ public class CommentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @PostMapping("/create")
+    public ResponseEntity<CommentDTO> newComment(@RequestBody CommentDTO commentDTO){
+
+        Optional<User> userReply = userRepository.findById(commentDTO.getUserReplyId());
+
+
+        User userComment = userRepository.findById(commentDTO.getUserReplyId())
+                .orElseThrow(() -> new RuntimeException("userComment not found"));
+        Chapter chapter= chapterRepository.findById(commentDTO.getChapterId())
+                .orElseThrow(()-> new RuntimeException("Chapter not found"));
+        Movie movie = movieRepository.findById(commentDTO.getMovieId())
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+        CommentDTO comment = commentService.createComment(new Comment(commentDTO.getId(),commentDTO.getParentId(),commentDTO.getContent(),commentDTO.getCommentAt()
+                ,commentDTO.getUpdateAt(),commentDTO.getDeleteAt(),commentDTO.getStatus(),movie,userComment,userReply.get()==null?null:userReply.get(),chapter));
+        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+
+    }
+    @PostMapping("/remove")
+    public ResponseEntity<CommentDTO> removeComment(@RequestBody Long id) throws Exception {
+        System.out.println(id);
+       CommentDTO comment=  commentService.deleteComment(id);
+        return new ResponseEntity<>(comment, HttpStatus.NO_CONTENT);
+
+    }
 }

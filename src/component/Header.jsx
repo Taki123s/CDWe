@@ -1224,4 +1224,8 @@ export const HeaderPage = () => {
       </nav>
     </header>
   );
+<<<<<<< Updated upstream
 };
+=======
+};
+>>>>>>> Stashed changes

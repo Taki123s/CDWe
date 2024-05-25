@@ -1,21 +1,42 @@
 import React, { Component } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 class MovieComment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      comments: [], // Initialize comments state
-      rendered: 0, // Initialize rendered state
-      enableRender: 0, // Initialize enableRender state
-      newComment: '', // Initialize newComment state to store the content of the new comment
+      comments: [],
+      rendered: 0,
+      enableRender: 0,
+      newComment: "",
+      replyContent: {},
+      userId: null,
     };
   }
 
   componentDidMount() {
     // Fetch initial comments data
     this.fetchComments();
+    this.setUserIdFromToken();
   }
+
+  setUserIdFromToken = () => {
+    const token = Cookies.get("jwt_token");
+    console.log("ko sao", token);
+
+    if (token) {
+      try {
+        console.log("decodedToken")
+
+        const decodedToken = jwtDecode(token);
+        this.setState({ userId: decodedToken.userId });
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  };
 
   fetchComments = () => {
     // Make an AJAX call to fetch comments
@@ -40,30 +61,88 @@ class MovieComment extends Component {
   // Function to handle form submission
   handleSubmit = (event) => {
     event.preventDefault();
-    const { newComment, comments } = this.state;
+    const { newComment, userId } = this.state;
+    const { movieId } = this.props; // Access movieId from props
+    const currentDate = new Date().toISOString();
+    const newCommentData = {
+      parentId: null,
+      content: newComment,
+      commentAt: currentDate,
+      updateAt: currentDate,
+      deleteAt: null,
+      status: 1,
+      movieId: movieId,
+      userCommentId: userId,
+      userReplyId: userId,
+      chapterId: 1,
+    };
 
-    // Update the state to include the new comment
-    this.setState(prevState => ({
-      comments: [{ id: comments.length + 1, content: newComment }, ...prevState.comments], // Assuming the structure of comments
-      newComment: '' // Clear the input field after submission
+    axios
+      .post("http://localhost:8080/comment/create", newCommentData)
+      .then((response) => {
+
+        if (response.data.isSuccess) {
+          this.fetchComments();
+          this.setState({ newComment: "" });
+        }
+      })
+      .catch((error) => {
+        console.error("Error posting comment:", error);
+      });
+  };
+
+  handleReplyInputChange = (event, commentId) => {
+    const { value } = event.target;
+    this.setState((prevState) => ({
+      replyContent: {
+        ...prevState.replyContent,
+        [commentId]: value,
+      },
     }));
   };
 
-  // Function to remove a comment
-  removeComment = idComment => {
-    // Make an AJAX call to remove the comment
-    // Replace the URL with your endpoint
-    fetch('remove-comment-endpoint', {
-      method: 'POST',
-      body: JSON.stringify({ idComment: idComment }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.isSuccess) {
-          // Reload comments after successful removal
+  handleSubmitReply = (event, commentId) => {
+    event.preventDefault();
+    const { userId } = this.state;
+    const reply = this.state.replyContent[commentId];
+    const { movieId } = this.props; // Access movieId from props
+    const currentDate = new Date().toISOString();
+    const replyData = {
+      parentId: commentId,
+      content: reply,
+      commentAt: currentDate,
+      updateAt: currentDate,
+      deleteAt: null,
+      status: 1,
+      movieId: movieId,
+      userCommentId: userId,
+      userReplyId: userId,
+      chapterId: 1,
+    };
+
+    axios
+      .post("http://localhost:8080/comment/create", replyData)
+      .then((response) => {
+        if (response.data.isSuccess) {
+          this.fetchComments();
+          this.setState((prevState) => ({
+            replyContent: {
+              ...prevState.replyContent,
+              [commentId]: "",
+            },
+          }));
+        }
+      })
+      .catch((error) => {
+        console.error("Error posting reply:", error);
+      });
+  };
+
+  removeComment = (idComment) => {
+    axios
+      .post("http://localhost:8080/comment/remove", { idComment })
+      .then((response) => {
+        if (response.data.isSuccess) {
           this.fetchComments();
         }
       })

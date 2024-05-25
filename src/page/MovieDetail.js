@@ -6,33 +6,17 @@ import Footer from "./Footer.js";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import axios from "axios";
 import { useTranslation, Trans } from "react-i18next";
-
-import Icon, {
-  HeartOutlined,
-  HeartFilled,
-  NotificationFilled,
-  AppleFilled,
-} from "@ant-design/icons";
 function MovieDetail() {
   const { t, i18n } = useTranslation();
 
   // Lấy id của phim từ URL
   const { id } = useParams();
-  console.log(id);
-
-  // Giả sử dữ liệu phim được truyền vào component
   const [movie, setMovies] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/api/movies/${id}`
-        );
-        console.log("response.data");
-        console.log(response.data);
-
+        const response = await axios.get(`http://localhost:8080/movie/${id}`);
         setMovies(response.data);
-        console.log(movie);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -43,6 +27,8 @@ function MovieDetail() {
   const [flag, setFlag] = React.useState(false);
 
   const ShowMore = () => {
+    console.log(movie.views.length);
+
     setFlag(!flag);
     return flag;
   };
@@ -120,6 +106,16 @@ function MovieDetail() {
                               {t("content.type")}:
                             </Trans>
                           </span>
+                          {movie.genres &&
+                            movie.genres.map((genre, index) => (
+                              <button
+                                key={index}
+                                className="btn btn-outline-light"
+                                style={{ color: "blue" }}
+                              >
+                                {genre.description}
+                              </button>
+                            ))}
                           <span>{}</span>
                         </li>
                         <li>
@@ -128,9 +124,8 @@ function MovieDetail() {
                               {t("menu.categories")}
                             </Trans>
                           </span>
-                          {/* {movie.genres.map((genre, index) => (
-                                                        <div key={index}><a href=""><button className="btn btn-outline-light" style={{ color: 'blue' }}>{}</button></a></div>
-                                                    ))} */}
+                          Tình cảm
+                          <> </>Hài hước
                         </li>
                         <li>
                           <span>
@@ -139,9 +134,7 @@ function MovieDetail() {
                               {t("content.producer")}:
                             </Trans>
                           </span>
-                          {/* {movie.listProducer.map((producer, index) => (
-                                                        <span key={index}>{producer.name}</span>
-                                                    ))} */}
+                          {movie.producer}
                         </li>
                       </ul>
                     </div>
@@ -168,8 +161,8 @@ function MovieDetail() {
                             <Trans i18nKey={"content.views"}>
                               {t("content.views")}:
                             </Trans>
-                          </span>
-                          {movie.views}
+                          </span>{" "}
+                          0{/* {movie.views.length} */}
                         </li>
                       </ul>
                     </div>
@@ -181,23 +174,30 @@ function MovieDetail() {
             <div className="col-lg-9 anime_showmore">
               <div className="anime__details__text">
                 <div className="anime_details_title">
-                  <h3>
-                    <Trans i18nKey={"content.description"}>
-                      {t("content.description")}:
-                    </Trans>
-                  </h3>
+                  <text className="des_detail">
+                    {movie.vietnameseDescriptions != null
+                      ? movie.vietnameseDescriptions.substring(0, 500)
+                      : ""}
+                  </text>
                 </div>
-                <text className="des_detail">
-                  {movie.vietnameseDescriptions != null
-                    ? movie.vietnameseDescriptions.substring(0, 500)
-                    : ""}
-                </text>
-                {/* {flag ?
-                                    <>
-                                        <text> {movie.vietnameseDescriptions.substring(500, movie.vietnameseDescriptions.length)}</text>
-                                        : <a onClick={() => ShowMore()}><i>Rút gọn</i> </a>
-                                    </>
-                                    : <a onClick={() => ShowMore()}><i>Xem thêm</i> </a>} */}
+                {flag ? (
+                  <>
+                    <text className="des_detail">
+                      {" "}
+                      {movie.vietnameseDescriptions.substring(
+                        500,
+                        movie.vietnameseDescriptions.length
+                      )}
+                    </text>
+                    <a onClick={() => ShowMore()}>
+                      <i>Rút gọn</i>{" "}
+                    </a>
+                  </>
+                ) : (
+                  <a onClick={() => ShowMore()}>
+                    <i>Xem thêm</i>{" "}
+                  </a>
+                )}
               </div>
             </div>
           </div>

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 @Autowired
@@ -54,4 +56,34 @@ public class CommentServiceImpl implements CommentService {
                 .build();
         return commentDTO;
     }
+
+    @Override
+    public CommentDTO deleteComment(Long id) throws Exception {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+        if (optionalComment.isPresent()) {
+            Comment comment = optionalComment.get();
+            comment.setStatus(false);
+            comment = commentRepository.save(comment);
+            return convertToDTO(comment);
+        } else {
+            throw new Exception("Comment not found with id: " + id);
+        }
+    }
+
+    private CommentDTO convertToDTO(Comment comment) {
+        return CommentDTO.builder()
+                .id(comment.getId())
+                .parentId(comment.getParentId())
+                .commentAt(comment.getCommentAt())
+                .updateAt(comment.getUpdateAt())
+                .deleteAt(comment.getDeleteAt())
+                .status(comment.getStatus())
+                .movieId(comment.getMovieId().getId())
+                .userCommentId(comment.getUserComment().getId())
+                .userReplyId(comment.getUserReply().getId())
+                .chapterId(comment.getChapter().getId())
+                .build();
+    }
+
+
 }

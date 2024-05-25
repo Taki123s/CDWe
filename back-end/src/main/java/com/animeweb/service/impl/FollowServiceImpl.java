@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FollowServiceImpl implements FollowService {
@@ -19,17 +20,39 @@ public class FollowServiceImpl implements FollowService {
     private FollowRepository followRepository;
 
     @Override
-    public FollowDTO AddFollow(Follow follow) {
-        Follow f = null;
-        if (follow != null) {
-            f = this.followRepository.save(follow);
+    public FollowDTO addFollow(Follow follow) {
+        Follow existingFollow = this.followRepository.findFollowByUserIdAndMovieId(follow.getMovie().getId(), follow.getUserId().getId());
+
+        if (existingFollow == null) {
+            Follow savedFollow = this.followRepository.save(follow);
+            return convertToDTO(savedFollow);
+        } else {
+            return updateFollow(follow);
         }
-        FollowDTO followDTO = FollowDTO.builder()
-                .id(f.getId())
-                .followAt(f.getFollowAt())
-                .userId(f.getUserId().getId())
-                .movieId(f.getMovie().getId())
-                .build();
-        return followDTO;
     }
+
+    private FollowDTO convertToDTO(Follow follow) {
+        return FollowDTO.builder()
+                .id(follow.getId())
+                .followAt(follow.getFollowAt())
+                .userId(follow.getUserId().getId())
+                .movieId(follow.getMovie().getId())
+                .status(follow.getStatus())
+                .build();
+    }
+    @Override
+    public FollowDTO updateFollow(Follow follow) {
+        Follow existingFollow = this.followRepository.findFollowByUserIdAndMovieId(follow.getMovie().getId(), follow.getUserId().getId());
+        if (existingFollow != null) {
+            existingFollow.setFollowAt(existingFollow.getFollowAt());
+            existingFollow.setStatus(!existingFollow.getStatus());
+            Follow updatedFollow = this.followRepository.save(existingFollow);
+            return convertToDTO(updatedFollow);
+        } else {
+            throw new RuntimeException("Follow entity not found for update");
+        }
+    }
+
+
+
 }

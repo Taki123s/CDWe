@@ -94,7 +94,7 @@ function AnimePage() {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    {/* {movies.map(movie => (
+                                     {movies.map(movie => (
                                         <div className="col-lg-4 col-md-6 col-sm-6" key={movie.id}>
                                             <div className="product__item">
                                                 <div className="product__item__pic set-bg"
@@ -105,11 +105,11 @@ function AnimePage() {
                                                     </div>
                                                 </div>
                                                 <div className="product__item__text">
-                                                    <h5><Link to="/">{movie.name}</Link></h5>
+                                                <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
                                                 </div>
                                             </div>
                                         </div>
-                                    ))} */}
+                                    ))} 
                                 </div>
                             </div>
                         </div>

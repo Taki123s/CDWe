@@ -1,145 +1,248 @@
 import React, { Component } from "react";
 import axios from "axios";
+import userDefaultImage from "../img/user_default.png";
+import { DeleteFilled } from '@ant-design/icons';
 
 class MovieComment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      comments: [], // Initialize comments state
-      rendered: 0, // Initialize rendered state
-      enableRender: 0, // Initialize enableRender state
-      newComment: '', // Initialize newComment state to store the content of the new comment
+      comments: [],
+      rendered: 0,
+      enableRender: 0,
+      newComment: "",
+      replyContent: {},
     };
   }
 
   componentDidMount() {
-    // Fetch initial comments data
     this.fetchComments();
   }
 
   fetchComments = () => {
-    // Make an AJAX call to fetch comments
-    axios.get(`http://localhost:8080/api/comments`)
-      .then(response => {
-        this.setState({
-          comments: response.data,
-          rendered: response.data.rendered,
-          enableRender: response.data.enableRender
-        });
+    axios
+      .get(`http://localhost:8080/comment`)
+      .then((response) => {
+        this.setState(
+          {
+            comments: response.data,
+            rendered: response.data.length,
+            enableRender: response.data.length > 5 ? response.data.length - 5 : 0,
+          },
+          () => {
+            this.fetchUserDetailsForComments();
+          }
+        );
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   };
-  
-  // Function to handle input change for new comment
+
+  fetchUserDetailsForComments = () => {
+    const { comments } = this.state;
+    const commentPromises = comments.map((comment) => {
+      return axios
+        .get(`http://localhost:8080/account/view/${comment.userCommentId}`)
+        .then((response) => response.data)
+        .catch((error) => {
+          console.error("Error fetching user details:", error);
+          return null;
+        });
+    });
+
+    Promise.all(commentPromises).then((userDetails) => {
+      const updatedComments = comments.map((comment, index) => {
+        return {
+          ...comment,
+          userComment: userDetails[index],
+        };
+      });
+      this.setState({ comments: updatedComments });
+    });
+  };
+
   handleInputChange = (event) => {
     this.setState({ newComment: event.target.value });
   };
 
-  // Function to handle form submission
   handleSubmit = (event) => {
     event.preventDefault();
-    const { newComment, comments } = this.state;
+    const { newComment } = this.state;
+    const currentDate = new Date().toISOString();
+    const newCommentData = {
+      parentId: null,
+      content: newComment,
+      commentAt: currentDate,
+      updateAt: currentDate,
+      deleteAt: null,
+      status: 1,
+      movieId: 2, // Replace with the actual movie ID
+      userCommentId: 5, // Replace with the actual user ID
+      userReplyId: 5, // Replace with the actual user ID
+      chapterId: 1, // Replace with the actual chapter ID
+    };
 
-    // Update the state to include the new comment
-    this.setState(prevState => ({
-      comments: [{ id: comments.length + 1, content: newComment }, ...prevState.comments], // Assuming the structure of comments
-      newComment: '' // Clear the input field after submission
+    axios
+      .post("http://localhost:8080/comment/create", newCommentData)
+      .then((response) => {
+        if (response.data.isSuccess) {
+          this.fetchComments();
+          this.setState({ newComment: "" });
+        }
+      })
+      .catch((error) => {
+        console.error("Error posting comment:", error);
+      });
+  };
+
+  handleReplyInputChange = (event, commentId) => {
+    const { value } = event.target;
+    this.setState((prevState) => ({
+      replyContent: {
+        ...prevState.replyContent,
+        [commentId]: value,
+      },
     }));
   };
 
-  // Function to remove a comment
-  removeComment = idComment => {
-    // Make an AJAX call to remove the comment
-    // Replace the URL with your endpoint
-    fetch('remove-comment-endpoint', {
-      method: 'POST',
-      body: JSON.stringify({ idComment: idComment }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.isSuccess) {
-          // Reload comments after successful removal
+  handleSubmitReply = (event, commentId) => {
+    event.preventDefault();
+    const reply = this.state.replyContent[commentId];
+    const currentDate = new Date().toISOString();
+    const replyData = {
+      parentId: commentId,
+      content: reply,
+      commentAt: currentDate,
+      updateAt: currentDate,
+      deleteAt: null,
+      status: 1,
+      movieId: 2, // Replace with the actual movie ID
+      userCommentId: 5, // Replace with the actual user ID
+      userReplyId: 5, // Replace with the actual user ID
+      chapterId: 1, // Replace with the actual chapter ID
+    };
+
+    axios
+      .post("http://localhost:8080/comment/create", replyData)
+      .then((response) => {
+        if (response.data.isSuccess) {
+          this.fetchComments();
+          this.setState((prevState) => ({
+            replyContent: {
+              ...prevState.replyContent,
+              [commentId]: "",
+            },
+          }));
+        }
+      })
+      .catch((error) => {
+        console.error("Error posting reply:", error);
+      });
+  };
+
+  removeComment = (idComment) => {
+    axios
+      .post("http://localhost:8080/comment/remove", { idComment })
+      .then((response) => {
+        if (response.data.isSuccess) {
           this.fetchComments();
         }
       })
-      .catch(error => console.error('Error removing comment:', error));
+      .catch((error) => console.error("Error removing comment:", error));
   };
 
-  // Function to show reply form
-  showForm = (idComment, userReply) => {
-    // Show/hide form logic
-    const { comments } = this.state;
-    const updatedComments = comments.map(comment => {
+  showForm = (idComment) => {
+    const updatedComments = this.state.comments.map((comment) => {
       if (comment.id === idComment) {
-        return { ...comment, showReplyForm: true };
-      } else {
-        return comment;
+        return { ...comment, showReplyForm: !comment.showReplyForm };
       }
+      return comment;
     });
     this.setState({ comments: updatedComments });
   };
 
   render() {
-    const { comments, enableRender, newComment } = this.state;
-
+    const { comments, enableRender, newComment, replyContent } = this.state;
     return (
       <div className="anime__details__review">
-        <div className="section-title">
-          <h5>Bình luận</h5>
+        <div className="row row-no-gutters">
+          <div className="section-title col-xs-6 comment-tile">
+            <h5>Bình luận</h5>
+          </div>
+          <div className="section-title col-xs-6">
+            <h5>Top View</h5>
+          </div>
         </div>
 
-        {/* Comment form */}
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <textarea
-              className="form-control"
+              className="form-control new-comment"
               rows="3"
               placeholder="Thêm bình luận mới"
               value={newComment}
               onChange={this.handleInputChange}
             ></textarea>
           </div>
-          <button type="submit" className="btn btn-primary" >Gửi</button>
+          <button type="submit" className="btn btn-send-comment">
+            Gửi
+          </button>
         </form>
 
         <div id="commentBase">
-          {comments.map(comment => (
+          {comments.slice(0, 5).map((comment) => (
             <div className="anime__review__item root0" key={comment.id}>
-              {/* Render comment details */}
               <div className="anime__review__item__pic">
-                <img src={comment.userComment.avatarPicture} alt="" />
+                <img
+                  src={comment.userComment?.avatarPicture || userDefaultImage}
+                  alt="User Avatar"
+                />
               </div>
               <div className="anime__review__item__text commentDisplay">
                 <h6>
-                  {comment.userComment.fullName} <span>- {comment.commentAt}</span>
+                  {comment.userComment?.fullName || "Anonymous"}{" "}
+                  <span>- {comment.commentAt}</span>
                 </h6>
                 <p>{comment.content}</p>
+                <button
+                  onClick={() => this.removeComment(comment.id)}
+                  className="btn btn-delete-comment"
+                >
+                  <DeleteFilled />
+                </button>
               </div>
 
               <div className="replyBase">
                 <button
                   className="setValue btn btn-outline-info"
-                  onClick={() => this.showForm(comment.id, comment.userComment.id)}>
+                  onClick={() => this.showForm(comment.id)}
+                >
                   Reply
                 </button>
-                {/* Render reply form */}
                 {comment.showReplyForm && (
-                  <form onSubmit={this.handleSubmitReply}>
+                  <form
+                    onSubmit={(event) =>
+                      this.handleSubmitReply(event, comment.id)
+                    }
+                  >
                     <div className="form-group">
                       <textarea
-                        className="form-control"
+                        className="form-control new-comment"
                         rows="3"
                         placeholder="Trả lời bình luận"
-                        // value={comment.replyContent || ''}
-                        onChange={(event) => this.handleReplyInputChange(event, comment.id)}
+                        value={replyContent[comment.id] || ""}
+                        onChange={(event) =>
+                          this.handleReplyInputChange(event, comment.id)
+                        }
                       ></textarea>
                     </div>
-                    <button type="submit" className="btn btn-primary">Gửi</button>
+                    <button
+                      type="submit"
+                      className="btn btn-send-comment"
+                    >
+                      Gửi
+                    </button>
                   </form>
                 )}
               </div>
@@ -147,13 +250,13 @@ class MovieComment extends Component {
           ))}
         </div>
 
-        {/* Render 'Xem thêm' button */}
         {enableRender > 0 && (
           <button
             className="btn btn-outline-success"
-            onClick={() => this.showMore('root0')}
-            value={this.state.rendered}>
-            Xem thêm 5 bình luận tiếp theo, còn {this.state.enableRender} khả dụng
+            onClick={() => this.showMore("root0")}
+            value={this.state.rendered}
+          >
+            Xem thêm
           </button>
         )}
       </div>

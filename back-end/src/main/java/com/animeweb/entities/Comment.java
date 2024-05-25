@@ -35,10 +35,10 @@ public class Comment {
     private Movie movieId;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="user_comment")
+    @JoinColumn(name="user_comment",nullable=false)
     @JsonBackReference
     private User userComment;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="user_reply")
     @JsonBackReference
     private User userReply;

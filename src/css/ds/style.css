@@ -3639,3 +3639,9 @@ table:not(#key-list-table) th {
 .dataTables_wrapper .dataTables_paginate .paginate_button {
 	color: white !important;
 }
+.setValue.btn.btn-outline-info {
+	margin-left: 6%;
+  }
+  .btn.btn-primary.btn-send-comment {
+	color: #17a2b8;
+  }

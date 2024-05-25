@@ -3,6 +3,7 @@ package com.animeweb.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,7 +21,7 @@ public class Role {
     @Column(name="description")
     private String description;
     @ManyToMany
-    List<Permission> permissions;
+    List<Permission> permissions = new ArrayList<>();
     public Role(Long id, String name) {
         this.id = id;
         this.name = name;

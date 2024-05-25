@@ -18,5 +18,5 @@ public class Genre {
     @Column(name = "description")
     private String description;
     @Column(name = "status",columnDefinition = "tinyint default 1")
-    private Boolean status;
+    private Boolean status = true;
     }

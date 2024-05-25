@@ -29,8 +29,9 @@ public class UserDTO {
     private List<View> views;
     private List<Rate> rates;
     private List<Follow> follows;
+    private Boolean authenticated;
 
-    public UserDTO(Long id, List<Role> role, String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType, Boolean status, String externalId) {
+    public UserDTO(Long id, List<Role> role, String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType, Boolean status, String externalId, Boolean authenticated) {
         this.id = id;
         this.role = role;
         this.userName = userName;
@@ -42,9 +43,10 @@ public class UserDTO {
         this.userType = userType;
         this.status = status;
         this.externalId = externalId;
+        this.authenticated = authenticated;
     }
 
-    public UserDTO(String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType) {//register data
+    public UserDTO(String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType) {
         this.userName = userName;
         this.avatarPicture = avatarPicture;
         this.password = password;

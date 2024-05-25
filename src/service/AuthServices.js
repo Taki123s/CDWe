@@ -21,4 +21,6 @@ axiosInstance.interceptors.request.use(
 );
 export const login = (user)=>axiosInstance.post(AUTH_API_BASE_URL+"/login",user)
 export const logout = (token) => axiosInstance.post(AUTH_API_BASE_URL+"/logout",token)
-export const register = (userRegister) =>axiosInstance.post(AUTH_API_BASE_URL+"/regiser",userRegister)
+export const register = (verifyUser) =>axios.post(AUTH_API_BASE_URL+"/register",verifyUser)
+export const checkUsername = (username) => axios.get(AUTH_API_BASE_URL+"/username",{params:{userName:username}})
+export const sendMail = (userRegister) => axios.post(AUTH_API_BASE_URL+"/email",userRegister)

@@ -1,8 +1,17 @@
-import React, { useState, useEffect, someStateIndicatingDOMReady } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone } from '@fortawesome/free-solid-svg-icons';
-import { login, logout } from "../service/AuthServices";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { createRoot } from "react-dom/client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhone } from "@fortawesome/free-solid-svg-icons";
+import {
+  login,
+  logout,
+  checkUsername,
+  sendMail,
+  register,
+} from "../service/AuthServices";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import axios from "axios";
 import "./bootstrap.min.css";
@@ -37,13 +46,234 @@ export const HeaderPage = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genreList, setGenreList] = useState([]);
-
   const [loggedUser, setLoggedUser] = useState(null);
   const [activeTab, setActiveTab] = useState("login");
   const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [regiserUser,setRegisterUser] = useState(null)
+  const [registerUsername, setRegisterUserName] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerRePassword, setRegisterRePassword] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPhone, setRegisterPhone] = useState("");
+  const [registerFullname, setRegisterFullname] = useState("");
+  const [correctPassword, setCorrectPassword] = useState(false);
+  const [correctUserName, setcorrectUserName] = useState(false);
+
+  const handleLogin = (event) => {
+    const user = { userName: username, password: password };
+    login(user)
+      .then((response) => {
+        const token = response.data.accessToken;
+        setToken(token);
+        const decodedToken = jwtDecode(token);
+        const expires = new Date(decodedToken.exp * 1000);
+        Cookies.set("jwt_token", token, {
+          expires: expires,
+        });
+        decodeToken();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+  const EmailVerificationDialog = ({ onClose }) => {
+    const [verificationCode, setVerificationCode] = useState("");
+    const [email, setEmail] = useState("");
+    const [isSendCodeDisabled, setSendCodeDisabled] = useState(false);
+    const [buttonText, setButtonText] = useState("Gửi mã");
+    const [timer, setTimer] = useState(null);
+    const [registerUser, setRegisterUser] = useState({});
+    useEffect(() => {
+      return () => {
+        if (timer) {
+          clearInterval(timer);
+        }
+      };
+    }, [timer]);
+    let currentRegister = {
+      userName: registerUsername,
+      password: registerPassword,
+      email: registerEmail,
+      fullName: registerFullname,
+      phone: registerPhone,
+    };
+    const sendCode = (emailInput) => {
+      currentRegister.email = emailInput;
+      setRegisterUser(currentRegister);
+      sendMail(currentRegister)
+        .then((response) => {
+          Swal.fire({
+            title: "Thành công",
+            text: "Đã gửi mã xác thực",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          let timeLeft = 300;
+          setButtonText(`Gửi lại mã sau ${timeLeft}s`);
+          const interval = setInterval(() => {
+            timeLeft -= 1;
+            setButtonText(`Gửi lại mã sau ${timeLeft}s`);
+            if (timeLeft <= 0) {
+              clearInterval(interval);
+              setButtonText("Gửi mã");
+              setSendCodeDisabled(false);
+            }
+          }, 1000);
+          setTimer(interval);
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: "Lỗi",
+            text: error.response.data,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          setSendCodeDisabled(false);
+        });
+    };
+    const handleSendCode = () => {
+      if (email && validateEmail(email)) {
+        setSendCodeDisabled(true);
+        sendCode(email);
+      } else {
+        Swal.fire({
+          title: "Lỗi",
+          text: "Vui lòng nhập email đúng định dạng",
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    };
+    const registerVerify = () => {
+      let verifyUser = {
+        userName: registerUser.userName,
+        email: registerUser.email,
+        verifyCode: verificationCode,
+      };
+      register(verifyUser)
+        .then((response) => {
+          Swal.fire({
+            title: "Thành công",
+            text: "Đăng ký thành công",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          setRegisterUserName("");
+          setRegisterPassword("");
+          setRegisterRePassword("");
+          setRegisterEmail("");
+          setRegisterPhone("");
+          setRegisterFullname("");
+          onClose();
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: "Lỗi",
+            text: error.response.data,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        });
+    };
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h2>Xác thực email</h2>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
+          <input
+            type="number"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            placeholder="Enter verification code"
+          />
+          <button
+            type="button"
+            onClick={handleSendCode}
+            className="swal2-confirm swal2-styled"
+            disabled={isSendCodeDisabled}
+          >
+            {buttonText}
+          </button>
+          <button
+            type="button"
+            onClick={registerVerify}
+            className="swal2-confirm swal2-styled"
+          >
+            Xác nhận đăng ký
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="swal2-cancel swal2-styled"
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    );
+  };
+  const handleRegister = () => {
+    if (correctUserName) {
+      const navbarRight = document.getElementById("navbar-right");
+      navbarRight.classList.toggle("-right-[300px]");
+      const modalDiv = document.createElement("div");
+      document.body.appendChild(modalDiv);
+      const root = createRoot(modalDiv);
+      root.render(<EmailVerificationDialog onClose={() => root.unmount()} />);
+    }
+  };
+
+  const checkCorrectRePassword = (e) => {
+    let errorPassword = document.getElementById("errorPassword");
+    if (registerPassword !== e.target.value) {
+      errorPassword.innerText = "Mật khẩu xác thực không hợp lệ";
+      setCorrectPassword(false);
+    } else {
+      setCorrectPassword(true);
+      errorPassword.innerText = "";
+    }
+    setRegisterRePassword(e.target.value);
+  };
+  const checkCorrectPassword = (e) => {
+    let errorPassword = document.getElementById("errorPassword");
+    if (e.target.value !== registerRePassword) {
+      errorPassword.innerText = "Mật khẩu xác thực không hợp lệ";
+      setCorrectPassword(false);
+    } else {
+      setCorrectPassword(true);
+      errorPassword.innerText = "";
+    }
+    setRegisterPassword(e.target.value);
+  };
+  const checkUsernameR = (e) => {
+    let errorUserName = document.getElementById("errorUserName");
+    checkUsername(e.target.value)
+      .then(() => {
+        setRegisterUserName(e.target.value);
+        errorUserName.innerText = "";
+        setcorrectUserName(true);
+      })
+      .catch((error) => {
+        setcorrectUserName(false);
+        errorUserName.innerText = error.response.data;
+      });
+  };
 
   const handleMouseEnter = () => {
     setDropdownOpen(true);
@@ -99,23 +329,7 @@ export const HeaderPage = () => {
         console.log(error);
       });
   };
-  const handleLogin = (event) => {
-    const user = { userName: username, password: password };
-    login(user)
-      .then((response) => {
-        const token = response.data.accessToken;
-        setToken(token);
-        const decodedToken = jwtDecode(token);
-        const expires = new Date(decodedToken.exp * 1000);
-        Cookies.set("jwt_token", token, {
-          expires: expires,
-        });
-        decodeToken();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+
   const decodeToken = () => {
     const token = Cookies.get("jwt_token");
     if (token) {
@@ -319,12 +533,16 @@ export const HeaderPage = () => {
                       {Array.isArray(genreList) &&
                         genreList?.map((genre) => {
                           return (
-                            <li
-                              key={genre.id}
-                              className="px-4 py-2 cursor-pointer categories-dropdown-item"
+                            <Link
+                              to={`/categories/${genre.id}/${genre.description}`}
                             >
-                              {genre.description}
-                            </li>
+                              <li
+                                key={genre.id}
+                                className="px-4 py-2 cursor-pointer categories-dropdown-item"
+                              >
+                                {genre.description}
+                              </li>
+                            </Link>
                           );
                         })}
                     </ul>
@@ -716,10 +934,12 @@ export const HeaderPage = () => {
                       <label className="mb-1 block text-[14px]">
                         Tên đăng nhập
                       </label>
+                      <div id="errorUserName" style={{ color: "red" }}></div>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="text"
                         name="username"
+                        onChange={checkUsernameR}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -743,6 +963,7 @@ export const HeaderPage = () => {
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="password"
                         name="password"
+                        onChange={(e) => checkCorrectPassword(e)}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -764,10 +985,12 @@ export const HeaderPage = () => {
                       <label className="mb-1 block text-[14px]">
                         Nhập lại mật khẩu
                       </label>
+                      <div id="errorPassword" style={{ color: "red" }}></div>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="password"
                         name="password_confirm"
+                        onChange={(e) => checkCorrectRePassword(e)}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -793,6 +1016,7 @@ export const HeaderPage = () => {
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="text"
                         name="full_name"
+                        onChange={(e) => setRegisterFullname(e.target.value)}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -810,34 +1034,14 @@ export const HeaderPage = () => {
                       </svg>
                       <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
                     </div>
-                    <div className="navbar-form-group relative mb-3">
-                      <label className="mb-1 block text-[14px]">Email</label>
-                      <input
-                        className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
-                        type="text"
-                        name="email"
-                      />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-4 h-4 absolute left-1 bottom-2"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"
-                        ></path>
-                      </svg>
-                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
-                    </div>
+
                     <div className="navbar-form-group relative mb-3">
                       <label className="mb-1 block text-[14px]">Phone</label>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6 rounded"
                         type="number"
                         name="phone"
+                        onChange={(e) => setRegisterPhone(e.target.value)}
                       />
                       <FontAwesomeIcon
                         icon={faPhone}
@@ -855,6 +1059,7 @@ export const HeaderPage = () => {
                         type="button"
                         name="submit"
                         value="Đăng ký"
+                        onClick={handleRegister}
                       />
                     </div>
                     <div
@@ -889,7 +1094,7 @@ export const HeaderPage = () => {
           {loggedUser != null && (
             <div
               id="navbar-right"
-              className="navbar-right fixed overflow-hidden h-full shadow w-[300px] top-0 bottom-0 bg-white dark:bg-slate-800/90 dark:shadow-slate-700 z-50 transition-all duration-300 right-0"
+              className="navbar-right fixed overflow-hidden h-full -right-[300px] shadow w-[300px] top-0 bottom-0 bg-white dark:bg-slate-800/90 dark:shadow-slate-700 z-50 transition-all duration-300 right-0"
             >
               <div
                 className="navbar-close absolute top-2 left-2 w-8 h-8 opacity-60"

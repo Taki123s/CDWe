@@ -1391,8 +1391,8 @@ ol {
 	text-decoration: none;
 }
 .activeEpisode {
-	/* color: #ffffff!important!important;
-	background: rgba(1, 172, 252, 0.7)!important; */
+	color: #ffffff!important;
+	background: rgba(1, 172, 252, 0.7)!important;
 }
 
 /*---------------------

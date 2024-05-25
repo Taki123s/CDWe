@@ -11,7 +11,6 @@ function AnimePage() {
     const [totalPages, setTotalPages] = useState(1);
     const [sortBy, setSortBy] = useState('createAt');
     const [ascending, setAscending] = useState(false);
-
     useEffect(() => {
         fetchMovies();
     }, [currentPage, sortBy, ascending]); // Fetch movies when currentPage, sortBy or ascending changes

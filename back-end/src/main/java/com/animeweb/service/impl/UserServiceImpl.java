@@ -1,6 +1,7 @@
 package com.animeweb.service.impl;
 
 import com.animeweb.dto.LoginDTO;
+import com.animeweb.dto.VerifyUser;
 import com.animeweb.entities.ExpiredToken;
 import com.animeweb.entities.Role;
 import com.animeweb.entities.User;
@@ -48,6 +49,9 @@ public class UserServiceImpl implements UserDetailsService {
     public boolean existUserName(String userName){
         return userRepository.existsByUserName(userName);
     }
+    public boolean existEmail(String email) {
+        return userRepository.existByEmail(email);
+    }
     public void saveUser(User user){
         userRepository.save(user);
     }
@@ -76,4 +80,8 @@ public class UserServiceImpl implements UserDetailsService {
         return jwtGenerator.generateToken(user);
     }
 
+    public boolean verifyUser(VerifyUser verifyUser) {
+        Integer updatedRows = userRepository.updateUserVerificationStatus(verifyUser.getUserName(), verifyUser.getEmail(), verifyUser.getVerifyCode());
+        return updatedRows > 0;
+    }
 }

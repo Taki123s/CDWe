@@ -24,5 +24,5 @@ public class View {
     @JsonBackReference
     private Movie movie;
     @Column(name = "watch_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date watchAt;
+    private Date watchAt = new Date();
 }

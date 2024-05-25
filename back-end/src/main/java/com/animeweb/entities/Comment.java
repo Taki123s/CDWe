@@ -20,13 +20,13 @@ public class Comment {
     @Column(name = "content")
     private String content;
     @Column(name = "comment_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date commentAt;
+    private Date commentAt = new Date();
     @Column(name = "update_at")
     private Date updateAt;
     @Column(name = "delete_at")
     private Date deleteAt;
     @Column(name="status",columnDefinition = "tinyint default 1")
-    private Boolean status;
+    private Boolean status = true;
 
 
 

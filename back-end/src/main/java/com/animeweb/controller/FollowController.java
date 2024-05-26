@@ -31,14 +31,14 @@ public class FollowController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Movie movie = movieRepository.findById(follow.getMovieId())
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
-        Follow followEntity = new Follow(follow.getId()!=null?follow.getId():null, follow.getFollowAt(), follow.getStatus(), user, movie);
+        Follow followEntity = new Follow(follow.getId() != null ? follow.getId() : null, follow.getFollowAt(), follow.getStatus(), user, movie);
 
         isFollow = followService.addFollow(followEntity);
         return new ResponseEntity<>(isFollow, HttpStatus.CREATED);
 
     }
 
-//    @PostMapping("/delete")
+    //    @PostMapping("/delete")
 //    public ResponseEntity<Void> unFollowMovie(@RequestBody FollowDTO follow) {
 //        User user = userRepository.findById(follow.getUserId())
 //                .orElseThrow(() -> new RuntimeException("User not found"));
@@ -47,4 +47,15 @@ public class FollowController {
 //        followService.updateFollow(new Follow(follow.getId(), follow.getFollowAt(), follow.getStatus(), user, movie));
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
+    @GetMapping
+    public ResponseEntity<FollowDTO> findFollow(@RequestParam  Long movieId, @RequestParam  Long userId) {
+
+        FollowDTO follow = followService.findFollowByIdUserAndIdMovie(movieId, userId);
+        if (follow != null) {
+            return new ResponseEntity<>(follow, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }    }
+
+
 }

@@ -1,4 +1,4 @@
-package com.animeweb.config;
+package com.animeweb.security;
 
 public enum PaypalPaymentMethod {
 

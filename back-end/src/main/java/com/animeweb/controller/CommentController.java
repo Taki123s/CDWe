@@ -1,17 +1,33 @@
 package com.animeweb.controller;
 import com.animeweb.dto.CommentDTO;
+import com.animeweb.entities.Chapter;
+import com.animeweb.entities.Comment;
+import com.animeweb.entities.Movie;
+import com.animeweb.entities.User;
+import com.animeweb.repository.MovieRepository;
+import com.animeweb.repository.UserRepository;
+import com.animeweb.repository.ChapterRepository;
 import com.animeweb.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
+import java.util.Optional;
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/comment")
+@RequiredArgsConstructor
 public class CommentController {
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ChapterRepository chapterRepository;
+    @Autowired
+    private MovieRepository movieRepository;
+
     @GetMapping
 
     public ResponseEntity<List<CommentDTO>> getAllCommentMovie() {
@@ -43,7 +59,7 @@ public class CommentController {
         Optional<User> userReply = userRepository.findById(commentDTO.getUserReplyId());
 
 
-        User userComment = userRepository.findById(commentDTO.getUserReplyId())
+        User userComment = userRepository.findById(commentDTO.getUserCommentId())
                 .orElseThrow(() -> new RuntimeException("userComment not found"));
         Chapter chapter= chapterRepository.findById(commentDTO.getChapterId())
                 .orElseThrow(()-> new RuntimeException("Chapter not found"));

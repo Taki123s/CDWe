@@ -5,11 +5,14 @@ import './css/ds/style.css'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './component/bootstrap.min.css';
+import "./i18n"
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App/>
-  </React.StrictMode>
+      <React.Suspense fallback='loading'>
+        <App/>
+      </React.Suspense>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

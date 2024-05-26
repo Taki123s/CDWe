@@ -39,25 +39,24 @@ public class AuthController {
         }
         User user = UserMapper.mapToRegisterUser(registerDto);
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-
         Role roles = roleRepository.findByName("USER").get();
         user.setRoles(Collections.singletonList(roles));
         userService.saveUser(user);
         return new ResponseEntity<>("User registered success!",HttpStatus.OK);
     }
     @PostMapping("/logout")
-    public ResponseEntity<String> logOut(LogOutRequest logOutRequest) throws ParseException, JOSEException {
+    public ResponseEntity<String> logOut(@RequestBody LogOutRequest logOutRequest) throws ParseException, JOSEException {
         userService.logout(logOutRequest);
         return new ResponseEntity<>("Logout success!",HttpStatus.OK);
     }
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(LoginDTO loginDTO){
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO){
         String token = userService.authenticate(loginDTO);
         return new ResponseEntity<>(new AuthResponseDTO(token,true),HttpStatus.OK);
     }
     @PostMapping("/introspect")
-    public ResponseEntity<IntrospectResponse> authenticate(IntrospectRequest introspectRequest) throws ParseException, JOSEException {
-             return new ResponseEntity<>(userService.introspect(introspectRequest),HttpStatus.OK);
+    public ResponseEntity<IntrospectResponse> authenticate(@RequestBody IntrospectRequest introspectRequest) throws ParseException, JOSEException {
+        return new ResponseEntity<>(userService.introspect(introspectRequest),HttpStatus.OK);
 
     }
 }

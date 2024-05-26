@@ -8,6 +8,7 @@ import axios from "axios";
 import { useTranslation, Trans } from "react-i18next";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import './bootstrap.min.css'; // Import Bootstrap CSS
 
 function MovieDetail() {
   const { t, i18n } = useTranslation();
@@ -18,11 +19,40 @@ function MovieDetail() {
   // Lấy id của phim từ URL
   const { id } = useParams();
   const [movie, setMovies] = useState("");
+  const [genres, setGenres] = useState([]);
+  const[movie_same_series,setMovieSameSeries]=useState([]);
+
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/movie/${id}`);
         setMovies(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/movie/same/${id}`);
+        setMovieSameSeries(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/genre`);
+        setGenres(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -38,9 +68,10 @@ function MovieDetail() {
     setFlag(!flag);
     return flag;
   };
+
   const [isFavorite, setFavorite] = React.useState(false);
   const AddFavorite = () => {
-   setFavorite(!isFavorite)
+    setFavorite(!isFavorite);
 
     return isFavorite;
   };
@@ -131,8 +162,15 @@ function MovieDetail() {
                               {t("menu.categories")}
                             </Trans>
                           </span>
-                          Tình cảm
-                          <> </>Hài hước
+                          {genres.map((genre, index) => (
+                            <button
+                              key={index}
+                              className="btn btn-outline-light"
+                              style={{ color: "blue" }}
+                            >
+                              {genre.description}
+                            </button>
+                          ))}
                         </li>
                         <li>
                           <span>
@@ -206,6 +244,13 @@ function MovieDetail() {
                   </a>
                 )}
               </div>
+            </div>
+            <div className="mt-3">
+              {movie_same_series.map((movie, index)=> (
+                <button  key={index} type="button" class="btn btn-outline-dark ml-2" >{movie.seriesDescriptions}</button>
+
+              ))}
+
             </div>
           </div>
           <MovieComment />

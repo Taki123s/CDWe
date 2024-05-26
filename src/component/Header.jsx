@@ -43,7 +43,7 @@ export const HeaderPage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/movies/search?term=${searchTerm}`
+          `http://localhost:8080/movie/search?term=${searchTerm}`
         );
         console.log(response.data);
         setSearchResults(response.data);
@@ -183,9 +183,9 @@ export const HeaderPage = () => {
 
   return (
     <header className="h-[60px]">
-      <nav className="fixed top-0 left-0 right-0 bg-white shadow dark:shadow-slate-700 bg-white dark:bg-slate-800 dark:shadow-slate-700  z-1000">
+      <nav className="fixed top-0 left-0 right-0 overflow-scroll bg-white shadow dark:shadow-slate-700 bg-white dark:bg-slate-800 dark:shadow-slate-700  z-1000">
         <div className="container px-[10px] s1024:px-0 mx-auto h-[60px] flex s375:gap-3 items-center">
-          <div className="navbar-brand h-[50px] w-[200px] s768:w-[180px] flex justify-between shrink-0 s1280:mr-2 s1366:mr-3 z-50">
+          <div className="navbar-brand h-[50px] s768:w-[180px] flex justify-between shrink-0 s1280:mr-2 s1366:mr-3 z-50">
             <a className="" href="/">
               <img className="h-full" src={logo} alt="/index" />
             </a>
@@ -210,7 +210,7 @@ export const HeaderPage = () => {
             </div>
           </div>
           <div
-            className="navbar-left fixed overflow-hidden h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300"
+            className="navbar-left  overflow-scroll h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300"
             id="navbar-left"
           >
             <div className="navbar-close absolute top-4 right-4 hidden">
@@ -229,67 +229,8 @@ export const HeaderPage = () => {
                 />
               </svg>
             </div>
-            <div className="relative mt-[20px] pr-[10px] s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow s768:items-center gap-4 s768:gap-2 s1280:gap-3">
-              <div className="group/search navbar-search relative top-0 right-0 s768:order-last s768:ml-auto s1024:w-[300px] s1280:w-[320px]">
-                <div className="search-box">
-                  <input
-                    className="rounded-full w-full h-[30px] text-[14px] font-extralight border-red-200 focus:ring-red-300 focus:border-red-200 s768:border-gray-200 s768:focus:ring-red-300 s768:focus:border-red-200 bg-transparent dark:bg-transparent dark:border-teal-500 s768:dark:border-gray-700 dark:focus:border-teal-500 dark:focus:ring-teal-500"
-                    id="search-box"
-                    type="text"
-                    name="search"
-                    autoComplete="off"
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6 absolute top-[2px] right-[2px] text-gray-200 group-hover/search:text-red-300 dark:text-slate-700 dark:group-hover/search:text-teal-500"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                </div>
-                <div
-                  className="search-result  pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
-                  id="search-results"
-                >
-                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
-                    {searchResults.map((result) => (
-                      <li className="result-input" key={result.id}>
-                        <a href={`/movie/${result.id}`}>
-                          <img
-                            className="image_result"
-                            src={result.avatarMovie}
-                          />
-                          {result.name}
-                        </a>
-                      </li>
-                    ))}
-                    {searchResults.length !== 0 ? (
-                      <a
-                        className="view-all-result"
-                        style={{ display: "block" }}
-                      >
-                        Xem tất cả
-                      </a>
-                    ) : (
-                      <a
-                        className="view-all-result"
-                        style={{ display: "none" }}
-                      />
-                    )}
-                  </div>
-                  <div className="result-noitem  font-extralight text-center"></div>
-                  <div className="loading animate-spin "></div>
-                </div>
-              </div>
-              <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
+            <div className="  s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow  gap-4 s768:gap-2 s1280:gap-3">
+              <div className="navbar-item  s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
                 <a
                   className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
                   href="/index"
@@ -416,6 +357,72 @@ export const HeaderPage = () => {
                     {t("menu.english1-1")}
                   </span>
                 </a>
+              </div>
+              <div className="group/search navbar-search s768:order-last s768:ml-auto s1024:w-[300px] s1280:w-[320px]">
+                <div className="">
+                  <div>
+                    <input
+                      className="rounded-full w-full h-[30px] text-[14px] font-extralight border-red-200 focus:ring-red-300 focus:border-red-200 s768:border-gray-200 s768:focus:ring-red-300 s768:focus:border-red-200 bg-transparent dark:bg-transparent dark:border-teal-500 s768:dark:border-gray-700 dark:focus:border-teal-500 dark:focus:ring-teal-500"
+                      id=""
+                      type="text"
+                      name="search"
+                      autoComplete="off"
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-6 h-6 absolute top-[2px] right-[2px] text-gray-200 group-hover/search:text-red-300 dark:text-slate-700 dark:group-hover/search:text-teal-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                      />
+                    </svg>
+                  </div>
+
+                  <div
+                    style={{
+                      width: "320px",
+                      right: 0,
+                      top: "44px",
+                      backgroundColor: "#fffff",
+                    }}
+                    className="shadow-xl absolute overflow-scroll right-0 h-[200px] flex flex-col"
+                  >
+                    {searchResults.map((result) => (
+                      <div
+                        style={{ backgroundColor: "#fffff" }}
+                        className="w-full bg-white"
+                        key={result.id}
+                      >
+                        <a
+                          style={{ backgroundColor: "#fffff" }}
+                          className="flex gap-3 "
+                          href={`/movie/${result.id}`}
+                        >
+                          <img className="h-12 w-12" src={result.avatarMovie} />
+                          <div> {result.name}</div>
+
+                        </a>
+                      </div>
+                    ))}
+                    {searchResults.length !== 0 ? (
+                      <a className="bg-white" style={{ display: "block" }}>
+                        {t("viewall")}
+                      </a>
+                    ) : (
+                      <a
+                        className="view-all-result"
+                        style={{ display: "none" }}
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1088,7 +1095,7 @@ export const HeaderPage = () => {
                           d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
                         ></path>
                       </svg>
-                      <span> {t("login.editinformation")}</span>
+                      <span> {t("login.editinformation")} </span>
                     </a>
                   </div>
                   <div className="user-item">

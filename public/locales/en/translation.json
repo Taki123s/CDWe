@@ -46,7 +46,9 @@
     "follow": "Follow"
   },
   "content": {
-    "reply":"reply",
+    "addcommnent":"Add new comment",
+
+    "reply":"Reply",
     "infor":"Information",
     "showless":"Show less",
     "time":"Time",
@@ -62,7 +64,7 @@
     "topview": "Top Views",
     "reviews": "Reviews",
     "comment": "Comment",
-    "review": "Review",
+    "review": "Send",
     "welcome": "Welcome ",
     "newmoive": "Add new movies :",
     "namemoive": "Name:",
@@ -131,6 +133,8 @@
     "choose": "---All---",
     "sort": "Filter"
   },
+  "genres":{
+
   "day": "Day",
   "month": "Month",
   "year": "Year",
@@ -141,4 +145,5 @@
   "Horror": "Horror",
   "Romantic": "Romantic",
   "viewall": "View All"
+  }
 }

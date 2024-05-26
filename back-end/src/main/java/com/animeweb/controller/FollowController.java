@@ -23,7 +23,7 @@ public class FollowController {
     @Autowired
     private MovieRepository movieRepository;
 
-  
+
     @PostMapping("/save")
     public ResponseEntity<FollowDTO> followMovie(@RequestBody FollowDTO follow) {
         FollowDTO isFollow;

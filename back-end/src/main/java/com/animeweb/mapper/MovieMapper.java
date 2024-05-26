@@ -28,6 +28,12 @@ public class MovieMapper {
     public static MovieDTO mapToMovieWatching(Movie movie){
         return new MovieDTO(movie.getId(),movie.getName(),movie.getTotalChapters(),movie.getCurrentChapters());
     }
+
+    public static MovieDTO mapToMovieSameSeries(Movie movie){
+        return new MovieDTO(movie.getId(),movie.getName(),movie.getTotalChapters(),
+                movie.getCreateAt(),movie.getUpdateAt(),movie.getDeleteAt(),movie.getStatus(),
+                movie.getProducer(),movie.getAvatarMovie(),movie.getSeriesDescriptions());
+    }
     public static Movie mapToMovie(MovieDTO movieDTO){
         return new Movie(
                 movieDTO.getId(),

@@ -3,11 +3,11 @@ import axios from "axios";
 import userDefaultImage from "../img/user_default.png";
 import { DeleteFilled } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 
 function MovieComment() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [comments, setComments] = useState([]);
   const [rendered, setRendered] = useState(0);
@@ -169,13 +169,14 @@ function MovieComment() {
           <textarea
             className="form-control new-comment"
             rows="3"
-            placeholder="Thêm bình luận mới"
+            placeholder=        {t("content.addcommnent")}
+
             value={newComment}
             onChange={handleInputChange}
           ></textarea>
         </div>
         <button type="submit" className="btn btn-send-comment">
-          Gửi
+        {t("content.review")}
         </button>
       </form>
 

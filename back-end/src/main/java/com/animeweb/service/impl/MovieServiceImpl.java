@@ -93,5 +93,15 @@ public class MovieServiceImpl implements MovieService {
         return movieDTOList;
     }
 
+    @Override
+    public List<MovieDTO> findAllMovieSameSeries(Long movieId) {
+        List<Movie> movieList=movieRepository.findAllSeries(movieId);
+        List<MovieDTO> movieDTOList  = new ArrayList<>();
+        for(Movie movie : movieList){
+            movieDTOList.add(MovieMapper.mapToMovieSameSeries(movie));
+        }
+        return movieDTOList;
+    }
+
 
 }

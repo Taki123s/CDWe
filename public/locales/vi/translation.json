@@ -46,6 +46,7 @@
     "follow": "Phim đang theo dõi"
   },
   "content": {
+    "addcommnent":"Thêm bình luận mới",
     "reply":"Trả lời",
     "showless":"Rút gọn",
     "infor":"Thông tin",
@@ -131,6 +132,7 @@
     "choose": "---Tất cả---",
     "sort": "Lọc"
   },
+  "genres":{
   "day": "Ngày",
   "month": "Tháng",
   "year": "Năm",
@@ -141,4 +143,5 @@
   "Horror": "Kinh dị",
   "Romantic": "Lãng mạn",
   "viewall": "Xem tất cả"
+  }
 }

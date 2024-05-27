@@ -15,9 +15,10 @@ function MovieComment() {
   const [newComment, setNewComment] = useState("");
   const [replyContent, setReplyContent] = useState({});
   var token = Cookies.get("jwt_token");
-  var user = jwtDecode(token);
+  const user = typeof token === "undefined" ? null : jwtDecode(token);
   useEffect(() => {
     fetchComments();
+    console.log(comments)
   }, []);
 
   const fetchComments = () => {
@@ -64,31 +65,34 @@ function MovieComment() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const currentDate = new Date().toISOString();
-    const newCommentData = {
-      parentId: null,
-      content: newComment,
-      commentAt: currentDate,
-      updateAt: currentDate,
-      deleteAt: null,
-      status: 1,
-      movieId: 2,
-      userCommentId: user.idUser,
-      userReplyId: 5,
-      chapterId: 1,
-    };
-    axios
-      .post("http://localhost:8080/comment/create", newCommentData)
-      .then((response) => {
-        console.log(response);
-        setNewComment('');  
-
-        fetchComments();
-      })
-      .catch((error) => {
-        console.error("Error posting comment:", error);
-      });
+    // if(user!=null){
+    //   event.preventDefault();
+    //   const currentDate = new Date().toISOString();
+    //   const newCommentData = {
+    //     parentId: null,
+    //     content: newComment,
+    //     commentAt: currentDate,
+    //     updateAt: currentDate,
+    //     deleteAt: null,
+    //     status: 1,
+    //     movieId: 2,
+    //     userCommentId: user.idUser,
+    //     userReplyId: 5,
+    //     chapterId: 1,
+    //   };
+    //   axios
+    //     .post("http://localhost:8080/comment/create", newCommentData)
+    //     .then((response) => {
+    //       console.log(response);
+    //       setNewComment('');  
+  
+    //       fetchComments();
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error posting comment:", error);
+    //     });
+    // }
+   
   };
 
   // const handleReplyInputChange = (event, commentId) => {

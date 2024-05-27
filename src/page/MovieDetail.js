@@ -9,13 +9,13 @@ import { useTranslation, Trans } from "react-i18next";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import './bootstrap.min.css';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 function MovieDetail() {
   const { t, i18n } = useTranslation();
-
   var token = Cookies.get("jwt_token");
-  var user = jwtDecode(token);
-
+  const user = typeof token === "undefined" ? null : jwtDecode(token);
   const { id } = useParams();
   const [movie, setMovies] = useState("");
   const [genres, setGenres] = useState([]);
@@ -61,19 +61,24 @@ function MovieDetail() {
   }, []);
 
   useEffect(() => {
+    if(user!=null){
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/follow?movieId=${id}&userId=${user.idUser}`);
-        if (response.data !== null) {
-          setFollow(response.data);
-          setFavorite(response.data.status);
+        if(user!=null){
+          const response = await axios.get(`http://localhost:8080/follow?movieId=${id}&userId=${user.idUser}`);
+          if (response.data !== null) {
+            setFollow(response.data);
+            setFavorite(response.data.status);
+        }
+       
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, [id, user.idUser]);
+  }
+  }, []);
 
   const ShowMore = () => {
     setFlag(!flag);
@@ -81,6 +86,9 @@ function MovieDetail() {
   };
 
   const AddFavorite = () => {
+    // const alert = useAlert()
+
+    if(user!=null){
     const newFavorite = !isFavorite;
     setFavorite(newFavorite);
     const currentDate = new Date().toISOString();
@@ -97,6 +105,19 @@ function MovieDetail() {
         console.error("Error posting comment:", error);
         setFavorite(!isFavorite);
       });
+    }else {
+      confirmAlert({
+        customUI: ({ onClose }) => {
+          return (
+            <div className='custom-ui'>
+              <p>Vui long dang nhap ! </p>
+            </div>
+          );
+        }
+      });      
+  
+    }
+   
   };
 
   return (

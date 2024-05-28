@@ -1,9 +1,50 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "../../src/component/bootstrap.min.css";
 import Carousel from "../../src/component/Carousel";
 import "../css/ds/style.css";
+import Topview from "../component/Topview";
+import { useParams } from "react-router-dom";
+import { getMoviesByGenre } from "../service/CategoryServices";
 
 export const CategoriesPage = () => {
+  const [movies, setMovies] = useState([]);
+  const { idGenre, nameGenre} = useParams();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(9);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("createAt");
+  const [ascending, setAscending] = useState(false);
+  useEffect(() => { 
+      getMoviesByGenre(idGenre, currentPage-1, sortBy, ascending).then((response) => {
+          setMovies(response.data.movies);
+          setTotalPages(Math.ceil(response.data.totalMovies / pageSize))
+        }
+      );
+    },[
+    idGenre,
+    currentPage,
+    sortBy,
+    ascending]
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleSortChange = (event) => {
+    setSortBy(event.target.value);
+  };
+
+  const handleOrderChange = (event) => {
+    const selectedOption = event.target.value;
+
+    if (selectedOption === "asc") {
+      setAscending(true);
+    } else {
+      setAscending(false);
+    }
+  };
   return (
     <div id="ah_wrapper">
       <section className="hero">
@@ -17,97 +58,99 @@ export const CategoriesPage = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-8">
-              <div className="container">
-                <div className="trending__product" id="">
-                  <div className="row">
-                    <div className="col-lg-8 col-md-8 col-sm-8">
-                      <div className="section-title">
-                        <h4>Hành động</h4>
-                      </div>
-                      <div className="section-title">
-                        <form
-                          className="sort"
-                          id="sort"
-                          action=""
-                          method="post"
+              <div className="trending__product">
+                <div className="row">
+                  <div className="col-lg-8 col-md-8 col-sm-8">
+                    <div className="section-title">
+                      <h4>Thể loại: {nameGenre}</h4>
+                      
+                      <div className="sort">
+                        <select
+                          className="filter"
+                          value={sortBy}
+                          onChange={handleSortChange}
                         >
-                          <label
-                            htmlFor="filter"
-                            className="section-title h4"
-                            style={{ color: `red`, fontSize: `1.5rem` }}
+                          <option value="createAt">Time</option>
+                          <option value="name">Name</option>
+                        </select>
+                        {sortBy === "createAt" ? (
+                          <select
+                            className="filter"
+                            value={ascending ? "asc" : "desc"}
+                            onChange={handleOrderChange}
                           >
-                            Lọc
-                          </label>
-                          <select name="filter" id="filter">
-                            <option value="isAtoZ">A-Z</option>
-                            <option value="notAtoZ">Z-A</option>
-                            <option value="isDescDate">Mới nhất</option>
-                            <option value="notDescDate">Cũ nhất</option>
+                            <option value="desc">Newest</option>
+                            <option value="asc">Oldest</option>
                           </select>
-                          <button
-                            type="submit"
-                            style={{ display: `none` }}
-                          ></button>
-                        </form>
+                        ) : (
+                          <select
+                            className="filter"
+                            value={ascending ? "asc" : "desc"}
+                            onChange={handleOrderChange}
+                          >
+                            <option value="asc">A-Z</option>
+                            <option value="desc">Z-A</option>
+                          </select>
+                        )}
                       </div>
                     </div>
                   </div>
+                  <div className="col-lg-4 col-md-4 col-sm-4"></div>
                 </div>
                 <div className="row">
-                  <div className="col-lg-4 col-md-6 col-sm-6">
-                    <div className="product__item">
-                      <a href="#">
+                  {movies.map((movie) => (
+                    <div className="col-lg-4 col-md-6 col-sm-6" key={movie.id}>
+                      <div className="product__item">
                         <div
                           className="product__item__pic set-bg"
                           style={{
-                            backgroundImage: `url("https://i.pinimg.com/564x/d6/a9/e4/d6a9e4d944352aae84ccbac8f8d655fa.jpg")`,
+                            backgroundImage: `url(${movie.avatarMovie})`,
                           }}
                         >
-                          <div className="ep">18 / 18</div>
+                          <div className="ep">
+                            {movie.currentChapters.length} /{" "}
+                            {movie.totalChapters}
+                          </div>
                           <div className="view">
-                            <i className="fa fa-eye"></i> 9141
+                            <i className="fa fa-eye"></i> {movie.views.length}
                           </div>
                         </div>
                         <div className="product__item__text">
                           <h5>
-                            <a href="#">
-                              The Seven Deadly Sins: Wrath of the Gods
-                            </a>
+                          <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
                           </h5>
                         </div>
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-lg-4 col-md-6 col-sm-6">
-                    <div className="product__item">
-                      <div
-                        className="product__item__pic set-bg"
-                        style={{
-                          backgroundImage: `url("img/trending/trend-2.jpg")`,
-                        }}
-                      >
-                        <div className="ep">18 / 18</div>
-
-                        <div className="view">
-                          <i className="fa fa-eye"></i> 9141
-                        </div>
-                      </div>
-                      <div className="product__item__text">
-                        <h5>
-                          <a href="#">
-                            Gintama Movie 2: Kanketsu-hen - Yorozuya yo Eien
-                          </a>
-                        </h5>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
+            {/* <Topview /> */}
+          </div>
+          <div className="col-md-6">
+            <nav aria-label="Page navigation example">
+              <ul className="pagination justify-content-end mb-0">
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <li
+                    className={`page-item ${
+                      index + 1 === currentPage ? "active" : ""
+                    }`}
+                    key={index}
+                  >
+                    <a
+                      className="page-link"
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         </div>
       </section>
     </div>
   );
 };
-

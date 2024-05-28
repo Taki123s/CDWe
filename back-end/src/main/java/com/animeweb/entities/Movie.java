@@ -57,18 +57,16 @@ public class Movie {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Genre> genres = new ArrayList<>();
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private List<Chapter> currentChapters;
+    private List<Chapter> currentChapters = new ArrayList<>();
     @ManyToOne()
     @JoinColumn(name ="serie_id",referencedColumnName = "id")
  //   @JsonBackReference
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private List<View> views;
+    private List<View> views =new ArrayList<>();
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private List<Rate> rates;
+    private List<Rate> rates = new ArrayList<>();
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
-    private List<Follow> follows;
-
-
+    private List<Follow> follows = new ArrayList<>();
 
 }

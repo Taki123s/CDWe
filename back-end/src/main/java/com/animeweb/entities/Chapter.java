@@ -24,12 +24,11 @@ public class Chapter {
     @Column(name = "link")
     private String link;
 
-    @Column(name = "status",columnDefinition = "tinyint default 1")
-    private Boolean status;
+    @Column(name = "status", columnDefinition = "TINYINT(1)")
+    private Boolean status = true;
 
     @Column(name = "type")
     private Integer type;
-
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
     @JsonBackReference

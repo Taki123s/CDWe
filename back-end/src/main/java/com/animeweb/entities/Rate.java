@@ -19,7 +19,7 @@ public class Rate {
     @Column(name= "score")
     private Double score;
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date createAt;
+    private Date createAt = new Date();
     @Column(name = "update_at")
     private Date updateAt;
     @Column(name = "delete_at")

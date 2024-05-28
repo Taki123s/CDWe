@@ -7,13 +7,19 @@ span {
   color: black !important;
 }
 
-.anime__details__widget ul li {
-  color: blue;
+.anime__details__widget ul li span {
+  color: black;
+  font-weight: 500;
+  font-size: 18px;
 }
-
+.anime__details__widget ul li:not(:first-child) {
+  display: flex;
+}
 .container p {
   color: black !important;
+
 }
+
 
 .footer {
   background-color: whitesmoke;
@@ -121,4 +127,7 @@ span {
 }
 button.setValue.btn.btn-outline-info.btn-reply {
   margin-left: 6%;
+}
+.hoverWhite:hover{
+  color: white!important;
 }

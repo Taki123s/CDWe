@@ -35,8 +35,8 @@ function ServiceDetail(props) {
                 <div className="col-lg-4 col-md-6 col-sm-6" key={servicePack.id}>
                     <div className="product__item">
                         <div className="product__item__text">
-                            <h5><Link to="/" >{servicePack.service_type}</Link></h5>
-                            <h5><Link to="/" >{servicePack.price} VND</Link></h5>
+                            <h3 style={{ color: 'whitesmoke' }}>{servicePack.service_type}</h3>
+                            <h5 style={{ color: 'whitesmoke' }}>{servicePack.price} VND</h5>
 
                             {loggedUser && (
                                 <PayPalButton

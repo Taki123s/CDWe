@@ -83,7 +83,7 @@ const PayPalButton = ({ amount, userId, serviceId }) => {
         }
     };
 
-    return <button onClick={handleBuyNow}>Mua Ngay</button>;
+    return <button id={"buyMovie"} onClick={handleBuyNow}>Mua Ngay</button>;
 };
 
 export default PayPalButton;

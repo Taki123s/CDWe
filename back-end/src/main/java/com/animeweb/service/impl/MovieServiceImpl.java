@@ -44,7 +44,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieDTO> index(int page, int size, String sortBy, boolean ascending) {
         if (sortBy == null || sortBy.isEmpty()) {
-            sortBy = "createAt"; // Mặc định sắp xếp theo thời gian tạo mới nhất
+            sortBy = "createAt";
         }
 
         Pageable pageable;

@@ -14,6 +14,7 @@ import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
 import React from 'react';
 import Follow from "./page/Follow";
 import AdminPanel from "./admin/user/AdminPanel";
+import Footer from "./page/Footer";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
       <Route path="/servicePack" element={<ServicePack />} />
       <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
       </Routes>
+      <Footer/>
     </Router>
 
   );

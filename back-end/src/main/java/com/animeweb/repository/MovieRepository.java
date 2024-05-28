@@ -27,4 +27,6 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     @Query("select m from Movie m  join Serie s on m.serie.id=s.id")
     List<Movie> findAllSeries(Long movieId);
 
+    @Query("select m from Movie m  where m.status = true")
+    List<Movie>findAll();
 }

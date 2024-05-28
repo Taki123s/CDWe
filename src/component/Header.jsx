@@ -15,7 +15,7 @@ import logo from "../img/logo.png";
 import { getGenreList } from "../service/CategoryServices";
 import { useTranslation, Trans } from "react-i18next";
 import { Dropdown, Space, Typography } from "antd";
-
+import {useNavigate} from 'react-router-dom';
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -55,7 +55,7 @@ export const HeaderPage = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genreList, setGenreList] = useState([]);
-
+  const navigate  = useNavigate();
   const [loggedUser, setLoggedUser] = useState(null);
   const [activeTab, setActiveTab] = useState("login");
   const [token, setToken] = useState("");
@@ -755,8 +755,10 @@ export const HeaderPage = () => {
                     </div>
                     <hr className="mb-3 border-gray-300 dark:border-slate-600" />
                     <div className="navbar-form-group relative mb-3 h-8 rounded bg-orange-600/90 text-center text-white text-[14px] font-light">
+
                       <a  className="social-login"
                           href="http://localhost:8080/oauth2/authorization/google">
+
                         <input
                           type="button"
                           className="google w-full h-full rounded cursor-pointer"

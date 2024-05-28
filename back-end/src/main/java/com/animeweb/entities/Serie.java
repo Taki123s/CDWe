@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,9 +24,9 @@ public class Serie {
     private String descriptions;
     @OneToMany(mappedBy = "serie",cascade = CascadeType.ALL)
     @JsonBackReference
-    private List<Movie> movieSet;
+    private List<Movie> movieSet = new ArrayList<>();
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date createAt;
+    private Date createAt = new Date();
 
     @Column(name = "update_at")
     private Date updateAt;
@@ -33,6 +34,6 @@ public class Serie {
     @Column(name = "delete_at")
     private Date deleteAt;
     @Column(name = "status",columnDefinition = "tinyint default 1")
-    private Boolean status;
+    private Boolean status = true;
 
 }

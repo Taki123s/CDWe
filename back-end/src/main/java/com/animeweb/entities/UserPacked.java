@@ -33,10 +33,10 @@ public class UserPacked {
     @Column(name = "captureId")
     private Long captureId;
     @Column(name = "create_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date createdAt;
+    private Date createdAt = new Date();
 
     @Column(name = "status",columnDefinition = "tinyint default 1")
-    private Boolean status;
+    private Boolean status = true;
 
     @Column(name = "delete_at")
     private Date deletedAt;

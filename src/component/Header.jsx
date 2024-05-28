@@ -1,7 +1,15 @@
-import React, { useState, useEffect, someStateIndicatingDOMReady } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { createRoot } from "react-dom/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
-import { login, logout } from "../service/AuthServices";
+import {
+  login,
+  logout,
+  checkUsername,
+  sendMail,
+  register,
+} from "../service/AuthServices";
 import { jwtDecode } from "jwt-decode";
 import {ServicePack} from "../component/ServicePack";
 import Cookies from "js-cookie";
@@ -19,6 +27,14 @@ import {useNavigate} from 'react-router-dom';
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  // const lngs = {
+  //   en: {
+  //     nativeName: "English",
+  //   },
+  //   vi: {
+  //     nativeName: "Vietnamese",
+  //   },
+  // };
 
   const items = [
     {
@@ -55,14 +71,259 @@ export const HeaderPage = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [genreList, setGenreList] = useState([]);
-  const navigate  = useNavigate();
+
   const [loggedUser, setLoggedUser] = useState(null);
   const [activeTab, setActiveTab] = useState("login");
   const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [regiserUser, setRegisterUser] = useState(null);
+  const [registerUsername, setRegisterUserName] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerRePassword, setRegisterRePassword] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPhone, setRegisterPhone] = useState("");
+  const [registerFullname, setRegisterFullname] = useState("");
+  const [correctPassword, setCorrectPassword] = useState(false);
+  const [correctUserName, setcorrectUserName] = useState(false);
 
+  const handleLogin = (event) => {
+    const user = { userName: username, password: password };
+    login(user)
+      .then((response) => {
+        const token = response.data.accessToken;
+        setToken(token);
+        const decodedToken = jwtDecode(token);
+        const expires = new Date(decodedToken.exp * 1000);
+        Cookies.set("jwt_token", token, {
+          expires: expires,
+        });
+        decodeToken();
+      })
+      .catch((error) => {
+        Swal.fire({
+            title: "Lỗi",
+            text: error.response.data.message,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+      });
+  };
+  const validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+  const EmailVerificationDialog = ({ onClose }) => {
+    const [verificationCode, setVerificationCode] = useState("");
+    const [email, setEmail] = useState("");
+    const [isSendCodeDisabled, setSendCodeDisabled] = useState(false);
+    const [buttonText, setButtonText] = useState("Gửi mã");
+    const [timer, setTimer] = useState(null);
+    const [registerUser, setRegisterUser] = useState({});
+    useEffect(() => {
+      return () => {
+        if (timer) {
+          clearInterval(timer);
+        }
+      };
+    }, [timer]);
+    let currentRegister = {
+      userName: registerUsername,
+      password: registerPassword,
+      email: registerEmail,
+      fullName: registerFullname,
+      phone: registerPhone,
+    };
+    const sendCode = (emailInput) => {
+      currentRegister.email = emailInput;
+      setRegisterUser(currentRegister);
+      sendMail(currentRegister)
+        .then((response) => {
+          Swal.fire({
+            title: "Thành công",
+            text: "Đã gửi mã xác thực",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          let timeLeft = 300;
+          setButtonText(`Gửi lại mã sau ${timeLeft}s`);
+          const interval = setInterval(() => {
+            timeLeft -= 1;
+            setButtonText(`Gửi lại mã sau ${timeLeft}s`);
+            if (timeLeft <= 0) {
+              clearInterval(interval);
+              setButtonText("Gửi mã");
+              setSendCodeDisabled(false);
+            }
+          }, 1000);
+          setTimer(interval);
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: "Lỗi",
+            text: error.response.data,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          setSendCodeDisabled(false);
+        });
+    };
+    const handleSendCode = () => {
+      if (email && validateEmail(email)) {
+        setSendCodeDisabled(true);
+        sendCode(email);
+      } else {
+        Swal.fire({
+          title: "Lỗi",
+          text: "Vui lòng nhập email đúng định dạng",
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    };
+    const registerVerify = () => {
+      let verifyUser = {
+        userName: registerUser.userName,
+        email: registerUser.email,
+        verifyCode: verificationCode,
+      };
+      if(verifyUser.verificationCode=="" || verifyUser.verificationCode == null){
+        Swal.fire({
+          title: "Lỗi",
+          text: "Không được để trống mã xác nhận",
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        return;
+      }
+      register(verifyUser)
+        .then((response) => {
+          Swal.fire({
+            title: "Thành công",
+            text: "Đăng ký thành công",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          setRegisterUserName("");
+          setRegisterPassword("");
+          setRegisterRePassword("");
+          setRegisterEmail("");
+          setRegisterPhone("");
+          setRegisterFullname("");
+          onClose();
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: "Lỗi",
+            text: error.response.data,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        });
+    };
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h2>Xác thực email</h2>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
+          <input
+            type="number"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            placeholder="Enter verification code"
+          />
+          <button
+            type="button"
+            onClick={handleSendCode}
+            className="swal2-confirm swal2-styled"
+            disabled={isSendCodeDisabled}
+          >
+            {buttonText}
+          </button>
+          <button
+            type="button"
+            onClick={registerVerify}
+            className="swal2-confirm swal2-styled"
+          >
+            Xác nhận đăng ký
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="swal2-cancel swal2-styled"
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    );
+  };
+  const handleRegister = () => {
+    if (correctUserName) {
+      const navbarRight = document.getElementById("navbar-right");
+      navbarRight.classList.toggle("-right-[300px]");
+      const modalDiv = document.createElement("div");
+      document.body.appendChild(modalDiv);
+      const root = createRoot(modalDiv);
+      root.render(<EmailVerificationDialog onClose={() => root.unmount()} />);
+    }else{
+      Swal.fire({
+        title: "Lỗi",
+        text: "Vui lòng điền đầy đủ và hợp lệ các trường",
+        icon: "error",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
+  };
+
+  const checkCorrectRePassword = (e) => {
+    let errorPassword = document.getElementById("errorPassword");
+    if (registerPassword !== e.target.value) {
+      errorPassword.innerText = "Mật khẩu xác thực không hợp lệ";
+      setCorrectPassword(false);
+    } else {
+      setCorrectPassword(true);
+      errorPassword.innerText = "";
+    }
+    setRegisterRePassword(e.target.value);
+  };
+  const checkCorrectPassword = (e) => {
+    let errorPassword = document.getElementById("errorPassword");
+    if (e.target.value !== registerRePassword) {
+      errorPassword.innerText = "Mật khẩu xác thực không hợp lệ";
+      setCorrectPassword(false);
+    } else {
+      setCorrectPassword(true);
+      errorPassword.innerText = "";
+    }
+    setRegisterPassword(e.target.value);
+  };
+  const checkUsernameR = (e) => {
+    let errorUserName = document.getElementById("errorUserName");
+    checkUsername(e.target.value)
+      .then(() => {
+        setRegisterUserName(e.target.value);
+        errorUserName.innerText = "";
+        setcorrectUserName(true);
+      })
+      .catch((error) => {
+        setcorrectUserName(false);
+        errorUserName.innerText = error.response.data;
+      });
+  };
   const handleMouseEnter = () => {
     setDropdownOpen(true);
   };
@@ -117,27 +378,7 @@ export const HeaderPage = () => {
         console.log(error);
       });
   };
-  const handleLogin = (event) => {
-    const user = { userName: username, password: password };
-    console.log(user);
 
-    login(user)
-      .then((response) => {
-        const token = response.data.accessToken;
-        setToken(token);
-        const decodedToken = jwtDecode(token);
-        const expires = new Date(decodedToken.exp * 1000);
-        Cookies.set("jwt_token", token, {
-          expires: expires,
-        });
-        decodeToken();
-      })
-      .catch((error) => {
-        console.log(user);
-
-        console.log(error);
-      });
-  };
   const decodeToken = () => {
     const token = Cookies.get("jwt_token");
     if (token) {
@@ -204,8 +445,9 @@ export const HeaderPage = () => {
             </div>
           </div>
           <div
-            className="navbar-left  overflow-scroll h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300"
+            className="navbar-left overflow-scroll h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300 absolute"
             id="navbar-left"
+
           >
             <div className="navbar-close absolute top-4 right-4 hidden">
               <svg
@@ -223,7 +465,7 @@ export const HeaderPage = () => {
                 />
               </svg>
             </div>
-            <div className="  s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow  gap-4 s768:gap-2 s1280:gap-3">
+            <div className="s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow  gap-4 s768:gap-2 s1280:gap-3" style={{background:"white"}}>
               <div className="navbar-item  s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
                 <a
                   className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
@@ -285,12 +527,14 @@ export const HeaderPage = () => {
                       {Array.isArray(genreList) &&
                         genreList?.map((genre) => {
                           return (
-                            <li
+                            <Link
                               key={genre.id}
-                              className="px-4 py-2 cursor-pointer categories-dropdown-item"
+                              to={`/categories/${genre.id}/${genre.description}`}
                             >
-                              {genre.description}
-                            </li>
+                              <li className="px-4 py-2 cursor-pointer categories-dropdown-item">
+                                {genre.description}
+                              </li>
+                            </Link>
                           );
                         })}
                     </ul>
@@ -405,20 +649,9 @@ export const HeaderPage = () => {
                         >
                           <img className="h-12 w-12" src={result.avatarMovie} />
                           <div> {result.name}</div>
-
                         </a>
                       </div>
                     ))}
-                    {searchResults.length !== 0 ? (
-                      <a className="bg-white" style={{ display: "block" }}>
-                        {t("viewall")}
-                      </a>
-                    ) : (
-                      <a
-                        className="view-all-result"
-                        style={{ display: "none" }}
-                      />
-                    )}
                   </div>
                 </div>
               </div>
@@ -449,7 +682,7 @@ export const HeaderPage = () => {
 
               {/* // language */}
 
-              <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+              <div className="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
                 <Dropdown
                   menu={{
                     items,
@@ -459,7 +692,7 @@ export const HeaderPage = () => {
                 >
                   <Typography.Link>
                     <Space>
-                      <a>
+                      <span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           height="24px"
@@ -471,7 +704,7 @@ export const HeaderPage = () => {
                           <path d="M0 0h24v24H0z" fill="none" />
                           <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" />
                         </svg>
-                      </a>
+                      </span>
                     </Space>
                   </Typography.Link>
                 </Dropdown>
@@ -507,7 +740,7 @@ export const HeaderPage = () => {
 
           {loggedUser == null && (
             <div className="navbar-user relative shrink-0 h-[40px] s1024:w-[145px] s1280:w-[294px] s1366:w-[320px] ml-auto flex justify-end gap-2">
-              <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+              <div className="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
                 <Dropdown
                   menu={{
                     items,
@@ -517,7 +750,7 @@ export const HeaderPage = () => {
                 >
                   <Typography.Link>
                     <Space>
-                      <a>
+                      <span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           height="24px"
@@ -810,10 +1043,12 @@ export const HeaderPage = () => {
                       <label className="mb-1 block text-[14px]">
                         {t("login.username")}{" "}
                       </label>
+                      <div id="errorUserName" style={{ color: "red" }}></div>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="text"
                         name="username"
+                        onChange={checkUsernameR}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -840,6 +1075,7 @@ export const HeaderPage = () => {
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="password"
                         name="password"
+                        onChange={(e) => checkCorrectPassword(e)}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -861,10 +1097,12 @@ export const HeaderPage = () => {
                       <label className="mb-1 block text-[14px]">
                         {t("login.passwordagain")}
                       </label>
+                      <div id="errorPassword" style={{ color: "red" }}></div>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="password"
                         name="password_confirm"
+                        onChange={(e) => checkCorrectRePassword(e)}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -890,6 +1128,7 @@ export const HeaderPage = () => {
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="text"
                         name="full_name"
+                        onChange={(e) => setRegisterFullname(e.target.value)}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -907,28 +1146,7 @@ export const HeaderPage = () => {
                       </svg>
                       <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
                     </div>
-                    <div className="navbar-form-group relative mb-3">
-                      <label className="mb-1 block text-[14px]">Email</label>
-                      <input
-                        className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
-                        type="text"
-                        name="email"
-                      />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-4 h-4 absolute left-1 bottom-2"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"
-                        ></path>
-                      </svg>
-                      <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
-                    </div>
+
                     <div className="navbar-form-group relative mb-3">
                       <label className="mb-1 block text-[14px]">
                         {t("signup.phone")}
@@ -937,6 +1155,7 @@ export const HeaderPage = () => {
                         className="text-[14px] font-extralight w-full h-8 pl-6 rounded"
                         type="number"
                         name="phone"
+                        onChange={(e) => setRegisterPhone(e.target.value)}
                       />
                       <FontAwesomeIcon
                         icon={faPhone}
@@ -954,6 +1173,7 @@ export const HeaderPage = () => {
                         type="button"
                         name="submit"
                         value={t("menu.signup")}
+                        onClick={handleRegister}
                       />
                     </div>
                     <div
@@ -988,7 +1208,7 @@ export const HeaderPage = () => {
           {loggedUser != null && (
             <div
               id="navbar-right"
-              className="navbar-right fixed overflow-hidden h-full shadow w-[300px] top-0 bottom-0 bg-white dark:bg-slate-800/90 dark:shadow-slate-700 z-50 transition-all duration-300 right-0"
+              className="navbar-right fixed overflow-hidden h-full -right-[300px] shadow w-[300px] top-0 bottom-0 bg-white dark:bg-slate-800/90 dark:shadow-slate-700 z-50 transition-all duration-300 right-0"
             >
               <div
                 className="navbar-close absolute top-2 left-2 w-8 h-8 opacity-60"
@@ -1316,7 +1536,6 @@ export const HeaderPage = () => {
                 </div>
               </div>
 
-              <div className="loading animate-spin hidden"></div>
               <div className="loading animate-spin hidden"></div>
             </div>
           )}

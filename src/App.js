@@ -14,18 +14,21 @@ import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
 import React from 'react';
 import Follow from "./page/Follow";
 import AdminPanel from "./admin/user/AdminPanel";
+import Follow from "./page/Follow";
+import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
+import React from "react";
 import Footer from "./page/Footer";
-
 function App() {
   return (
-
     <Router>
       <HeaderPage />
       <Routes>
-
         <Route path="/movie/:id" Component={MovieDetail} />
         <Route path="/item" element={ProductItem} />
-        <Route path="/categories" element={<CategoriesPage />} />
+        <Route
+          path="/categories/:idGenre/:nameGenre"
+          element={<CategoriesPage />}
+        />
         <Route path="/" element={<AnimePage />} />
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
@@ -45,9 +48,7 @@ function App() {
       <Route path="/servicePack" element={<ServicePack />} />
       <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
       </Routes>
-      <Footer/>
     </Router>
-
   );
 }
 

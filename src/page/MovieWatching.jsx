@@ -1,23 +1,22 @@
 import React, { useState } from "react";
-import Footer from "./Footer";
 import { useParams } from "react-router-dom";
-import MovieComment from "./MovieComment";
 import { useEffect } from "react";
 import { FaFastForward } from "react-icons/fa";
 import { createRoot } from "react-dom/client";
-import { FaHome } from "react-icons/fa";
 import { findMovieWatching } from "../service/MovieServices";
 import { usePlyr } from "plyr-react";
 import "plyr-react/plyr.css";
-
+import { Link } from "react-router-dom";
+import { Comment } from "../component/Comment";
+import Cookies from "js-cookie";
 const MovieWatching = () => {
   const { movieId, chapterId } = useParams();
   const [movie, setMovie] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [videoSrc, setVideoSrc] = useState([]);
+  const currentUrl = `http://animeweb.site/movies/${movieId}&${chapterId}`;
   const PlyrPlayer = React.forwardRef((props, ref) => {
     const { source, options = null, ...rest } = props;
-
     const playerRef = React.useRef(videoSrc);
     usePlyr(playerRef, {
       source,
@@ -31,10 +30,12 @@ const MovieWatching = () => {
     );
   });
   useEffect(() => {
-    findMovieWatching(movieId)
+    const token = Cookies.get("jwt_token");
+    findMovieWatching(movieId, token)
       .then((response) => {
         setMovie(response.data);
         setChapters(response.data.currentChapters);
+        window.scrollTo(0, 0);
       })
       .catch((error) => {
         console.log(error);
@@ -73,10 +74,12 @@ const MovieWatching = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <div className="breadcrumb__links" style={{display:"flex"}}>
+            <div className="breadcrumb__links" style={{ display: "flex" }}>
               <p>Trang chủ</p>
-              <p>----</p>
+              <p> /</p>
               <p>{movie.name}</p>
+              <p> /</p>
+              <p>Chap {chapterId}</p>
             </div>
           </div>
         </div>
@@ -120,26 +123,28 @@ const MovieWatching = () => {
                   <h5>Danh sách tập</h5>
                 </div>
                 {chapters.map((chap) => {
-                  const isActive = chap.ordinal == chapterId;
+                  let isActive = chap.ordinal == chapterId;
                   return (
-                    <a
+                    <Link
+                      to={`/movie/watching/${movieId}/${chap.ordinal}`}
                       key={chap.ordinal}
-                      href={`/movie/watching/${chapterId}/${chap.ordinal}`}
                       className={isActive ? "activeEpisode" : ""}
                     >
                       Ep {chap.ordinal}
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
             </div>
           </div>
-          <div className="">
-            <MovieComment />
+          <div className="anime__details__review">
+            <div className="row row-no-gutters">
+            <div class="section-title col-xs-6 comment-tile"><h5> Bình luận</h5></div>
+              <Comment appId="583739630280650" url={currentUrl} />
+            </div>
           </div>
         </div>
       </section>
-      <Footer />
       <div className="search-model">
         <div className="h-100 d-flex align-items-center justify-content-center">
           <div className="search-close-switch">

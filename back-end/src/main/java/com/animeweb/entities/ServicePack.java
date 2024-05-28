@@ -20,7 +20,7 @@ public class ServicePack {
     @Column(name="price")
     private Double price;
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date createAt;
+    private Date createAt = new Date();
 
     @Column(name = "update_at")
     private Date updateAt;
@@ -29,7 +29,7 @@ public class ServicePack {
     private Date deleteAt;
 
     @Column(name = "status",columnDefinition = "tinyint default 1")
-    private Boolean status;
+    private Boolean status = true;
 
     public ServicePack(Long id, String service_type, Double price, Date createAt) {
         this.id = id;

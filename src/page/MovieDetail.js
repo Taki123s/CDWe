@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../css/moviedetail.css";
-import MovieComment from "./MovieComment.js";
-import Footer from "./Footer.js";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import axios from "axios";
 import { useTranslation, Trans } from "react-i18next";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import './bootstrap.min.css';
-import { confirmAlert } from 'react-confirm-alert'; // Import
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import "./bootstrap.min.css";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { LikeShare } from "../component/LikeShare";
+import MovieComment from "./MovieComment";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 function MovieDetail() {
   const { t, i18n } = useTranslation();
@@ -23,7 +26,7 @@ function MovieDetail() {
   const [flag, setFlag] = useState(false);
   const [follow, setFollow] = useState("");
   const [isFavorite, setFavorite] = useState("");
-
+  const currentUrl = `http://animeweb.site/like/${id}`;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +42,9 @@ function MovieDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/movie/same/${id}`);
+        const response = await axios.get(
+          `http://localhost:8080/movie/same/${id}`
+        );
         setMovieSameSeries(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -61,23 +66,24 @@ function MovieDetail() {
   }, []);
 
   useEffect(() => {
-    if(user!=null){
-    const fetchData = async () => {
-      try {
-        if(user!=null){
-          const response = await axios.get(`http://localhost:8080/follow?movieId=${id}&userId=${user.idUser}`);
-          if (response.data !== null) {
-            setFollow(response.data);
-            setFavorite(response.data.status);
+    if (user != null) {
+      const fetchData = async () => {
+        try {
+          if (user != null) {
+            const response = await axios.get(
+              `http://localhost:8080/follow?movieId=${id}&userId=${user.idUser}`
+            );
+            if (response.data !== null) {
+              setFollow(response.data);
+              setFavorite(response.data.status);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
         }
-       
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }
+      };
+      fetchData();
+    }
   }, []);
 
   const ShowMore = () => {
@@ -88,36 +94,34 @@ function MovieDetail() {
   const AddFavorite = () => {
     // const alert = useAlert()
 
-    if(user!=null){
-    const newFavorite = !isFavorite;
-    setFavorite(newFavorite);
-    const currentDate = new Date().toISOString();
-    const newfollow = {
-      followAt: currentDate,
-      status: newFavorite,
-      userId: user.idUser,
-      movieId: movie.id,
-    };
-    axios
-      .post("http://localhost:8080/follow/save", newfollow)
-      .then((response) => {})
-      .catch((error) => {
-        console.error("Error posting comment:", error);
-        setFavorite(!isFavorite);
-      });
-    }else {
+    if (user != null) {
+      const newFavorite = !isFavorite;
+      setFavorite(newFavorite);
+      const currentDate = new Date().toISOString();
+      const newfollow = {
+        followAt: currentDate,
+        status: newFavorite,
+        userId: user.idUser,
+        movieId: movie.id,
+      };
+      axios
+        .post("http://localhost:8080/follow/save", newfollow)
+        .then((response) => {})
+        .catch((error) => {
+          console.error("Error posting comment:", error);
+          setFavorite(!isFavorite);
+        });
+    } else {
       confirmAlert({
         customUI: ({ onClose }) => {
           return (
-            <div className='custom-ui'>
+            <div className="custom-ui">
               <p>Vui long dang nhap ! </p>
             </div>
           );
-        }
-      });      
-  
+        },
+      });
     }
-   
   };
 
   return (
@@ -127,8 +131,14 @@ function MovieDetail() {
           <div className="row">
             <div className="col-lg-12">
               <div className="breadcrumb__links">
-                <a><Trans i18nKey={"menu.home"}>{t("menu.home")}</Trans></a>
-                <a href=""><Trans i18nKey={"content.moviedetail"}>{t("content.moviedetail")}</Trans></a>
+                <a>
+                  <Trans i18nKey={"menu.home"}>{t("menu.home")}</Trans>
+                </a>
+                <a href="">
+                  <Trans i18nKey={"content.moviedetail"}>
+                    {t("content.moviedetail")}
+                  </Trans>
+                </a>
               </div>
             </div>
           </div>
@@ -147,62 +157,141 @@ function MovieDetail() {
             <div className="row">
               <div className="col-lg-3">
                 <div className="image-container">
-                  <img className="movie-image" src={movie.avatarMovie} alt="movie" />
+                  <img
+                    className="movie-image"
+                    src={movie.avatarMovie}
+                    alt="movie"
+                  />
                   <div className="anime__details__btn icon-layer">
                     {isFavorite ? (
-                      <FaHeart onClick={AddFavorite} style={{ color: "red", fontSize: "25px" }} />
+                      <FaHeart
+                        onClick={AddFavorite}
+                        style={{ color: "red", fontSize: "25px" }}
+                      />
                     ) : (
-                      <FaRegHeart onClick={AddFavorite} style={{ color: "black", fontSize: "25px" }} />
+                      <FaRegHeart
+                        onClick={AddFavorite}
+                        style={{ color: "black", fontSize: "25px" }}
+                      />
                     )}
                   </div>
+                  <LikeShare appId="583739630280650" url={currentUrl} />
                 </div>
               </div>
               <div className="col-lg-9">
-                <div className="anime__details__widget">
+                <div
+                  className="anime__details__widget"
+                  style={{
+                    height: "100%",
+                  }}
+                >
                   <div className="row">
                     <div className="col-lg-6 col-md-6">
                       <ul>
-                        <li><span><Trans i18nKey={"content.type"}>{t("content.type")}</Trans>:</span>
-                          {movie.genres && movie.genres.map((genre, index) => (
-                            <button key={index} className="btn btn-outline-light" style={{ color: "blue" }}>{genre.description}</button>
-                          ))}
-                          <span>{}</span>
-                        </li>
-                        <li><span><Trans i18nKey={"menu.categories"}>{t("menu.categories")}</Trans>:</span>
+                        <li>
+                          <span>
+                            <Trans i18nKey={"menu.categories"}>
+                              {t("menu.categories")}
+                            </Trans>
+                            :
+                          </span>
                           {genres.map((genre, index) => (
-                            <button key={index} className="btn btn-outline-light" style={{ color: "blue" }}>{genre.description}</button>
+                            <Link
+                              key={genre.id}
+                              to={`/categories/${genre.id}/${genre.description}`}
+                            >
+                              <button
+                                className="btn btn-outline-danger ml-2 hoverWhite"
+                                style={{ color: "black",fontWeight:"500",marginTop:"10px",transform:"translate(-10%,-20%)" }}
+                              >
+                                {genre.description}
+                              </button>
+                            </Link>
                           ))}
                         </li>
-                        <li><span><Trans i18nKey={"content.producer"}>{t("content.producer")}</Trans>:</span>{movie.producer}</li>
+                        <li>
+                          <span>
+                            <Trans i18nKey={"content.producer"}>
+                              {t("content.producer")}
+                            </Trans>
+                            :
+                          </span>
+                          <span style={{width:"unset",fontWeight:"400"}}>{movie.producer}</span>
+                        </li>
                       </ul>
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <ul>
-                        <li><span><Trans i18nKey={"content.duration"}>{t("content.duration")}</Trans>:</span>24 min/ep</li>
-                        <li><span><Trans i18nKey={"content.quality"}>{t("content.quality")}</Trans>:</span>HD</li>
-                        <li><span><Trans i18nKey={"content.views"}>{t("content.views")}</Trans>:</span>0{/* {movie.views.length} */}</li>
+                        <li style={{display:"flex"}}>
+                          <span>
+                            <Trans i18nKey={"content.duration"}>
+                              {t("content.duration")}
+                            </Trans>
+                          </span>
+                          <span style={{width:"unset",fontWeight:"400"}}>24 min/ep</span>
+                        </li>
+                        <li>
+                          <span>
+                            <Trans i18nKey={"content.quality"}>
+                              {t("content.quality")}
+                            </Trans>
+                          </span>
+                          <span style={{width:"unset",fontWeight:"400"}}>HD</span>
+                        </li>
+                        <li>
+                          <span>
+                            <Trans i18nKey={"content.views"}>
+                              {t("content.views")}
+                            </Trans>
+                          </span>
+                          <span style={{width:"unset",fontWeight:"400"}}>0{/* {movie.views.length} */}</span>
+                        </li>
                       </ul>
                     </div>
                   </div>
-                  <div className="row"></div>
+                  <div className="row" style={{ marginTop: "20%" }}>
+                    <div className="anime__details__btn">
+                      <Link
+                        className="watch-btn"
+                        to={`/movie/watching/${movie.id}/${1}`}
+                      >
+                        <button
+                          id={"rateBtn"}
+                          style={{
+                            color: "white",
+                            fontSize: "20px",
+                            outline: "none",
+                          }}
+                        >
+                          Watching
+                        </button>
+                        <i>
+                          <FontAwesomeIcon icon={faAngleRight} />
+                        </i>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div className="col-lg-9 anime_showmore">
               <div className="anime__details__text">
                 <div className="anime_details_title">
-                  <text className="des_detail">{movie.vietnameseDescriptions != null ?
-                    movie.vietnameseDescriptions.substring(0, 500) : ""}</text>
+                  <h4 className="des_detail">
+                    {movie.vietnameseDescriptions != null
+                      ? movie.vietnameseDescriptions.substring(0, 500)
+                      : ""}
+                  </h4>
                 </div>
                 {flag ? (
                   <>
-                    <text className="des_detail">
+                    <h5 className="des_detail">
                       {" "}
                       {movie.vietnameseDescriptions.substring(
                         500,
                         movie.vietnameseDescriptions.length
                       )}
-                    </text>
+                    </h5>
                     <a onClick={() => ShowMore()}>
                       <i> {t("content.showless")}</i>
                     </a>
@@ -215,17 +304,20 @@ function MovieDetail() {
               </div>
             </div>
             <div className="mt-3">
-              {movie_same_series.map((movie, index)=> (
-                <button  key={index} type="button" class="btn btn-outline-dark ml-2" >{movie.seriesDescriptions}</button>
-
+              {movie_same_series.map((movie, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="btn btn-outline-dark ml-2"
+                >
+                  {movie.seriesDescriptions}
+                </button>
               ))}
-
             </div>
           </div>
           <MovieComment />
         </div>
       </section>
-      <Footer />
     </div>
   );
 }

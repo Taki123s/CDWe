@@ -1195,7 +1195,7 @@ ol {
 	font-size: 20px;
 	display: inline-block;
 	background: #e53637;
-	padding: 11px 5px 16px 8px;
+	padding: 14px 10px;
 	color: #ffffff;
 	border-radius: 0 4px 4px 0;
 }
@@ -1393,8 +1393,8 @@ ol {
 	text-decoration: none;
 }
 .activeEpisode {
-	/* color: #ffffff!important!important;
-	background: rgba(1, 172, 252, 0.7)!important; */
+	color: #ffffff!important;
+	background: rgba(1, 172, 252, 0.7)!important;
 }
 
 /*---------------------

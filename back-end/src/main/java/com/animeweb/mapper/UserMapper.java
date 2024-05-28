@@ -16,16 +16,15 @@ public class UserMapper {
                 user.getPhone(),
                 user.getUserType(),
                 user.getStatus(),
-                user.getExternalId());
+                user.getExternalId(),
+                user.getAuthenticated());
     }
     public static User mapToRegisterUser(RegisterDTO userDTO){
         return new User(
                 userDTO.getUserName(),
-                userDTO.getAvatarPicture(),
+                userDTO.getPassword(),
                 userDTO.getEmail(),
                 userDTO.getFullName(),
-                userDTO.getPhone(),
-                userDTO.getUserType(),
-                userDTO.getExternalId());
+                userDTO.getPhone());
     }
 }

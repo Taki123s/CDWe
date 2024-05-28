@@ -17,9 +17,9 @@ public class Follow {
     @Column(name = "id")
     private Long id ;
     @Column(name = "follow_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date followAt;
+    private Date followAt = new Date();
     @Column(name="status",columnDefinition = "tinyint default 1")
-    private Boolean status;
+    private Boolean status = true;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
     @JsonBackReference

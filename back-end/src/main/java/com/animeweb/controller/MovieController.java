@@ -2,8 +2,10 @@ package com.animeweb.controller;
 
 
 import com.animeweb.dto.MovieDTO;
-import com.animeweb.dto.SerieDTO;
+import com.animeweb.security.JwtGenerator;
 import com.animeweb.service.MovieService;
+import com.animeweb.service.impl.UserServiceImpl;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +26,10 @@ import java.util.Map;
 public class MovieController {
     @Autowired
     private MovieService movieService;
-
+    @Autowired
+    JwtGenerator jwtGenerator;
+    @Autowired
+    UserServiceImpl userService;
     @PostMapping
     public ResponseEntity<MovieDTO> createMovie(@RequestBody MovieDTO movieDTO) {
         MovieDTO savedMovie = movieService.createMovie(movieDTO);
@@ -52,25 +59,18 @@ public class MovieController {
     public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId){
         return ResponseEntity.ok(movieService.findMovieById(movieId));
     }
-    @GetMapping("/watching/{movieId}")
-    public ResponseEntity<MovieDTO> findMovieWatching(@PathVariable Long movieId){
+    @GetMapping("/watching")
+    public ResponseEntity<MovieDTO> findMovieWatching(@RequestParam Long movieId,@RequestParam String token) throws ParseException {
+        SignedJWT signedJWT =  jwtGenerator.verifyToken(token);
+        Long idUser = (Long) signedJWT.getJWTClaimsSet().getClaim("idUser");
         return ResponseEntity.ok(movieService.findMovieWatching(movieId));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<MovieDTO>> search(@RequestParam("term") String keyword) {
-        List<MovieDTO> movieList = null;
-        if (keyword != null && !keyword.isEmpty()) {
-            movieList = movieService.searchMovie(keyword);
-        } else {
-            movieList = movieService.getAllMovie();
-        }
+        List<MovieDTO> movieList = movieService.searchMovie(keyword);
 
-        if (movieList != null && !movieList.isEmpty()) {
-            return new ResponseEntity<>(movieList, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
     @GetMapping("/top-view")
     public ResponseEntity<Map<String, Object>> getTopMovies(@RequestParam("type") String type) {

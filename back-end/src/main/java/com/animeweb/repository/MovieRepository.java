@@ -1,6 +1,5 @@
 package com.animeweb.repository;
 
-
 import com.animeweb.dto.MovieDTO;
 import com.animeweb.entities.Movie;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +24,7 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     List<Movie> findTopMoviesMonth();
     @Query("SELECT m FROM Movie m JOIN View v ON m.id = v.movie.id  WHERE YEAR(v.watchAt) = YEAR(CURDATE()) AND m.status = true ORDER BY SIZE(m.views) DESC")
     List<Movie> findTopMoviesYear();
+    @Query("select m from Movie m  join Serie s on m.serie.id=s.id")
+    List<Movie> findAllSeries(Long movieId);
+
 }

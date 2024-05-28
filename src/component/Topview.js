@@ -6,7 +6,8 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import './bootstrap.min.css'; // Import Bootstrap CSS
 
 const Topview = () => {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
   const [movies, setMovies] = useState([]);
   const [activeFilter, setActiveFilter] = useState('day'); // Track active filter
 

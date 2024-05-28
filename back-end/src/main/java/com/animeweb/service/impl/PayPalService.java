@@ -1,12 +1,9 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.config.PaypalPaymentIntent;
-import com.animeweb.config.PaypalPaymentMethod;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -2,6 +2,7 @@ package com.animeweb.controller;
 
 
 import com.animeweb.dto.MovieDTO;
+import com.animeweb.dto.SerieDTO;
 import com.animeweb.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,7 +63,7 @@ public class MovieController {
         if (keyword != null && !keyword.isEmpty()) {
             movieList = movieService.searchMovie(keyword);
         } else {
-            movieList = movieService.findAll();
+            movieList = movieService.getAllMovie();
         }
 
         if (movieList != null && !movieList.isEmpty()) {
@@ -88,5 +89,9 @@ public class MovieController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/same/{movieId}")
+    public ResponseEntity<List<MovieDTO>> getSeries(@PathVariable Long movieId){
+        return  ResponseEntity.ok(movieService.findAllMovieSameSeries(movieId));
+    }
 
 }

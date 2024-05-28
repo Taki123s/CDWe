@@ -1,6 +1,6 @@
 import React, { useState, useEffect, someStateIndicatingDOMReady } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { login, logout } from "../service/AuthServices";
 import { jwtDecode } from "jwt-decode";
 import {ServicePack} from "../component/ServicePack";
@@ -13,16 +13,31 @@ import {Link} from 'react-router-dom';
 import "../css/home.css";
 import logo from "../img/logo.png";
 import { getGenreList } from "../service/CategoryServices";
+import { useTranslation, Trans } from "react-i18next";
+import { Dropdown, Space, Typography } from "antd";
 
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+  const items = [
+    {
+      key: "1",
+      label: "Vi",
+      onClick: () => i18n.changeLanguage("vi"),
+    },
+    {
+      key: "2",
+      label: "En",
+      onClick: () => i18n.changeLanguage("en"),
+    },
+  ];
+  const { t, i18n } = useTranslation();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/movies/search?term=${searchTerm}`
+          `http://localhost:8080/movie/search?term=${searchTerm}`
         );
         console.log(response.data);
         setSearchResults(response.data);
@@ -46,7 +61,7 @@ export const HeaderPage = () => {
   const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [regiserUser,setRegisterUser] = useState(null)
+  const [regiserUser, setRegisterUser] = useState(null);
 
   const handleMouseEnter = () => {
     setDropdownOpen(true);
@@ -104,6 +119,8 @@ export const HeaderPage = () => {
   };
   const handleLogin = (event) => {
     const user = { userName: username, password: password };
+    console.log(user);
+
     login(user)
       .then((response) => {
         const token = response.data.accessToken;
@@ -116,6 +133,8 @@ export const HeaderPage = () => {
         decodeToken();
       })
       .catch((error) => {
+        console.log(user);
+
         console.log(error);
       });
   };
@@ -185,7 +204,7 @@ export const HeaderPage = () => {
             </div>
           </div>
           <div
-            className="navbar-left fixed overflow-hidden h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300"
+            className="navbar-left  overflow-scroll h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300"
             id="navbar-left"
           >
             <div className="navbar-close absolute top-4 right-4 hidden">
@@ -204,67 +223,8 @@ export const HeaderPage = () => {
                 />
               </svg>
             </div>
-            <div className="relative mt-[20px] pr-[10px] s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow s768:items-center gap-4 s768:gap-2 s1280:gap-3">
-              <div className="group/search navbar-search relative top-0 right-0 s768:order-last s768:ml-auto s1024:w-[300px] s1280:w-[320px]">
-                <div className="search-box">
-                  <input
-                    className="rounded-full w-full h-[30px] text-[14px] font-extralight border-red-200 focus:ring-red-300 focus:border-red-200 s768:border-gray-200 s768:focus:ring-red-300 s768:focus:border-red-200 bg-transparent dark:bg-transparent dark:border-teal-500 s768:dark:border-gray-700 dark:focus:border-teal-500 dark:focus:ring-teal-500"
-                    id="search-box"
-                    type="text"
-                    name="search"
-                    autoComplete="off"
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6 absolute top-[2px] right-[2px] text-gray-200 group-hover/search:text-red-300 dark:text-slate-700 dark:group-hover/search:text-teal-500"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                </div>
-                <div
-                  className="search-result  pt-2 s768:bg-white s768:pl-2 s768:mt-[15px] dark:s768:bg-slate-800/90 s768:shadow s768:rounded-b-lg "
-                  id="search-results"
-                >
-                  <div className="result-body relative scrollbar-hide h-auto max-h-none s768:max-h-[400px]">
-                    {searchResults.map((result) => (
-                      <li className="result-input" key={result.id}>
-                        <a href={`/movie/${result.id}`}>
-                          <img
-                            className="image_result"
-                            src={result.avatarMovie}
-                          />
-                          {result.name}
-                        </a>
-                      </li>
-                    ))}
-                    {searchResults.length !== 0 ? (
-                      <a
-                        className="view-all-result"
-                        style={{ display: "block" }}
-                      >
-                        Xem tất cả
-                      </a>
-                    ) : (
-                      <a
-                        className="view-all-result"
-                        style={{ display: "none" }}
-                      />
-                    )}
-                  </div>
-                  <div className="result-noitem  font-extralight text-center"></div>
-                  <div className="loading animate-spin "></div>
-                </div>
-              </div>
-              <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
+            <div className="  s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow  gap-4 s768:gap-2 s1280:gap-3">
+              <div className="navbar-item  s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
                 <a
                   className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
 
@@ -284,8 +244,9 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <Link to={'/index'}> <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                  Trang chủ
+                    {t("menu.home")}
                   </span></Link>
+
                 </a>
               </div>
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:order-2">
@@ -310,7 +271,9 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    Thể loại
+                    <Trans i18nKey={"menu.categories"}>
+                      {t("menu.categories")}
+                    </Trans>
                   </span>
                 </a>
                 {dropdownOpen && (
@@ -362,8 +325,9 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <Link to={'/servicePack'}>  <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    Service Pack
+                    {t("menu.servicepack")}
                   </span></Link>
+
                 </a>
               </div>
 
@@ -388,9 +352,75 @@ export const HeaderPage = () => {
                     />
                   </svg>
                   <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    English 1-1
+                    {t("menu.english1-1")}
                   </span>
                 </a>
+              </div>
+              <div className="group/search navbar-search s768:order-last s768:ml-auto s1024:w-[300px] s1280:w-[320px]">
+                <div className="">
+                  <div>
+                    <input
+                      className="rounded-full w-full h-[30px] text-[14px] font-extralight border-red-200 focus:ring-red-300 focus:border-red-200 s768:border-gray-200 s768:focus:ring-red-300 s768:focus:border-red-200 bg-transparent dark:bg-transparent dark:border-teal-500 s768:dark:border-gray-700 dark:focus:border-teal-500 dark:focus:ring-teal-500"
+                      id=""
+                      type="text"
+                      name="search"
+                      autoComplete="off"
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-6 h-6 absolute top-[2px] right-[2px] text-gray-200 group-hover/search:text-red-300 dark:text-slate-700 dark:group-hover/search:text-teal-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                      />
+                    </svg>
+                  </div>
+
+                  <div
+                    style={{
+                      width: "320px",
+                      right: 0,
+                      top: "44px",
+                      backgroundColor: "#fffff",
+                    }}
+                    className="shadow-xl absolute overflow-scroll right-0 h-[200px] flex flex-col"
+                  >
+                    {searchResults.map((result) => (
+                      <div
+                        style={{ backgroundColor: "#fffff" }}
+                        className="w-full bg-white"
+                        key={result.id}
+                      >
+                        <a
+                          style={{ backgroundColor: "#fffff" }}
+                          className="flex gap-3 "
+                          href={`/movie/${result.id}`}
+                        >
+                          <img className="h-12 w-12" src={result.avatarMovie} />
+                          <div> {result.name}</div>
+
+                        </a>
+                      </div>
+                    ))}
+                    {searchResults.length !== 0 ? (
+                      <a className="bg-white" style={{ display: "block" }}>
+                        {t("viewall")}
+                      </a>
+                    ) : (
+                      <a
+                        className="view-all-result"
+                        style={{ display: "none" }}
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -416,6 +446,37 @@ export const HeaderPage = () => {
                   ></path>
                 </svg>
               </div>
+
+              {/* // language */}
+
+              <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+                <Dropdown
+                  menu={{
+                    items,
+                    selectable: true,
+                    defaultSelectedKeys: ["2"],
+                  }}
+                >
+                  <Typography.Link>
+                    <Space>
+                      <a>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="24px"
+                          viewBox="0 0 24 24"
+                          alt="Language"
+                          width="24px"
+                          fill="#666666"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" />
+                        </svg>
+                      </a>
+                    </Space>
+                  </Typography.Link>
+                </Dropdown>
+              </div>
+
               <div className="user-notification relative w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center hidden s412:flex s1024:hidden s1280:flex">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -446,6 +507,34 @@ export const HeaderPage = () => {
 
           {loggedUser == null && (
             <div className="navbar-user relative shrink-0 h-[40px] s1024:w-[145px] s1280:w-[294px] s1366:w-[320px] ml-auto flex justify-end gap-2">
+              <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+                <Dropdown
+                  menu={{
+                    items,
+                    selectable: true,
+                    defaultSelectedKeys: ["2"],
+                  }}
+                >
+                  <Typography.Link>
+                    <Space>
+                      <a>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          height="24px"
+                          viewBox="0 0 24 24"
+                          alt="Language"
+                          width="24px"
+                          fill="#666666"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" />
+                        </svg>
+                      </a>
+                    </Space>
+                  </Typography.Link>
+                </Dropdown>
+              </div>
+
               <div
                 className="overflow-hidden w-[40px] h-[40px] p-[10px] rounded-full bg-gray-100 dark:bg-slate-700 user-theme hidden s360:block"
                 id="user-theme"
@@ -547,7 +636,7 @@ export const HeaderPage = () => {
                 </div>
                 <div className="navbar-user-welcome mb-4">
                   <span className="w-[165px] line-clamp-1 text-[14px]">
-                    Chào khách!
+                    {t("content.welcome")}!
                   </span>
                 </div>
                 <div
@@ -561,7 +650,7 @@ export const HeaderPage = () => {
                     data-tab="login"
                     onClick={() => handleTabClick("login")}
                   >
-                    Đăng nhập
+                    {t("menu.login")}
                   </div>
                   <div
                     className={`navbar-user-tab-item navbar-tab-signup ${
@@ -570,7 +659,7 @@ export const HeaderPage = () => {
                     data-tab="signup"
                     onClick={() => handleTabClick("signup")}
                   >
-                    Đăng ký
+                    {t("menu.signup")}
                   </div>
                 </div>
               </div>
@@ -583,7 +672,7 @@ export const HeaderPage = () => {
                   >
                     <div className="navbar-form-group relative mb-3">
                       <label className="mb-1 block text-[14px]">
-                        Tên đăng nhập
+                        {t("login.username")}
                       </label>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6 rounded"
@@ -610,7 +699,9 @@ export const HeaderPage = () => {
                       <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
                     </div>
                     <div className="navbar-form-group relative mb-3">
-                      <label className="mb-1 block text-[14px]">Mật khẩu</label>
+                      <label className="mb-1 block text-[14px]">
+                        {t("login.password")}
+                      </label>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="password"
@@ -643,10 +734,10 @@ export const HeaderPage = () => {
                           name="remember"
                           defaultChecked
                         />
-                        <span>Ghi nhớ</span>
+                        <span> {t("login.remember")}</span>
                       </label>
                       <a href="/quen-mat-khau" className="forgot-password">
-                        Quên mật khẩu
+                        {t("content.forgotpassword")}{" "}
                       </a>
                     </div>
                     <div className="navbar-form-group relative mb-3 hidden">
@@ -658,7 +749,7 @@ export const HeaderPage = () => {
                         id="login"
                         type="button"
                         name="submit"
-                        value="Đăng nhập"
+                        value={t("menu.login")}
                         onClick={handleLogin}
                       />
                     </div>
@@ -667,9 +758,9 @@ export const HeaderPage = () => {
                       <a  className="social-login"
                           href="http://localhost:8080/oauth2/authorization/google">
                         <input
-                            type="button"
-                            className="google w-full h-full rounded cursor-pointer"
-                            value="Đăng nhập với Google"
+                          type="button"
+                          className="google w-full h-full rounded cursor-pointer"
+                          value={t("content.logingg")}
                         />
                       </a>
                     </div>
@@ -679,7 +770,7 @@ export const HeaderPage = () => {
                         <input
                           type="button"
                           className="facebook w-full h-full rounded cursor-pointer"
-                          value="Đăng nhập với Facebook"
+                          value={t("content.fb")}
                         />
                       </a>
                     </div>
@@ -715,7 +806,7 @@ export const HeaderPage = () => {
                   >
                     <div className="navbar-form-group relative mb-3">
                       <label className="mb-1 block text-[14px]">
-                        Tên đăng nhập
+                        {t("login.username")}{" "}
                       </label>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
@@ -739,7 +830,10 @@ export const HeaderPage = () => {
                       <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
                     </div>
                     <div className="navbar-form-group relative mb-3">
-                      <label className="mb-1 block text-[14px]">Mật khẩu</label>
+                      <label className="mb-1 block text-[14px]">
+                        {t("login.password")}
+                      </label>
+
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
                         type="password"
@@ -763,7 +857,7 @@ export const HeaderPage = () => {
                     </div>
                     <div className="navbar-form-group relative mb-3">
                       <label className="mb-1 block text-[14px]">
-                        Nhập lại mật khẩu
+                        {t("login.passwordagain")}
                       </label>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
@@ -788,7 +882,7 @@ export const HeaderPage = () => {
                     </div>
                     <div className="navbar-form-group relative mb-3">
                       <label className="mb-1 block text-[14px]">
-                        Tên hiển thị
+                        {t("signup.fullname")}
                       </label>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6  rounded"
@@ -834,7 +928,9 @@ export const HeaderPage = () => {
                       <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
                     </div>
                     <div className="navbar-form-group relative mb-3">
-                      <label className="mb-1 block text-[14px]">Phone</label>
+                      <label className="mb-1 block text-[14px]">
+                        {t("signup.phone")}
+                      </label>
                       <input
                         className="text-[14px] font-extralight w-full h-8 pl-6 rounded"
                         type="number"
@@ -855,7 +951,7 @@ export const HeaderPage = () => {
                         id="signup"
                         type="button"
                         name="submit"
-                        value="Đăng ký"
+                        value={t("menu.signup")}
                       />
                     </div>
                     <div
@@ -943,7 +1039,8 @@ export const HeaderPage = () => {
                 </div>
                 <div className="navbar-user-welcome mb-4">
                   <span className="w-[165px] line-clamp-1 text-[14px]">
-                    Chào {loggedUser?.fullName}!
+                    {t("content.welcome")}
+                    {loggedUser?.fullName}!
                   </span>
                   <input id="user-id" type="hidden" value="995002" />
                   <input id="user-role" type="hidden" value="10" />
@@ -963,7 +1060,7 @@ export const HeaderPage = () => {
                     className="navbar-user-tab-item navbar-tab-information activated border-red-500 h-full cursor-pointer border-b-2"
                     data-tab="information"
                   >
-                    Thông tin
+                    {t("content.infor")}
                   </div>
                 </div>
               </div>
@@ -992,7 +1089,7 @@ export const HeaderPage = () => {
                           d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
                         ></path>
                       </svg>
-                      <span>Sửa thông tin</span>
+                      <span> {t("login.editinformation")} </span>
                     </a>
                   </div>
                   <div className="user-item">
@@ -1014,7 +1111,7 @@ export const HeaderPage = () => {
                           d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
                         ></path>
                       </svg>
-                      <span>Đổi mật khẩu</span>
+                      <span> {t("content.chagepass")}</span>
                     </a>
                   </div>
                   <hr className="my-2 border-gray-200 dark:border-slate-700" />
@@ -1037,7 +1134,7 @@ export const HeaderPage = () => {
                           d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                         ></path>
                       </svg>
-                      <span>Phim đã xem</span>
+                      <span> {t("login.history")}</span>
                     </a>
                   </div>
                   <div className="user-item">
@@ -1059,7 +1156,7 @@ export const HeaderPage = () => {
                           d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
                         ></path>
                       </svg>
-                      <span>Phim đã thích</span>
+                      <span> {t("content.liked")}</span>
                     </a>
                   </div>
                   <div className="user-item">
@@ -1081,7 +1178,7 @@ export const HeaderPage = () => {
                           d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5"
                         ></path>
                       </svg>
-                      <span>Phim đang theo dõi</span>
+                      <span> {t("header.follow")}</span>
                     </a>
                   </div>
                   <hr className="my-2 border-gray-200 dark:border-slate-700" />
@@ -1105,7 +1202,7 @@ export const HeaderPage = () => {
                           d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
                         ></path>
                       </svg>
-                      <span>Đơn hàng đã mua</span>
+                      <span> {t("content.ordered")}</span>
                     </a>
                   </div>
 
@@ -1128,7 +1225,7 @@ export const HeaderPage = () => {
                           d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"
                         ></path>
                       </svg>
-                      <span>Lịch sử giao dịch</span>
+                      <span> {t("content.transactionhistory")}</span>
                     </a>
                   </div>
 
@@ -1152,7 +1249,7 @@ export const HeaderPage = () => {
                         d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"
                       ></path>
                     </svg>
-                    <span>Đăng xuất</span>
+                    <span> {t("content.logout")}</span>
                   </div>
                 </div>
                 <div
@@ -1184,14 +1281,14 @@ export const HeaderPage = () => {
               >
                 <div className="notification-list pt-3"></div>
                 <div className="notification-none font-extralight text-center leading-10 text-[14px] s1024:text-[15px]">
-                  Không có thông báo
+                  <span> {t("content.nonotification")}</span>
                 </div>
                 <div className="flex gap-2 s1024:justify-between mb-5">
                   <div className="notification-more hidden bg-red-600/80 text-white px-3 py-1 text-[12px] font-extralight">
-                    xem thêm
+                    <span> {t("content.showmore")}</span>
                   </div>
                   <div className="notification-clear hidden bg-gray-900/80 text-white px-3 py-1 text-[12px] font-extralight opacity-50 hover:opacity-100 rounded-full">
-                    xóa hết
+                    <span> {t("content.clearall")}</span>
                   </div>
                 </div>
 
@@ -1226,3 +1323,5 @@ export const HeaderPage = () => {
     </header>
   );
 };
+
+export default HeaderPage;

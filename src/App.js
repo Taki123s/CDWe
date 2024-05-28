@@ -3,8 +3,8 @@ import "./App.css";
 import MovieDetail from "./page/MovieDetail";
 import ProductItem from "./page/ProductItem";
 import AnimePage from "./component/Index";
-import {CategoriesPage} from "./page/Categorie";
-import {HeaderPage} from "./component/Header";
+import { CategoriesPage } from "./page/Categorie";
+import { HeaderPage } from "./component/Header";
 import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
 import LoginGoogle from "./component/LoginGoogleSuccess"

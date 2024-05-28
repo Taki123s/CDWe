@@ -12,13 +12,17 @@ import AdminPanel from "./admin/user/AdminPanel";
 import Follow from "./page/Follow";
 import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
 import React from "react";
+import Footer from "./page/Footer";
 function App() {
   return (
     <Router>
       <HeaderPage />
       <Routes>
         <Route path="/item" element={ProductItem} />
-        <Route path="/categories/:idGenre/:nameGenre" element={<CategoriesPage />} />
+        <Route
+          path="/categories/:idGenre/:nameGenre"
+          element={<CategoriesPage />}
+        />
         <Route path="/" element={<AnimePage />} />
         <Route path="/servicePack" element={<ServicePack />} />
         <Route path="*" element={<AnimePage />} />
@@ -32,6 +36,7 @@ function App() {
         <Route path="/follow" element={<Follow />} />
         <Route path="/movie/:id" Component={MovieDetail} />
       </Routes>
+      {/* <Footer /> */}
     </Router>
   );
 }

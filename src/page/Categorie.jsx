@@ -14,7 +14,7 @@ export const CategoriesPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState("createAt");
   const [ascending, setAscending] = useState(false);
-  useEffect(() => {
+  useEffect(() => { 
       getMoviesByGenre(idGenre, currentPage-1, sortBy, ascending).then((response) => {
           setMovies(response.data.movies);
           setTotalPages(Math.ceil(response.data.totalMovies / pageSize))

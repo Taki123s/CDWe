@@ -472,7 +472,6 @@ export const HeaderPage = () => {
                     )}
                   </div>
                   <div className="result-noitem  font-extralight text-center"></div>
-                  <div className="loading animate-spin "></div>
                 </div>
               </div>
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
@@ -534,12 +533,10 @@ export const HeaderPage = () => {
                         genreList?.map((genre) => {
                           return (
                             <Link
+                              key={genre.id}
                               to={`/categories/${genre.id}/${genre.description}`}
                             >
-                              <li
-                                key={genre.id}
-                                className="px-4 py-2 cursor-pointer categories-dropdown-item"
-                              >
+                              <li className="px-4 py-2 cursor-pointer categories-dropdown-item">
                                 {genre.description}
                               </li>
                             </Link>
@@ -1421,7 +1418,6 @@ export const HeaderPage = () => {
                 </div>
               </div>
 
-              <div className="loading animate-spin hidden"></div>
               <div className="loading animate-spin hidden"></div>
             </div>
           )}

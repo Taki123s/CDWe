@@ -69,6 +69,4 @@ public class Movie {
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<Follow> follows = new ArrayList<>();
 
-
-
 }

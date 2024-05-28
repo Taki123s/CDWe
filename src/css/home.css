@@ -5984,4 +5984,6 @@ background: transparent!important;
     background-color: #aaa; /* Màu nút Đóng */
     color: white;
   }
-  
+  .fb-comments{
+    width: 100% !important;
+  }

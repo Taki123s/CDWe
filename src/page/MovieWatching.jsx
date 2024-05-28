@@ -1,24 +1,23 @@
 import React, { useState } from "react";
 import Footer from "./Footer";
 import { useParams } from "react-router-dom";
-import MovieComment from "./MovieComment";
 import { useEffect } from "react";
 import { FaFastForward } from "react-icons/fa";
 import { createRoot } from "react-dom/client";
-import { FaHome } from "react-icons/fa";
 import { findMovieWatching } from "../service/MovieServices";
 import { usePlyr } from "plyr-react";
 import "plyr-react/plyr.css";
 import { Link } from "react-router-dom";
+import { Comment } from "../component/Comment";
 
 const MovieWatching = () => {
   const { movieId, chapterId } = useParams();
   const [movie, setMovie] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [videoSrc, setVideoSrc] = useState([]);
+  const currentUrl = `http://animeweb.site/movies/${movieId}${chapterId}`;
   const PlyrPlayer = React.forwardRef((props, ref) => {
     const { source, options = null, ...rest } = props;
-
     const playerRef = React.useRef(videoSrc);
     usePlyr(playerRef, {
       source,
@@ -36,6 +35,7 @@ const MovieWatching = () => {
       .then((response) => {
         setMovie(response.data);
         setChapters(response.data.currentChapters);
+        window.scrollTo(0, 0);
       })
       .catch((error) => {
         console.log(error);
@@ -137,10 +137,11 @@ const MovieWatching = () => {
               </div>
             </div>
           </div>
-          <div className="">{/* <MovieComment /> */}</div>
+          <div className="">
+            <Comment appId="583739630280650" url={currentUrl} />
+          </div>
         </div>
       </section>
-      <Footer />
       <div className="search-model">
         <div className="h-100 d-flex align-items-center justify-content-center">
           <div className="search-close-switch">

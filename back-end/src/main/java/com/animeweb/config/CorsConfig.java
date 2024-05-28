@@ -1,4 +1,4 @@
-package com.animeweb.security;
+package com.animeweb.config;
 
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.context.annotation.Bean;

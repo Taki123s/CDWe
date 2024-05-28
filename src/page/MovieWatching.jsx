@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Footer from "./Footer";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { FaFastForward } from "react-icons/fa";
@@ -9,13 +8,13 @@ import { usePlyr } from "plyr-react";
 import "plyr-react/plyr.css";
 import { Link } from "react-router-dom";
 import { Comment } from "../component/Comment";
-
+import Cookies from "js-cookie";
 const MovieWatching = () => {
   const { movieId, chapterId } = useParams();
   const [movie, setMovie] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [videoSrc, setVideoSrc] = useState([]);
-  const currentUrl = `http://animeweb.site/movies/${movieId}${chapterId}`;
+  const currentUrl = `http://animeweb.site/movies/${movieId}&${chapterId}`;
   const PlyrPlayer = React.forwardRef((props, ref) => {
     const { source, options = null, ...rest } = props;
     const playerRef = React.useRef(videoSrc);
@@ -31,7 +30,8 @@ const MovieWatching = () => {
     );
   });
   useEffect(() => {
-    findMovieWatching(movieId)
+    const token = Cookies.get("jwt_token");
+    findMovieWatching(movieId, token)
       .then((response) => {
         setMovie(response.data);
         setChapters(response.data.currentChapters);
@@ -76,9 +76,9 @@ const MovieWatching = () => {
           <div className="col-lg-12">
             <div className="breadcrumb__links" style={{ display: "flex" }}>
               <p>Trang chủ</p>
-              <p>----</p>
+              <p> /</p>
               <p>{movie.name}</p>
-              <p>----</p>
+              <p> /</p>
               <p>Chap {chapterId}</p>
             </div>
           </div>
@@ -130,15 +130,18 @@ const MovieWatching = () => {
                       key={chap.ordinal}
                       className={isActive ? "activeEpisode" : ""}
                     >
-                      <h1>Ep {chap.ordinal}</h1>
+                      Ep {chap.ordinal}
                     </Link>
                   );
                 })}
               </div>
             </div>
           </div>
-          <div className="">
-            <Comment appId="583739630280650" url={currentUrl} />
+          <div className="anime__details__review">
+            <div className="row row-no-gutters">
+            <div class="section-title col-xs-6 comment-tile"><h5> Bình luận</h5></div>
+              <Comment appId="583739630280650" url={currentUrl} />
+            </div>
           </div>
         </div>
       </section>

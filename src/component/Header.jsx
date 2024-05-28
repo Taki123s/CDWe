@@ -54,7 +54,6 @@ export const HeaderPage = () => {
         const response = await axios.get(
           `http://localhost:8080/movie/search?term=${searchTerm}`
         );
-        console.log(response.data);
         setSearchResults(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -98,7 +97,13 @@ export const HeaderPage = () => {
         decodeToken();
       })
       .catch((error) => {
-        console.log(error);
+        Swal.fire({
+            title: "Lỗi",
+            text: error.response.data.message,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
       });
   };
   const validateEmail = (email) => {
@@ -183,6 +188,16 @@ export const HeaderPage = () => {
         email: registerUser.email,
         verifyCode: verificationCode,
       };
+      if(verifyUser.verificationCode=="" || verifyUser.verificationCode == null){
+        Swal.fire({
+          title: "Lỗi",
+          text: "Không được để trống mã xác nhận",
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        return;
+      }
       register(verifyUser)
         .then((response) => {
           Swal.fire({
@@ -260,6 +275,14 @@ export const HeaderPage = () => {
       document.body.appendChild(modalDiv);
       const root = createRoot(modalDiv);
       root.render(<EmailVerificationDialog onClose={() => root.unmount()} />);
+    }else{
+      Swal.fire({
+        title: "Lỗi",
+        text: "Vui lòng điền đầy đủ và hợp lệ các trường",
+        icon: "error",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -344,7 +367,6 @@ export const HeaderPage = () => {
     const logoutToken = { token: token };
     logout(logoutToken)
       .then((response) => {
-        console.log("response :" + response);
         Cookies.remove("jwt_token");
         setLoggedUser(null);
       })
@@ -419,8 +441,9 @@ export const HeaderPage = () => {
             </div>
           </div>
           <div
-            className="navbar-left  overflow-scroll h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300"
+            className="navbar-left overflow-scroll h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300 absolute"
             id="navbar-left"
+            
           >
             <div className="navbar-close absolute top-4 right-4 hidden">
               <svg
@@ -438,7 +461,7 @@ export const HeaderPage = () => {
                 />
               </svg>
             </div>
-            <div className="  s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow  gap-4 s768:gap-2 s1280:gap-3">
+            <div className="s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow  gap-4 s768:gap-2 s1280:gap-3" style={{background:"white"}}>
               <div className="navbar-item  s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
                 <a
                   className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
@@ -621,16 +644,6 @@ export const HeaderPage = () => {
                         </a>
                       </div>
                     ))}
-                    {searchResults.length !== 0 ? (
-                      <a className="bg-white" style={{ display: "block" }}>
-                        {t("viewall")}
-                      </a>
-                    ) : (
-                      <a
-                        className="view-all-result"
-                        style={{ display: "none" }}
-                      />
-                    )}
                   </div>
                 </div>
               </div>
@@ -661,7 +674,7 @@ export const HeaderPage = () => {
 
               {/* // language */}
 
-              <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+              <div className="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
                 <Dropdown
                   menu={{
                     items,
@@ -671,7 +684,7 @@ export const HeaderPage = () => {
                 >
                   <Typography.Link>
                     <Space>
-                      <a>
+                      <span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           height="24px"
@@ -683,7 +696,7 @@ export const HeaderPage = () => {
                           <path d="M0 0h24v24H0z" fill="none" />
                           <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" />
                         </svg>
-                      </a>
+                      </span>
                     </Space>
                   </Typography.Link>
                 </Dropdown>
@@ -719,7 +732,7 @@ export const HeaderPage = () => {
 
           {loggedUser == null && (
             <div className="navbar-user relative shrink-0 h-[40px] s1024:w-[145px] s1280:w-[294px] s1366:w-[320px] ml-auto flex justify-end gap-2">
-              <div class="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
+              <div className="overflow-hidden w-[40px] h-[40px] rounded-full bg-gray-100 dark:bg-slate-700 flex justify-center items-center text-center">
                 <Dropdown
                   menu={{
                     items,
@@ -729,7 +742,7 @@ export const HeaderPage = () => {
                 >
                   <Typography.Link>
                     <Space>
-                      <a>
+                      <span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           height="24px"
@@ -741,7 +754,7 @@ export const HeaderPage = () => {
                           <path d="M0 0h24v24H0z" fill="none" />
                           <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z" />
                         </svg>
-                      </a>
+                      </span>
                     </Space>
                   </Typography.Link>
                 </Dropdown>
@@ -1181,7 +1194,6 @@ export const HeaderPage = () => {
                 </form>
               )}
               <div className="loading hidden"></div>
-
               <div className="loading animate-spin hidden"></div>
             </div>
           )}

@@ -45,6 +45,9 @@ public class UserServiceImpl implements UserDetailsService {
     private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles){
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
+    public User findUserById(Long idUser){
+        return userRepository.findById(idUser).orElseThrow(()->new UsernameNotFoundException("User not found"));
+    }
 
     public boolean existUserName(String userName){
         return userRepository.existsByUserName(userName);
@@ -76,7 +79,7 @@ public class UserServiceImpl implements UserDetailsService {
         User user = userRepository.findByUserName(loginDTO.getUserName()).orElseThrow(()-> new RuntimeException("User not exits"));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(loginDTO.getPassword(),user.getPassword());
-        if(!authenticated) throw new RuntimeException("Unauthenticated");
+        if(!authenticated) throw new RuntimeException("Wrong password!");
         return jwtGenerator.generateToken(user);
     }
     public boolean verifyUser(VerifyUser verifyUser) {

@@ -2,6 +2,7 @@ package com.animeweb.service.impl;
 
 import com.animeweb.dto.MovieDTO;
 import com.animeweb.entities.Movie;
+import com.animeweb.exception.ResourceNotFoundException;
 import com.animeweb.mapper.MovieMapper;
 import com.animeweb.repository.GenreRepository;
 import com.animeweb.repository.MovieRepository;
@@ -85,7 +86,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDTO> searchMovie(String name) {
-        List<Movie> movieList=movieRepository.findByNameContainingIgnoreCase(name);
+        List<Movie> movieList=movieRepository.findByNameContainingIgnoreCase(name,PageRequest.of(0, 5));
         List<MovieDTO> movieDTOList  = new ArrayList<>();
         for(Movie movie : movieList){
             movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
@@ -95,7 +96,8 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDTO> findAllMovieSameSeries(Long movieId) {
-        List<Movie> movieList=movieRepository.findAllSeries(movieId);
+        Movie movieS = movieRepository.findById(movieId).orElseThrow(()->new ResourceNotFoundException("Not found"));
+        List<Movie> movieList=movieRepository.findAllSeries(movieId,movieS.getSerie().getId());
         List<MovieDTO> movieDTOList  = new ArrayList<>();
         for(Movie movie : movieList){
             movieDTOList.add(MovieMapper.mapToMovieSameSeries(movie));

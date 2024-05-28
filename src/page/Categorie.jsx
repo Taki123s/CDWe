@@ -6,6 +6,7 @@ import "../css/ds/style.css";
 import Topview from "../component/Topview";
 import { useParams } from "react-router-dom";
 import { getMoviesByGenre } from "../service/CategoryServices";
+
 export const CategoriesPage = () => {
   const [movies, setMovies] = useState([]);
   const { idGenre, nameGenre} = useParams();
@@ -62,6 +63,7 @@ export const CategoriesPage = () => {
                   <div className="col-lg-8 col-md-8 col-sm-8">
                     <div className="section-title">
                       <h4>Thể loại: {nameGenre}</h4>
+                      
                       <div className="sort">
                         <select
                           className="filter"
@@ -115,7 +117,7 @@ export const CategoriesPage = () => {
                         </div>
                         <div className="product__item__text">
                           <h5>
-                            <Link to="/">{movie.name}</Link>
+                          <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
                           </h5>
                         </div>
                       </div>
@@ -124,7 +126,7 @@ export const CategoriesPage = () => {
                 </div>
               </div>
             </div>
-            <Topview />
+            {/* <Topview /> */}
           </div>
           <div className="col-md-6">
             <nav aria-label="Page navigation example">

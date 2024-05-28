@@ -9,6 +9,7 @@ import ServicePack from "./component/ServicePack";
 import MovieWatching from "./page/MovieWatching";
 import LoginGoogle from "./component/LoginGoogleSuccess"
 import LoginFacebook from "./component/LoginFacebookSuccess"
+import PayPal from "./component/PayPal"
 import ExecutePaymentComponent from "./component/ExecutePaymentComponent";
 import React from 'react';
 import Follow from "./page/Follow";
@@ -33,7 +34,7 @@ function App() {
 
         <Route path="/movie/watching/:movieId/:chapterId" element={<MovieWatching />} />
       <Route path="/AdminPanel" element={<AdminPanel/>} />
-
+        <Route path="/PayPal" element={<PayPal/>}/>
       <Route path="/follow" element={<Follow/>} />
       <Route path="/movie/:id" Component={MovieDetail} />
       <Route path="/item" element={ProductItem} />

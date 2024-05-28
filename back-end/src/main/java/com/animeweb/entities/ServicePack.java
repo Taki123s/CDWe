@@ -31,4 +31,10 @@ public class ServicePack {
     @Column(name = "status",columnDefinition = "tinyint default 1")
     private Boolean status;
 
+    public ServicePack(Long id, String service_type, Double price, Date createAt) {
+        this.id = id;
+        this.service_type = service_type;
+        this.price = price;
+        this.createAt = createAt;
+    }
 }

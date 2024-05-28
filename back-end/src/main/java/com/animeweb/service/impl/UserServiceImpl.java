@@ -75,5 +75,7 @@ public class UserServiceImpl implements UserDetailsService {
         if(!authenticated) throw new RuntimeException("Unauthenticated");
         return jwtGenerator.generateToken(user);
     }
-
+    public User getUserById(String id){
+        return userRepository.findById(Long.valueOf(id)).get();
+    }
 }

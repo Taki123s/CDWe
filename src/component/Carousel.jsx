@@ -1,11 +1,13 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import axios from "axios";
+import {Link} from "react-router-dom";
 
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
-    items: 4,
+    items: 5,
     slidesToSlide: 4 // optional, default to 1.
   },
   tablet: {
@@ -20,53 +22,40 @@ const responsive = {
   }
 };
 
-const sliderImageUrl = [
-  {
-    url:
-      "http://localhost:8080/imgs/1.jpg"
-  },
-  {
-    url:
-      "http://localhost:8080/imgs/1.jpg"
-  },
-  //Second image url
-  {
-    url:
-      "http://localhost:8080/imgs/1.jpg"
-  },
-  //Third image url
-  {
-    url:
-      "http://localhost:8080/imgs/1.jpg"
-  },
-
-  //Fourth image url
-
-  {
-    url:
-      "http://localhost:8080/imgs/1.jpg"
-  }
-];
 
 const Slider = () => {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const loadTopViewMovies = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/movie/top-view?type=year"); // Replace 'all' with the appropriate type if needed
+        setMovies(response.data.topMovies);
+      } catch (error) {
+        console.error('Error fetching top view movies:', error);
+      }
+    };
+
+    loadTopViewMovies();
+  }, []);
   return (
     <div className="parent">
            <style>
         {`
         .slider {
-          margin: 0 10px; /* Giảm margin */
+          margin: 0 10px; 
           overflow: hidden;
-          padding: 1rem 0; /* Giảm padding */
+          padding: 1rem 0; 
         }
 
         .slider img {
           width: 100%;
           border-radius: 10px;
-          height: auto; /* Chiều cao tự động */
+          height: auto; 
         }
 
         .react-multi-carousel-list {
-          padding: 0rem 0 1rem 0; /* Giảm padding */
+          padding: 0rem 0 1rem 0; 
         }
 
         .custom-dot-list-style button {
@@ -89,10 +78,21 @@ const Slider = () => {
         partialVisible={false}
         dotListClass="custom-dot-list-style"
       >
-        {sliderImageUrl.map((imageUrl, index) => {
+        {movies.map((movie, index) => {
           return (
             <div className="slider" key={index}>
-              <img src={imageUrl.url} alt="movie" />
+              <div className="product__item">
+              <div className="product__item__pic set-bg"
+                   style={{backgroundImage: `url(${movie.avatarMovie})`}}>
+                <div
+                    className="ep">{movie.currentChapters.length} / {movie.totalChapters}</div>
+                <div className="view"><i className="fa fa-eye"></i> {movie.views.length}
+                </div>
+              </div>
+                <div className="product__item__text">
+                  <h5><Link to={`/movie/${movie.id}`}>{movie.name}</Link></h5>
+                </div>
+            </div>
             </div>
           );
         })}

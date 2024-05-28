@@ -41,9 +41,9 @@ public class UserPacked {
     @Column(name = "delete_at")
     private Date deletedAt;
 
-    public UserPacked(long userId, long serviceId) {
-
+    public UserPacked(User userId, ServicePack servicePackId, Date expiredTime) {
+        this.userId = userId;
+        this.servicePackId = servicePackId;
+        this.expiredTime = expiredTime;
     }
-
-
 }

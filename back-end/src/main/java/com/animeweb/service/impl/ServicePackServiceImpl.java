@@ -26,4 +26,11 @@ public class ServicePackServiceImpl implements ServicePackService {
         }
         return servicePackDTOS;
     }
+
+    @Override
+    public ServicePackDTO getById(long id) {
+        ServicePack servicePack = servicePackRepository.findById(id).get();
+        return ServicePackMapper.MaptoDto(servicePack);
+    }
+
 }

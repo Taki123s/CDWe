@@ -3051,13 +3051,19 @@ input[type="checkbox"]:checked {
 	/* position: absolute; */
 	text-align: left;
 
-	z-index: 9999 !important;
+	/* z-index: 9999 !important; */
 	list-style: none;
 	/*margin: 10%;*/
 	font-family: inherit;
 	width: 90%;
 	background-color: white;
 	border-radius: 2%;
+	
+
+}
+.result-body{
+	display: flex;
+    flex-direction: column; /* Đặt chiều dọc */
 }
 #search-results  a{
 	color: #000;

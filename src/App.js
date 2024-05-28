@@ -18,6 +18,7 @@ function App() {
     <Router>
       <HeaderPage />
       <Routes>
+        <Route path="/movie/:id" Component={MovieDetail} />
         <Route path="/item" element={ProductItem} />
         <Route
           path="/categories/:idGenre/:nameGenre"
@@ -34,7 +35,7 @@ function App() {
         />
         <Route path="/AdminPanel" element={<AdminPanel />} />
         <Route path="/follow" element={<Follow />} />
-        <Route path="/movie/:id" Component={MovieDetail} />
+        <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
       </Routes>
       {/* <Footer /> */}
     </Router>

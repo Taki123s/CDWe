@@ -1,6 +1,7 @@
 package com.animeweb.service;
 
 import com.animeweb.dto.MovieDTO;
+import com.animeweb.dto.SerieDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
@@ -13,5 +14,6 @@ public interface MovieService {
     MovieDTO findMovieById(Long movieId);
     MovieDTO findMovieWatching(Long movieId);
     List<MovieDTO> searchMovie(String name);
+    List<MovieDTO> findAllMovieSameSeries(Long movieId);
 
 }

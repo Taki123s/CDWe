@@ -79,7 +79,6 @@ public class UserServiceImpl implements UserDetailsService {
         if(!authenticated) throw new RuntimeException("Unauthenticated");
         return jwtGenerator.generateToken(user);
     }
-
     public boolean verifyUser(VerifyUser verifyUser) {
         Integer updatedRows = userRepository.updateUserVerificationStatus(verifyUser.getUserName(), verifyUser.getEmail(), verifyUser.getVerifyCode());
         return updatedRows > 0;

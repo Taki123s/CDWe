@@ -3,7 +3,9 @@ import axios from 'axios'; // You may need to install axios for HTTP requests
 import {Link} from 'react-router-dom';
 import Carousel from './Carousel';
 import Topview from './Topview';
+import { useTranslation, Trans } from "react-i18next";
 
+// import '../i18n';
 function AnimePage() {
     const [movies, setMovies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -11,6 +13,7 @@ function AnimePage() {
     const [totalPages, setTotalPages] = useState(1);
     const [sortBy, setSortBy] = useState('createAt');
     const [ascending, setAscending] = useState(false);
+    const { t, i18n } = useTranslation();
     useEffect(() => {
         fetchMovies();
     }, [currentPage, sortBy, ascending]); // Fetch movies when currentPage, sortBy or ascending changes
@@ -61,17 +64,17 @@ function AnimePage() {
                                 <div className="row">
                                     <div className="col-lg-8 col-md-8 col-sm-8">
                                         <div className="section-title">
-                                            <h4>Mới cập nhật</h4>
+                                            <h4>{t("content.latestupdate")}</h4>
                                             <div className="sort">
                                                 <select className="filter" value={sortBy} onChange={handleSortChange}>
-                                                    <option value="createAt">Time</option>
+                                                    <option value="createAt">{t("content.time")}</option>
                                                     <option value="name">Name</option>
                                                 </select>
                                                 {sortBy === 'createAt' ? (
                                                     // Nếu là thời gian, hiển thị lựa chọn sắp xếp thời gian
                                                     <select className="filter" value={ascending ? 'asc' : 'desc'} onChange={handleOrderChange}>
-                                                        <option value="desc">Newest</option>
-                                                        <option value="asc">Oldest</option>
+                                                        <option value="desc">{t("sort.new")}</option>
+                                                        <option value="asc">{t("sort.oldest")}</option>
                                                     </select>
                                                 ) : (
                                                     // Nếu là tên, hiển thị lựa chọn sắp xếp theo tên
@@ -99,7 +102,7 @@ function AnimePage() {
                                                     </div>
                                                 </div>
                                                 <div className="product__item__text">
-                                                    <h5><Link to="/">{movie.name}</Link></h5>
+                                                <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
                                                 </div>
                                             </div>
                                         </div>

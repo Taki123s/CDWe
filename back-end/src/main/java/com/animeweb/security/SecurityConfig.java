@@ -26,7 +26,7 @@ public class SecurityConfig {
     JwtAuthEntryPoint authEntryPoint;
     @Autowired
     CustomJwtDecoder jwtDecoder;
-    private final String[] PUBLIC_ENDPOINTS ={"/auth/login","/auth/register","/auth/introspect","/genres","/movie/index","/topView","/imgs","/servicePack"};
+    private final String[] PUBLIC_ENDPOINTS ={"/account/view/**", "/auth/login","/auth/register","/auth/introspect","/genres","/movie/**","/topView","/imgs","/servicePack","/comment/**"};
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request->

@@ -37,4 +37,17 @@ public class MovieDTO {
         this.totalChapters = totalChapters;
         this.currentChapters = currentChapters;
     }
+
+    public MovieDTO(Long id, String name, Integer totalChapters, Date createAt, Date updateAt, Date deleteAt, Boolean status, String producer, String avatarMovie, String seriesDescriptions) {
+        this.id = id;
+        this.name = name;
+        this.totalChapters = totalChapters;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+        this.deleteAt = deleteAt;
+        this.status = status;
+        this.producer = producer;
+        this.avatarMovie = avatarMovie;
+        this.seriesDescriptions = seriesDescriptions;
+    }
 }

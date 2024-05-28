@@ -26,3 +26,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("update User a set a.authenticated = true where a.userName = :userName and a.email = :email and a.authCode = :verifyCode and a.status=true and a.authenticated = false and a.expiredAt > CURRENT_TIMESTAMP")
     Integer updateUserVerificationStatus(String userName, String email, Integer verifyCode);
 }
+
+

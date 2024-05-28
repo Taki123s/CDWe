@@ -4,7 +4,8 @@ import axios from 'axios';
 
 import './bootstrap.min.css'; // Import Bootstrap CSS
 const Topview = () => {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {

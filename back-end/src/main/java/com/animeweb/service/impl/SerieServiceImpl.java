@@ -24,4 +24,6 @@ public class SerieServiceImpl implements SerieService {
         }
         return serieDTOList;
     }
+
+
 }

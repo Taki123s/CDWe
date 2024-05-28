@@ -15,10 +15,9 @@ public class CommentMapper {
                 comment.getUpdateAt(),
                 comment.getDeleteAt(),
                 comment.getStatus(),
-                comment.getMovieId(),
-                comment.getUserComment(),
-                comment.getUserReply(),
-                comment.getChapter());
-
+                comment.getMovieId().getId(),
+                comment.getUserComment().getId(),
+                comment.getUserReply().getId(),
+                comment.getChapter().getId());
     }
 }

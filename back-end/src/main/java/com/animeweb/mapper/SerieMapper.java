@@ -5,6 +5,7 @@ import com.animeweb.entities.Serie;
 
 public class SerieMapper {
     public static SerieDTO mapToSerieDto(Serie serie){
-        return new SerieDTO(serie.getId(),serie.getDescriptions(),serie.getMovieSet(),serie.getCreateAt(),serie.getUpdateAt(),serie.getDeleteAt(),serie.getStatus());
+        return new SerieDTO(serie.getId(),serie.getDescriptions(),null,serie.getCreateAt(),serie.getUpdateAt(),serie.getDeleteAt(),serie.getStatus());
     }
+
 }

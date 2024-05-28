@@ -56,7 +56,7 @@ public class AuthController {
     }
     @PostMapping("/introspect")
     public ResponseEntity<IntrospectResponse> authenticate(@RequestBody IntrospectRequest introspectRequest) throws ParseException, JOSEException {
-             return new ResponseEntity<>(userService.introspect(introspectRequest),HttpStatus.OK);
+        return new ResponseEntity<>(userService.introspect(introspectRequest),HttpStatus.OK);
 
     }
 }

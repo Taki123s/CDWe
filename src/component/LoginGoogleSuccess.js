@@ -46,7 +46,7 @@ const Login = () => {
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                navigate('/');
+                                window.location.href = "http://localhost:3000/"
                             }
                         });
                     } else {

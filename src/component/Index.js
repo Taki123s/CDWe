@@ -4,7 +4,9 @@ import {Link} from 'react-router-dom';
 import Carousel from './Carousel';
 import Topview from './Topview';
 import { useTranslation, Trans } from "react-i18next";
+import "../../src/component/bootstrap.min.css";
 
+import "../css/ds/style.css";
 function AnimePage() {
     const [movies, setMovies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -102,7 +104,8 @@ function AnimePage() {
                                                     </div>
                                                 </div>
                                                 <div className="product__item__text">
-                                                <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
+                                                    <h5>
+                                                        <Link to={`/movie/${movie.id}`}>{movie.name}</Link></h5>
                                                 </div>
                                             </div>
                                         </div>

@@ -2,7 +2,6 @@ package com.animeweb.security;
 
 
 import com.animeweb.service.impl.UserServiceImpl;
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +25,7 @@ public class SecurityConfig {
     JwtAuthEntryPoint authEntryPoint;
     @Autowired
     CustomJwtDecoder jwtDecoder;
-    private final String[] PUBLIC_ENDPOINTS ={"/account/view/**", "/auth/login","/auth/register","/auth/introspect","/genres","/movie/**","/topView","/imgs","/servicePack","/comment/**"};
+    private final String[] PUBLIC_ENDPOINTS ={"/account/view/**", "/auth/login","/auth/register","/auth/introspect","/genres","/movie/**","/topView", "/static/imgs","/servicePack","/comment/**"};
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request->

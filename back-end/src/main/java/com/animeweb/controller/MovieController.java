@@ -2,8 +2,10 @@ package com.animeweb.controller;
 
 
 import com.animeweb.dto.MovieDTO;
+import com.animeweb.entities.User;
 import com.animeweb.security.JwtGenerator;
 import com.animeweb.service.MovieService;
+import com.animeweb.service.impl.UserPackedServiceImpl;
 import com.animeweb.service.impl.UserServiceImpl;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,23 +32,28 @@ public class MovieController {
     JwtGenerator jwtGenerator;
     @Autowired
     UserServiceImpl userService;
+    @Autowired
+    UserPackedServiceImpl userPackedService;
+
     @PostMapping
     public ResponseEntity<MovieDTO> createMovie(@RequestBody MovieDTO movieDTO) {
         MovieDTO savedMovie = movieService.createMovie(movieDTO);
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
+
     @GetMapping
-    public ResponseEntity<List<MovieDTO>> getMovie(){
+    public ResponseEntity<List<MovieDTO>> getMovie() {
         return ResponseEntity.ok(movieService.getAllMovie());
     }
+
     @GetMapping("/index")
     public ResponseEntity<Map<String, Object>> getMovies(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "9") int size,
             @RequestParam(defaultValue = "createAt") String sortBy,
-            @RequestParam(defaultValue = "false") boolean ascending){
+            @RequestParam(defaultValue = "false") boolean ascending) {
 
-        List<MovieDTO> movies = movieService.index(page, size,sortBy,ascending);
+        List<MovieDTO> movies = movieService.index(page, size, sortBy, ascending);
         int totalMovies = movieService.findAll().size(); // Assume you have a method to get the total number of movies
 
         Map<String, Object> response = new HashMap<>();
@@ -55,15 +62,26 @@ public class MovieController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @GetMapping("/{movieId}")
-    public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId){
+    public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId) {
         return ResponseEntity.ok(movieService.findMovieById(movieId));
     }
+
     @GetMapping("/watching")
-    public ResponseEntity<MovieDTO> findMovieWatching(@RequestParam Long movieId,@RequestParam String token) throws ParseException {
-        SignedJWT signedJWT =  jwtGenerator.verifyToken(token);
+    public ResponseEntity<MovieDTO> findMovieWatching(@RequestParam Long movieId, @RequestParam String token) throws ParseException {
+        SignedJWT signedJWT = jwtGenerator.verifyToken(token);
         Long idUser = (Long) signedJWT.getJWTClaimsSet().getClaim("idUser");
-        return ResponseEntity.ok(movieService.findMovieWatching(movieId));
+        User user = userService.getUserById(String.valueOf(idUser));
+        boolean isBuyed = userPackedService.checkUserBuyedService(user);
+
+
+        if (isBuyed) {
+            return ResponseEntity.ok(movieService.findMovieWatching(movieId));
+        } else {
+
+            return ResponseEntity.ok().body(null);
+        }
     }
 
     @GetMapping("/search")
@@ -72,6 +90,7 @@ public class MovieController {
 
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
+
     @GetMapping("/top-view")
     public ResponseEntity<Map<String, Object>> getTopMovies(@RequestParam("type") String type) {
         Map<String, Object> response = new HashMap<>();
@@ -90,8 +109,8 @@ public class MovieController {
     }
 
     @GetMapping("/same/{movieId}")
-    public ResponseEntity<List<MovieDTO>> getSeries(@PathVariable Long movieId){
-        return  ResponseEntity.ok(movieService.findAllMovieSameSeries(movieId));
+    public ResponseEntity<List<MovieDTO>> getSeries(@PathVariable Long movieId) {
+        return ResponseEntity.ok(movieService.findAllMovieSameSeries(movieId));
     }
 
 }

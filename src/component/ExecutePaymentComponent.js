@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { ProgressBar } from 'react-loader-spinner';
+
 
 const ExecutePaymentComponent = () => {
     const location = useLocation();

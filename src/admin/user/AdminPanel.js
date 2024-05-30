@@ -6,8 +6,7 @@ import AddUser from './AddUser'
 const AdminPanel = () => {
     return (
         <div>
-
-            <h1></h1>
+        <Sidebar/>
         </div>
     );
 }

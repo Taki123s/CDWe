@@ -15,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -42,7 +44,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieDTO> index(int page, int size, String sortBy, boolean ascending) {
         if (sortBy == null || sortBy.isEmpty()) {
-            sortBy = "createAt"; // Mặc định sắp xếp theo thời gian tạo mới nhất
+            sortBy = "createAt";
         }
 
         Pageable pageable;
@@ -72,6 +74,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
 
+
     @Override
     public MovieDTO findMovieById(Long movieId) {
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
@@ -95,8 +98,53 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<MovieDTO> getTopViewDay() {
+        List<Movie> topMovies = movieRepository.findTopMoviesByDate();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        if (topMovies.size() > 5) {
+            topMovies = topMovies.subList(0, 5);
+            for (Movie m :topMovies
+            ) {
+                movieDTOS.add(MovieMapper.mapToMovieDTO(m));
+            }
+        }
+        return movieDTOS;
+    }
+
+    @Override
+    public List<MovieDTO> getTopViewMonth() {
+        List<Movie> topMovies = movieRepository.findTopMoviesMonth();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        if (topMovies.size() > 5) {
+            topMovies = topMovies.subList(0, 5);
+            for (Movie m :topMovies
+            ) {
+                movieDTOS.add(MovieMapper.mapToMovieDTO(m));
+            }
+        }
+        return movieDTOS;
+    }
+
+    @Override
+    public List<MovieDTO> getTopViewYear() {
+        List<Movie> topMovies = movieRepository.findTopMoviesYear();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        if (topMovies.size() > 5) {
+            topMovies = topMovies.subList(0, 5);
+            for (Movie m :topMovies
+            ) {
+                movieDTOS.add(MovieMapper.mapToMovieDTO(m));
+            }
+        }
+        return movieDTOS;
+    }
+
+    @Override
     public List<MovieDTO> findAllMovieSameSeries(Long movieId) {
         Movie movieS = movieRepository.findById(movieId).orElseThrow(()->new ResourceNotFoundException("Not found"));
+       if(movieS.getSerie()==null){
+           return new ArrayList<>() ;
+       }
         List<Movie> movieList=movieRepository.findAllSeries(movieId,movieS.getSerie().getId());
         List<MovieDTO> movieDTOList  = new ArrayList<>();
         for(Movie movie : movieList){

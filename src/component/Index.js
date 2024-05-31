@@ -4,8 +4,9 @@ import {Link} from 'react-router-dom';
 import Carousel from './Carousel';
 import Topview from './Topview';
 import { useTranslation, Trans } from "react-i18next";
+import "../../src/component/bootstrap.min.css";
 
-// import '../i18n';
+import "../css/ds/style.css";
 function AnimePage() {
     const [movies, setMovies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +23,7 @@ function AnimePage() {
         try {
             const response = await axios.get(`http://localhost:8080/movie/index?page=${currentPage - 1}&size=${pageSize}&sortBy=${sortBy}&ascending=${ascending}`);
             const responseData = response.data;
+            console.log(responseData.movies)
             setMovies(responseData.movies);
             setTotalPages(Math.ceil(responseData.totalMovies / pageSize));
         } catch (error) {
@@ -102,7 +104,8 @@ function AnimePage() {
                                                     </div>
                                                 </div>
                                                 <div className="product__item__text">
-                                                <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
+                                                    <h5>
+                                                        <Link to={`/movie/${movie.id}`}>{movie.name}</Link></h5>
                                                 </div>
                                             </div>
                                         </div>

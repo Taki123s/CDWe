@@ -14,10 +14,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByUserName(String userName);
     @Query("select count(a) > 0 from User a where a.userName=:userName and a.status=true and  a.authenticated = true")
     Boolean existsByUserName(String userName);
-    @Query( "SELECT a from User a where a.email= :email and a.userType = 2 and  a.status  = true and a.authenticated = true" )
+    @Query( "SELECT a from User a where a.email= :email and a.userType = 2 and  a.status  = true " )
     User findByEmailGoogle(String email);
 
-    @Query( "SELECT a from User a where a.email = :email and a.userType = 3 and  a.status  = true and a.authenticated = true" )
+    @Query( "SELECT a from User a where a.email = :email and a.userType = 3 and  a.status  = true " )
     User findByEmailFacebook(String email);
     @Query("select count(a) > 0 from User a where a.email = :email and a.status=true and  a.authenticated = true")
     Boolean existByEmail(String email);

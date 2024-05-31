@@ -86,4 +86,8 @@ public class UserServiceImpl implements UserDetailsService {
         Integer updatedRows = userRepository.updateUserVerificationStatus(verifyUser.getUserName(), verifyUser.getEmail(), verifyUser.getVerifyCode());
         return updatedRows > 0;
     }
+
+    public User getUserById(String id){
+        return userRepository.findById(Long.valueOf(id)).get();
+    }
 }

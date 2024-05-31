@@ -3,6 +3,8 @@ package com.animeweb.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -39,4 +41,9 @@ public class UserPacked {
     @Column(name = "delete_at")
     private Date deletedAt;
 
+    public UserPacked(User userId, ServicePack servicePackId, Date expiredTime) {
+        this.userId = userId;
+        this.servicePackId = servicePackId;
+        this.expiredTime = expiredTime;
+    }
 }

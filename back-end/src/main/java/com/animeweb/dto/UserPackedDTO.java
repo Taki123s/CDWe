@@ -15,8 +15,15 @@ public class UserPackedDTO {
     private User userId;
     private ServicePack servicePackId;
     private Date expiredTime;
-    private Long captureId;
+    private String captureId;
     private Date createdAt;
     private Boolean status;
     private Date deletedAt;
+
+    public UserPackedDTO(User userId, ServicePack servicePackId, Date expiredTime) {
+        this.userId = userId;
+        this.servicePackId = servicePackId;
+        this.expiredTime = expiredTime;
+
+    }
 }

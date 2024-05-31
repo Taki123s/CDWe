@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ServicePackService {
     List<ServicePackDTO> getListServicePack();
+    ServicePackDTO getById(long id);
 }

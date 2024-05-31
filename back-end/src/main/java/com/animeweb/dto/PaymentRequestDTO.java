@@ -12,5 +12,7 @@ public class PaymentRequestDTO {
     private String method;
     private String intent;
     private String description;
+     private long idUser;
+     private long serviceId;
 
 }

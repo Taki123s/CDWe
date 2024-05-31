@@ -10,4 +10,7 @@ return new ServicePackDTO(servicePack.getId(), servicePack.getService_type(),ser
         servicePack.getCreateAt());
     }
 
+    public static ServicePack MaptoEntiy(ServicePackDTO servicePack){
+        return new ServicePack(servicePack.getId(), servicePack.getService_type(), servicePack.getPrice(),servicePack.getCreatedAt());
+    }
 }

@@ -1,4 +1,8 @@
 package com.animeweb.entities;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,6 +52,7 @@ public class User {
     private Boolean authenticated = false;
     @Column(name="externalId")
     private String externalId;
+
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
     private List<View> views = new ArrayList<>();
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
@@ -84,6 +89,26 @@ public class User {
         this.phone = phone;
     }
 
+
+    public User( String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType, Date createdAt, Date updatedAt, Date deletedAt, Boolean status, String externalId, List<View> views, List<Rate> rates, List<Follow> follows) {
+
+        this.userName = userName;
+        this.avatarPicture = avatarPicture;
+        this.password = password;
+        this.email = email;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.userType = userType;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+        this.status = status;
+        this.externalId = externalId;
+        this.views = views;
+        this.rates = rates;
+        this.follows = follows;
+    }
+
     public List<Role> getRoleDetails() {
         return this.roles.stream()
                 .map(role -> new Role(role.getId(), role.getName()))
@@ -92,6 +117,6 @@ public class User {
 
 
     public User(String accountName, String fullName, String password, String email, String image, String idOther, Date createAt, Integer type) {
-    }
 
+    }
 }

@@ -1,14 +1,43 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios'; // You may need to install axios for HTTP requests
-import './bootstrap.min.css'; // Import Bootstrap CSS
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './bootstrap.min.css';
 import './owl.carousel.min.css';
 import Carousel from './Carousel';
 import ServicePackItems from './ServicePackDetail';
 
 import '../css/ds/style.css'
-import ProductItem from "../page/ProductItem";
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
+import Swal from "sweetalert2";
 
 function ServicePack() {
+    useEffect(() => {
+
+        decodeToken();
+
+    }, []);
+
+    const [servicePacks, setServicePacks] = useState([]);
+    const [loggedUser, setLoggedUser] = useState(null);
+    const decodeToken = () => {
+        const token = Cookies.get("jwt_token");
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            setLoggedUser(decodedToken);
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Must Login',
+                text: 'You must login.',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'http://localhost:3000';
+                }
+            });
+        }
+    };
     return (
         <>
             <div id="ah_wrapper">
@@ -32,7 +61,7 @@ function ServicePack() {
                                         <div className="col-lg-4 col-md-4 col-sm-4">
                                         </div>
                                     </div>
-                                    <ServicePackItems/>
+                                    {loggedUser && <ServicePackItems/>}
                                 </div>
                             </div>
 

@@ -73,13 +73,10 @@ public class MovieController {
         SignedJWT signedJWT = jwtGenerator.verifyToken(token);
         Long idUser = (Long) signedJWT.getJWTClaimsSet().getClaim("idUser");
         User user = userService.getUserById(String.valueOf(idUser));
-        boolean isBuyed = userPackedService.checkUserBuyedService(user);
-
-
-        if (isBuyed) {
+        boolean isBought = userPackedService.checkUserBuyedService(user);
+        if (isBought) {
             return ResponseEntity.ok(movieService.findMovieWatching(movieId));
         } else {
-
             return ResponseEntity.ok().body(null);
         }
     }

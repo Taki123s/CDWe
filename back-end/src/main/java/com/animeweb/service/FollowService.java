@@ -4,11 +4,14 @@ import com.animeweb.dto.movie.FollowDTO;
 import com.animeweb.entities.Follow;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface FollowService {
-    public FollowDTO addFollow(Follow follow);
+    FollowDTO addFollow(Follow follow);
 
-    public FollowDTO updateFollow(Follow follow) ;
-    FollowDTO findFollowByIdUserAndIdMovie(Long movieId,Long userId);
+    FollowDTO updateFollow(Follow follow);
+
+    FollowDTO findFollowByIdUserAndIdMovie(Long movieId, Long userId);
 
 }

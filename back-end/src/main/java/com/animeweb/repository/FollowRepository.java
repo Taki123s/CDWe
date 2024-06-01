@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow,Long> {
-    @Query("select f from Follow f where f.movie.id = :movie_id and f.userId.id = :user_id")
+    @Query("select f from Follow f where   f.movie.id = :movie_id and f.userId.id = :user_id")
     Follow findFollowByUserIdAndMovieId(@Param("movie_id") Long movieId,
                                         @Param("user_id") Long userId);
 

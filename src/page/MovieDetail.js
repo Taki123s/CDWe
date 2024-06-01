@@ -9,10 +9,10 @@ import { jwtDecode } from "jwt-decode";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { LikeShare } from "../component/LikeShare";
-import MovieComment from "./MovieComment";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { Comment } from "../component/Comment";
 
 function MovieDetail() {
   const { t, i18n } = useTranslation();
@@ -26,10 +26,13 @@ function MovieDetail() {
   const [follow, setFollow] = useState("");
   const [isFavorite, setFavorite] = useState("");
   const currentUrl = `http://animeweb.site/like/${id}`;
+  const [description, setDescription] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/movie/${id}`);
+        setDescription(response.data.vietnameseDescriptions);
+
         setMovies(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -122,6 +125,7 @@ function MovieDetail() {
       });
     }
   };
+  console.log(description);
 
   return (
     <div className="supermovie">
@@ -174,21 +178,20 @@ function MovieDetail() {
                       />
                     )}
                   </div>
-
                 </div>
                 <div className="row" style={{ marginTop: "5%" }}>
                   <div className="anime__details__btn">
                     <Link
-                        className="watch-btn"
-                        to={`/movie/watching/${movie.id}/${1}`}
+                      className="watch-btn"
+                      to={`/movie/watching/${movie.id}/${1}`}
                     >
                       <button
-                          id={"rateBtn"}
-                          style={{
-                            color: "white",
-                            fontSize: "20px",
-                            outline: "none",
-                          }}
+                        id={"rateBtn"}
+                        style={{
+                          color: "white",
+                          fontSize: "20px",
+                          outline: "none",
+                        }}
                       >
                         Watching
                       </button>
@@ -199,18 +202,16 @@ function MovieDetail() {
                   </div>
                   <div className="mt-3">
                     {movie_same_series.map((movie, index) => (
-                        <button
-                            key={index}
-                            type="button"
-                            className="btn btn-outline-dark ml-2"
-                        >
-                          {movie.seriesDescriptions}
-                        </button>
+                      <button
+                        key={index}
+                        type="button"
+                        className="btn btn-outline-dark ml-2"
+                      >
+                        {movie.seriesDescriptions}
+                      </button>
                     ))}
                   </div>
                 </div>
-
-
               </div>
               <div className="col-lg-9">
                 <div
@@ -236,7 +237,12 @@ function MovieDetail() {
                             >
                               <button
                                 className="btn btn-outline-danger ml-2 hoverWhite"
-                                style={{ color: "black",fontWeight:"500",marginTop:"10px",transform:"translate(-10%,-20%)" }}
+                                style={{
+                                  color: "black",
+                                  fontWeight: "500",
+                                  marginTop: "10px",
+                                  transform: "translate(-10%,-20%)",
+                                }}
                               >
                                 {genre.description}
                               </button>
@@ -250,19 +256,23 @@ function MovieDetail() {
                             </Trans>
                             :
                           </span>
-                          <span style={{width:"unset",fontWeight:"400"}}>{movie.producer}</span>
+                          <span style={{ width: "unset", fontWeight: "400" }}>
+                            {movie.producer}
+                          </span>
                         </li>
                       </ul>
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <ul>
-                        <li style={{display:"flex"}}>
+                        <li style={{ display: "flex" }}>
                           <span>
                             <Trans i18nKey={"content.duration"}>
                               {t("content.duration")}
                             </Trans>
                           </span>
-                          <span style={{width:"unset",fontWeight:"400"}}>24 min/ep</span>
+                          <span style={{ width: "unset", fontWeight: "400" }}>
+                            24 min/ep
+                          </span>
                         </li>
                         <li>
                           <span>
@@ -270,7 +280,9 @@ function MovieDetail() {
                               {t("content.quality")}
                             </Trans>
                           </span>
-                          <span style={{width:"unset",fontWeight:"400"}}>HD</span>
+                          <span style={{ width: "unset", fontWeight: "400" }}>
+                            HD
+                          </span>
                         </li>
                         <li>
                           <span>
@@ -278,64 +290,66 @@ function MovieDetail() {
                               {t("content.views")}
                             </Trans>
                           </span>
-                          <span style={{width:"unset",fontWeight:"400"}}>0{/* {movie.views.length} */}</span>
+                          <span style={{ width: "unset", fontWeight: "400" }}>
+                          {/* {movie.views.length} */}0
+                          </span>
                         </li>
                       </ul>
                     </div>
                     <div className="col-lg-9 anime_showmore">
                       <div className="anime__details__text">
                         <div className="anime_details_title">
-                          <h4 className="des_detail">
-                            {movie.vietnameseDescriptions != null
-                                ? movie.vietnameseDescriptions.substring(0, 500)
-                                : ""}
-                          </h4>
                         </div>
-                        {flag ? (
-                            <>
-                              <h5 className="des_detail">
-                                {" "}
-                                {movie.vietnameseDescriptions.substring(
-                                    500,
-                                    movie.vietnameseDescriptions.length
-                                )}
-                              </h5>
-                              <a onClick={() => ShowMore()}>
-                                <i> {t("content.showless")}</i>
-                              </a>
-                            </>
-                        ) : (
+                        {flag==false ? (
+                          <>
+                            <h4 className="des_detail">
+                              {description.substring(0, 500)}
+                            </h4>
                             <a onClick={() => ShowMore()}>
                               <i> {t("content.showmore")}</i>
                             </a>
-
-                        )}<br></br>
+                          </>
+                        ) : (
+                          <>
+                            <h4 className="des_detail">{description}</h4>
+                            <a onClick={() => ShowMore()}>
+                              <i> {t("content.showless")}</i>
+                            </a>
+                          </>
+                        )}
+                        <br></br>
 
                         <LikeShare appId="583739630280650" url={currentUrl} />
                       </div>
                     </div>
                   </div>
-                  <div className="row" >
-                    <div className="col-lg-6"><h2>Trailer</h2></div>
+                  <div className="row">
+                    <div className="col-lg-6">
+                      <h2>Trailer</h2>
+                    </div>
                   </div>
                   <div className="row" style={{ marginTop: "20px" }}>
-
                     <div className="col-lg-6">
                       <div className="embed-responsive embed-responsive-16by9">
-                        <iframe width="1236" height="695" src="https://www.youtube.com/embed/gq2xKJXYZ80"
-                                title="Avatar: Dòng Chảy Của Nước | Official Trailer" frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                        <iframe
+                          width="1236"
+                          height="695"
+                          src="https://www.youtube.com/embed/gq2xKJXYZ80"
+                          title="Avatar: Dòng Chảy Của Nước | Official Trailer"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          allowFullScreen
+                        ></iframe>
                       </div>
-
-          
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <MovieComment />
+          <Comment appId="583739630280650" url={currentUrl} />
+
         </div>
       </section>
     </div>

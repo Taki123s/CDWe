@@ -12,8 +12,4 @@ public class RegisterDTO {
     private String fullName;
     private String phone;
 
-    public static void main(String[] args) {
-       BCryptPasswordEncoder pw = new BCryptPasswordEncoder();
-        System.out.println(pw.encode("1234"));
-    }
 }

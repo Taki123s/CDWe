@@ -1,17 +1,14 @@
 package com.animeweb.repository;
 
-import com.animeweb.dto.MovieDTO;
 import com.animeweb.entities.Movie;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.util.Date;
+
 import java.util.List;
 
 @Repository
@@ -28,7 +25,6 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     List<Movie> findTopMoviesYear();
     @Query("select m from Movie m  join Serie s on m.serie.id=s.id")
     List<Movie> findAllSeries(Long movieId);
-
     @Query("select m from Movie m  where m.status = true")
     List<Movie>findAll();
     @Query("select m from Movie m where m.name like :term% and m.status = true")

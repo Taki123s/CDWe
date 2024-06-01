@@ -7,7 +7,6 @@ import React from 'react';
 const Dashboard = "/admin/dashBoard";
 const UserList = "/admin/UserList";
 const UserEdit = "/admin/UserEdit";
-const urlAvatar = "{sessionScope.user.avatar}";
 
 
 const Navbar = () => {
@@ -32,7 +31,7 @@ const Navbar = () => {
                         <li className="line-height">
                             <a href="#" className="search-toggle iq-waves-effect d-flex align-items-center">
                                 <div className="caption">
-                                    <img src={urlAvatar} className="img-fluid rounded" alt="" style={{ width: "80px" }} />
+                                    <img className="img-fluid rounded" alt="" style={{ width: "80px" }} />
                                     <p className="mb-0">Manager</p>
                                 </div>
                             </a>

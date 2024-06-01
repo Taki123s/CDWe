@@ -329,7 +329,7 @@ function MovieDetail() {
                                 referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
                       </div>
 
-                      )}
+          
                     </div>
                   </div>
                 </div>

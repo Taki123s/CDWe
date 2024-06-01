@@ -1,21 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import './css/ds/style.css'
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import './component/bootstrap.min.css';
-import "./i18n"
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-      <React.Suspense>
-        <App/>
-      </React.Suspense>
-    </React.StrictMode>
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const path = window.location.pathname;
+const rootElement = document.getElementById('root');
+
+const renderApp = (App) => {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+};
+
+if (path.startsWith('/admin')) {
+  import('./admin/index')
+    .then(({ default: AdminApp }) => {
+      renderApp(AdminApp);
+    })
+    .catch(error => {
+      console.error('Error loading admin app:', error);
+    });
+} else {
+  import('./client/index')
+    .then(({ default: ClientApp }) => {
+      renderApp(ClientApp);
+    })
+    .catch(error => {
+      console.error('Error loading client app:', error);
+    });
+}

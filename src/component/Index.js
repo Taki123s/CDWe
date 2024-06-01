@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios'; // You may need to install axios for HTTP requests
+import axios from 'axios'; 
 import {Link} from 'react-router-dom';
 import Carousel from './Carousel';
 import Topview from './Topview';
 import { useTranslation, Trans } from "react-i18next";
 import "../../src/component/bootstrap.min.css";
-
 import "../css/ds/style.css";
 function AnimePage() {
     const [movies, setMovies] = useState([]);

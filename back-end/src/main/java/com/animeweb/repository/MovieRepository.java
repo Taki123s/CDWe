@@ -1,5 +1,6 @@
 package com.animeweb.repository;
 
+import com.animeweb.entities.Follow;
 import com.animeweb.entities.Movie;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
@@ -35,5 +36,8 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     Integer totalMoviesByGenresId(@Param("idGenre") Integer idGenre);
     @Query("SELECT m FROM Movie m WHERE m.id != :movieId AND m.serie.id = :serieId AND m.status = true")
     List<Movie> findAllSeries(@Param("movieId") Long movieId, @Param("serieId") Long serieId);
+
+    @Query("select  m from Follow  f join Movie  m on f.movie.id=m.id where  f.status=true and f.userId.id= :user_id  ")
+    List<Movie> findAllMovieFollowedByUserId(@Param("user_id") Long userId);
 }
 

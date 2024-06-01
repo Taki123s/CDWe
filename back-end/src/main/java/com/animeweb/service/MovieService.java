@@ -23,5 +23,6 @@ public interface MovieService {
     List<MovieDTO> getTopViewDay();
     List<MovieDTO> getTopViewMonth();
     List<MovieDTO> getTopViewYear();
+    List<MovieDTO> findAllMovieFollowedByUserId(Long userId);
 
 }

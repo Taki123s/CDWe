@@ -27,15 +27,6 @@ import Swal from 'sweetalert2';
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  // const lngs = {
-  //   en: {
-  //     nativeName: "English",
-  //   },
-  //   vi: {
-  //     nativeName: "Vietnamese",
-  //   },
-  // };
-
   const items = [
     {
       key: "1",
@@ -1295,7 +1286,7 @@ export const HeaderPage = () => {
                   <div className="user-item">
                     <a
                       className="block flex gap-4 items-center h-8"
-                      href="/sua-thong-tin"
+                      href="/profile"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1384,7 +1375,7 @@ export const HeaderPage = () => {
                   <div className="user-item">
                     <a
                       className="block flex gap-4 items-center h-8"
-                      href="/phim-dang-theo-doi"
+                      href="/follow_page"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

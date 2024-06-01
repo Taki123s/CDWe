@@ -140,6 +140,17 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<MovieDTO> findAllMovieFollowedByUserId(Long userId) {
+        List<MovieDTO> result = new ArrayList<>();
+        List<Movie> follows = movieRepository.findAllMovieFollowedByUserId(userId);
+        for (Movie f : follows) {
+            result.add(MovieMapper.mapToMovieDTO(f));
+        }
+        return result;
+
+    }
+
+    @Override
     public List<MovieDTO> findAllMovieSameSeries(Long movieId) {
         Movie movieS = movieRepository.findById(movieId).orElseThrow(()->new ResourceNotFoundException("Not found"));
        if(movieS.getSerie()==null){

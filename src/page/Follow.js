@@ -1,30 +1,79 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { AiOutlineMore } from "react-icons/ai";
-import MovieFollowItem from './MovieFollowItem.js'; // Import MovieComment component
-import '../css/follow.css';
-function Follow({ listmovie }) {
+import MovieFollowItem from "./MovieFollowItem.js"; // Import MovieComment component
+import "../css/follow.css";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+function Follow() {
+  const [listmovie, setListMovie] = useState([]); // Ensure initial state is an array
+  const [error, setError] = useState(null); // State to handle errors
 
-    return (
-        <section className='follow_page'>
-            <br></br>
-            <h2 className='title_movie_follow'>DANH SÁCH PHIM YÊU THÍCH</h2><br></br>
-            <div className='element'>
-                <div className='title_element'>
-                    <span className='image_movie'>Hình</span>
-                    <span className='title_movie'>Tên phim</span>
-                    <span className='movie_time'>Thời lượng</span>
-                    <span className='movie_viewer'>Lượt xem</span>
-                    <span className='movie_icon'><AiOutlineMore /></span>
-                </div>
-                <div className='movie_element_list'>
-                    <MovieFollowItem />
-                    <MovieFollowItem />
+  var token = Cookies.get("jwt_token");
 
+  const user = typeof token === "undefined" ? null : jwtDecode(token);
+  const handleRefresh = () => {
+    fetchMovies();
+  };
 
-                </div>
-            </div>
+  const fetchMovies = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/movie/findAll?userId=${user.idUser}`
+      ); // Correct usage of template literals
 
-        </section>
-    );
+      const data = await response.json();
+      console.log(data[0].views.length);
+
+      // console.log( "views:  "+data.get(0).views)
+      setListMovie(data);
+    } catch (error) {
+      setError("Error fetching movie data");
+    }
+  };
+  useEffect(() => {
+
+    // Fetch the movie list from the API
+   
+
+    fetchMovies();
+  }, []);
+  if (listmovie.length == 0) {
+    return <div>You have not followed any movies yet.</div>;
+  }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+  if (!user) {
+    return <div>Please log in to see your favorite movies.</div>;
+  }
+  return (
+    <section className="follow_page">
+      <br></br>
+      <h2 className="title_movie_follow">DANH SÁCH PHIM YÊU THÍCH</h2>
+      <br></br>
+      <div className="element">
+        <div className="title_element row">
+          <span className="image_movie col-md-3">Hình</span>
+          <span className="title_movie col-md-3">Tên phim</span>
+          <span className="movie_time col-md-3">Thời lượng</span>
+          <span className="movie_viewer col-md-3">Lượt xem</span>
+          <span className="movie_icon col-md-3">
+            <AiOutlineMore />
+          </span>
+        </div>
+        <div className="movie_element_list">
+          {listmovie.map((movie) => (
+            <MovieFollowItem
+              key={movie.id}
+              movie={movie}
+              user={user}
+              onRefresh={handleRefresh}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
+
 export default Follow;

@@ -1,17 +1,19 @@
 package com.animeweb.controller.client;
 
-import com.animeweb.dto.user.UserDTOBuilder;
+import com.animeweb.dto.MovieDTO;
+import com.animeweb.dto.UserDTO;
+import com.animeweb.dto.UserDTOBuilder;
 import com.animeweb.entities.*;
 import com.animeweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -41,4 +43,37 @@ public class UserController {
 
                return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
+    @PostMapping("/update")
+    public ResponseEntity<User> updateProfile(@RequestBody UpdateUser user){
+        Optional<User> existingUser = userRepository.findById(user.getId());
+        if (existingUser.isPresent()) {
+
+
+                User updatedUser = userRepository.save(new User(
+                        user.getId(),
+                        existingUser.get().getRoles()
+                        ,user.getUserName(),
+                        user.getAvatarPicture()!=null?user.getAvatarPicture():existingUser.get().getAvatarPicture(),
+                        existingUser.get().getPassword()
+                        ,user.getEmail(),
+                        user.getFullName(),
+                        user.getPhone(),
+                        existingUser.get().getUserType(),
+                        existingUser.get().getCreatedAt(),
+                        existingUser.get().getUpdatedAt(),
+                        existingUser.get().getDeletedAt()
+                        ,existingUser.get().getStatus()
+                        ,existingUser.get().getAuthCode()
+                        ,existingUser.get().getExpiredAt()
+                        ,existingUser.get().getAuthenticated()
+                        ,existingUser.get().getExternalId()
+                        ,existingUser.get().getViews(),
+                        existingUser.get().getRates(),
+                        existingUser.get().getFollows()));
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 }

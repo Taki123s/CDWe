@@ -31,9 +31,7 @@ function Follow() {
     }
   };
   useEffect(() => {
-
     // Fetch the movie list from the API
-   
 
     fetchMovies();
   }, []);

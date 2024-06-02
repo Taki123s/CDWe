@@ -59,6 +59,9 @@ public class User {
     private List<Rate> rates = new ArrayList<>();
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
     private List<Follow> follows = new ArrayList<>();
+
+
+
     public User(Long id, String userName, String avatarPicture, String email, String fullName, String phone, Integer userType, Boolean status, String externalId) {
         this.id = id;
         this.userName = userName;
@@ -108,6 +111,8 @@ public class User {
         this.rates = rates;
         this.follows = follows;
     }
+
+
 
     public List<Role> getRoleDetails() {
         return this.roles.stream()

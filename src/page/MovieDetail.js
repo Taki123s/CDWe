@@ -28,6 +28,18 @@ function MovieDetail() {
   const [isFavorite, setFavorite] = useState("");
   const currentUrl = `http://animeweb.site/like/${id}`;
   const [description, setDescription] = useState("");
+
+  // const [showForm, setShowForm] = useState(false);
+  const [rating, setRating] = useState(0);
+
+  // const toggleForm = () => {
+  //   setShowForm(!showForm);
+  // };
+
+  const handleStarClick = (index) => {
+    setRating(index + 1);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -126,7 +138,6 @@ function MovieDetail() {
       });
     }
   };
-  console.log(description);
 
   return (
     <div className="supermovie">
@@ -212,6 +223,26 @@ function MovieDetail() {
                       </button>
                     ))}
                   </div>
+
+                  <div className="row mt-3">
+                    <button id="rateBtn" className="col-lg-0">
+                      Rate
+                    </button>
+                    <form action="" method="post" className="col">
+                      {[...Array(6)].map((_, index) => (
+                        <a
+                          key={index}
+                          className="fa fa-star rateStar"
+                          style={{
+                            color: index < rating ? "yellow" : "black",
+                            fontSize: "20px",
+                          }}
+                          onClick={() => handleStarClick(index)}
+                        ></a>
+                      ))}
+                      <input type="hidden" id="scoreMovie" value={rating} />
+                    </form>
+                  </div>
                 </div>
               </div>
               <div className="col-lg-9">
@@ -292,16 +323,15 @@ function MovieDetail() {
                             </Trans>
                           </span>
                           <span style={{ width: "unset", fontWeight: "400" }}>
-                          {/* {movie.views.length} */}0
+                            {/* {movie.views.length} */}0
                           </span>
                         </li>
                       </ul>
                     </div>
                     <div className="col-lg-9 anime_showmore">
                       <div className="anime__details__text">
-                        <div className="anime_details_title">
-                        </div>
-                        {flag==false ? (
+                        <div className="anime_details_title"></div>
+                        {flag == false ? (
                           <>
                             <h4 className="des_detail">
                               {description.substring(0, 500)}
@@ -349,8 +379,8 @@ function MovieDetail() {
               </div>
             </div>
           </div>
-          <Comment appId="583739630280650" url={currentUrl} />
 
+          <Comment appId="583739630280650" url={currentUrl} />
         </div>
       </section>
     </div>

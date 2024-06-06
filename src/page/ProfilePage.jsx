@@ -12,6 +12,7 @@ function ProfilePage() {
   const [phone, setPhone] = useState("");
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
+  const [service, setService] = useState([]);
 
   const user = typeof token === "undefined" ? null : jwtDecode(token);
   useEffect(() => {
@@ -32,7 +33,23 @@ function ProfilePage() {
         console.error("Error fetching data:", error);
       }
     };
+
+    const FetchService = async () => {
+      try {
+        if (user) {
+          const response = await axios.get(
+            `http://localhost:8080/servicePack/findAll?userID=${user.idUser}`
+          );
+          const data = response.data;
+          console.log(data);
+          setService(data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
     fetchData();
+    FetchService();
   }, []); // Empty dependency array ensures useEffect runs only once after the initial render
 
   const validateEmail = (email) => {
@@ -77,7 +94,6 @@ function ProfilePage() {
   const isSaveDisabled = emailError || phoneError;
 
   const ChangeInformation = async () => {
-
     try {
       // Make POST request using Axios
       const response = await axios.post(
@@ -99,6 +115,14 @@ function ProfilePage() {
       // Handle error
       console.error("Error updating user information:", error.message);
     }
+  };
+  const convertToDateOnly = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
   };
   return (
     <section style={{ backgroundColor: "#eee" }}>
@@ -132,15 +156,6 @@ function ProfilePage() {
         </div>
 
         <div className="row">
-          <div className="col-md-2"></div>
-          <div className="col-md-2">
-            <img
-              src={account.avatarPicture}
-              alt="avatar"
-              className="rounded-circle"
-              style={{ width: "150px", height: "150px" }}
-            />
-          </div>
           <div className="col-md-8">
             <div className="card mb-4">
               <div className="card-body">
@@ -208,6 +223,7 @@ function ProfilePage() {
                 </div>
               </div>
             </div>
+
             <div className="row">
               <div className="col">
                 <button
@@ -218,12 +234,116 @@ function ProfilePage() {
                   Save
                 </button>
               </div>
-
-              {/* <div className="col">
-              <button className="btn btn-secondary">Change Password</button>
-            </div> */}
             </div>
           </div>
+          <div className="col-md-4">
+            <img
+              src={account.avatarPicture}
+              alt="avatar"
+              className="rounded-circle"
+              style={{ width: "200px", height: "200px" }}
+            />
+          </div>
+        </div>
+        {/* <div className="row">
+          <div className="col-md-8">
+            <div className="display-5  text-primary mb-1">Gói Đã Mua</div>
+            <div className="card mb-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Tên gói</p>
+                  </div>
+                  <div className="col-sm-3">
+                    <p>Ngày Mua</p>
+                  </div>
+                  <div className="col-sm-3">
+                    <p>Ngày hết hạn</p>
+                  </div>{" "}
+                  <div className="col-sm-3">
+                    <p>Trạng thái</p>
+                  </div>
+                </div>
+                {service.map((s) => (
+                  <>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <p className="mb-0">{s.servicePackId.service_type}</p>
+                      </div>
+                      <div className="col-sm-3">
+                        <p>{convertToDateOnly(s.servicePackId.createAt)}</p>
+                      </div>
+                      <div className="col-sm-3">
+                        <p>{convertToDateOnly(s.expiredTime)}</p>
+                      </div>
+                      <div className="col-sm-3">
+                        {s.status ? (
+                          <a className="text-success">Còn hạng</a>
+                        ) : (
+                          <a className="text-danger">Hết hạng</a>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div> */}
+        <div className="row">
+          {service.map((s) => (
+            <>
+              <div className="col-md-8">
+                <div className="display-5  text-primary mb-1">Gói Đã Mua</div>
+
+                <div className="card mb-4">
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <p className="mb-0">Tên gói</p>
+                      </div>
+                      <div className="col-sm-9">
+                        <p className="mb-0">{s.servicePackId.service_type}</p>
+                      </div>
+                    </div>
+
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <p className="mb-0">Ngày mua</p>
+                      </div>
+                      <div className="col-sm-9">
+                        <p>{convertToDateOnly(s.servicePackId.createAt)}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <p className="mb-0">Ngày hết hạn</p>
+                      </div>
+                      <div className="col-sm-9">
+                        <p>{convertToDateOnly(s.expiredTime)}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <p className="mb-0">Trạng thái</p>
+                      </div>
+                      <div className="col-sm-9">
+                        {s.status ? (
+                          <a className="text-success">Còn hạng</a>
+                        ) : (
+                          <a className="text-danger">Hết hạng</a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ))}
         </div>
       </div>
     </section>

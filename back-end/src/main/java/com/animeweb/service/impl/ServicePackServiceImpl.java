@@ -22,7 +22,7 @@ public class ServicePackServiceImpl implements ServicePackService {
         List<ServicePack> servicePacks = servicePackRepository.findAll();
         List<ServicePackDTO> servicePackDTOS = new ArrayList<>();
         for (ServicePack servicePack : servicePacks) {
-                servicePackDTOS.add(ServicePackMapper.MaptoDto(servicePack));
+            servicePackDTOS.add(ServicePackMapper.MaptoDto(servicePack));
         }
         return servicePackDTOS;
     }
@@ -32,5 +32,4 @@ public class ServicePackServiceImpl implements ServicePackService {
         ServicePack servicePack = servicePackRepository.findById(id).get();
         return ServicePackMapper.MaptoDto(servicePack);
     }
-
 }

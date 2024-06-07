@@ -27,9 +27,10 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private GenreRepository genreRepository;
 
+
     @Override
-    public MovieDTO createMovie(MovieDTO movieDTO) {
-        return null;
+    public void save(Movie movie) {
+        movieRepository.save(movie);
     }
 
     @Override
@@ -147,6 +148,21 @@ public class MovieServiceImpl implements MovieService {
             }
         }
         return movieDTOS;
+    }
+
+    @Override
+    public boolean findByName(String name) {
+        return movieRepository.existsByNameAndStatus(name,true);
+    }
+
+    @Override
+    public boolean existById(Long id) {
+        return movieRepository.existsById(id);
+    }
+
+    @Override
+    public Movie findById(Long id) {
+        return movieRepository.findById(id).orElse(null);
     }
 
     @Override

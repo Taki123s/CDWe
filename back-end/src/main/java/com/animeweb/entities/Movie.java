@@ -34,7 +34,7 @@ public class Movie {
     private String englishDescriptions;
 
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date createAt;
+    private Date createAt = new Date();
 
     @Column(name = "update_at")
     private Date updateAt;
@@ -43,7 +43,7 @@ public class Movie {
     private Date deleteAt;
 
     @Column(name = "status",columnDefinition = "tinyint default 1")
-    private Boolean status;
+    private Boolean status = true;
 
     @Column(name = "producer")
     private String producer;

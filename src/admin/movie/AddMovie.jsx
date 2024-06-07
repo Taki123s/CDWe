@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
+import defaultAvatar from "../images/defaultImg.jpg";
+import { getGenreList } from "../../service/CategoryServices";
+import DataTable from "react-data-table-component";
+import { getAllSerie } from "../../service/SerieServices";
+import { addMovie } from "../../service/MovieServices";
+import Swal from "sweetalert2";
+import { Loading } from "../../component/Loading";
+
+
 export const AddMovie = () => {
   const [avatar, setAvatar] = useState(null);
+  const [imageSrc, setImageSrc] = useState(defaultAvatar);
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     totalChapters: "",
@@ -8,11 +19,149 @@ export const AddMovie = () => {
     englishDescriptions: "",
     producer: "",
     seriesDescriptions: "",
+    series: "",
+    trailer: "",
     genres: [],
   });
+  const [genres, setGenres] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [series, setSeries] = useState([]);
+  useEffect(() => {
+    getGenreList()
+      .then((response) => {
+        setGenres(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    getAllSerie()
+      .then((response) => {
+        setSeries(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+  const handleGenreSelect = (genreId) => {
+    setSelectedGenres((prevSelectedGenres) => {
+      if (prevSelectedGenres.includes(genreId)) {
+        return prevSelectedGenres.filter((id) => id !== genreId);
+      } else {
+        return [...prevSelectedGenres, genreId];
+      }
+    });
+  };
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setAvatar(file);
+    }
+  };
+  const submidAdd = () => {
+    const formDt = new FormData();
+    const {
+      name,
+      totalChapters,
+      vietnameseDescriptions,
+      englishDescriptions,
+      producer,
+      seriesDescriptions,
+      series,
+      trailer,
+    } = formData;
+    if (
+      !name ||
+      !totalChapters ||
+      !vietnameseDescriptions ||
+      !englishDescriptions ||
+      !producer ||
+      !trailer
+    ) {
+      Swal.fire({
+        title: "Thông báo",
+        text: "Vui lòng nhập đủ thông tin",
+        icon: "warning",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      return;
+    }
+    formDt.append("name", name);
+    formDt.append("totalChapters", totalChapters);
+    formDt.append("vietnameseDescriptions", vietnameseDescriptions);
+    formDt.append("englishDescriptions", englishDescriptions);
+    formDt.append("producer", producer);
+    formDt.append("series", series);
+    formDt.append("trailer", trailer);
+    formDt.append("seriesDescriptions", seriesDescriptions);
+    formDt.append("genres", selectedGenres);
+    if (avatar == null) {
+      Swal.fire({
+        title: "Thông báo",
+        text: "Vui lòng chọn ảnh đại diện cho phim",
+        icon: "warning",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      return;
+    }
+    formDt.append("file", avatar);
+    setIsUploading(true);
+    addMovie(formDt)
+      .then((response) => {
+        setIsUploading(false);
+        Swal.fire({
+          title: "Thành công",
+          text: response.data,
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      })
+      .catch((error) => {
+        setIsUploading(false);
+        Swal.fire({
+          title: "Lỗi",
+          text: error.response.data,
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      });
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
+  const columns = [
+    {
+      name: "Thêm",
+      cell: (row) => (
+        <input
+          type="checkbox"
+          checked={selectedGenres.includes(row.id)}
+          onChange={() => handleGenreSelect(row.id)}
+        />
+      ),
+    },
+    {
+      name: "Thể loại",
+      selector: (row) => row.description,
+    },
+  ];
+  
   return (
     <div>
+     <Loading open={isUploading}/>
       <h1>Nhập phim mới</h1>
       <form className="needs-validation">
         <div className="row">
@@ -26,25 +175,35 @@ export const AddMovie = () => {
               <div className="iq-card-body">
                 <div className="form-group">
                   <div className="add-img-user profile-img-edit">
-                    <div className="p-image">
-                      <div id="image-render-area"></div>
-                      <label className="upload-button btn iq-bg-primary">
-                        Ảnh đại diện
+                    <div className="p-image" style={{ textAlign: "center" }}>
+                      <div id="image-render-area">
+                        <img
+                          id="avatarMovie"
+                          src={imageSrc}
+                          alt="Uploaded Avatar"
+                          style={{
+                            width: "300px",
+                            height: "300px",
+                            borderRadius: "20px",
+                            filter:
+                              "drop-shadow(10px 10px 4px rgb(231 33 143 / 66%))",
+                          }}
+                        />
+                      </div>
+                      <label
+                        className="upload-button btn btn-outline-success"
+                        style={{ marginTop: "10px" }}
+                      >
+                        Tải lên
                         <input
                           className="file-upload"
                           type="file"
                           accept="image/*"
                           name="avatar"
                           id="uploadImage"
+                          onChange={handleImageUpload}
                         />
                       </label>
-                    </div>
-                  </div>
-                  <div className="img-extension mt-3">
-                    <div className="d-inline-block align-items-center">
-                      <span>Chấp nhận</span> <label href="">.jpg</label>{" "}
-                      <label>.png</label> <label>.jpeg</label>
-                      <span></span>
                     </div>
                   </div>
                 </div>
@@ -62,58 +221,85 @@ export const AddMovie = () => {
                 <div className="new-user-info">
                   <div className="row">
                     <div className="form-group col-md-6">
-                      <label htmlFor="name">Tên phim: </label>{" "}
+                      <label htmlFor="name">Tên phim: </label>
                       <input
                         type="text"
                         className="form-control"
                         id="name"
                         name="name"
                         placeholder="Name"
+                        value={formData.name}
+                        onChange={handleChange}
                         required
                       />
                     </div>
 
                     <div className="form-group col-md-6">
-                      <label htmlFor="totalEpisode">Tổng số tập:</label>{" "}
+                      <label htmlFor="totalChapters">Tổng số tập:</label>
                       <input
                         type="number"
                         className="form-control"
-                        id="totalEpisode"
-                        name="totalEpisode"
-                        placeholder="Total Episode"
+                        id="totalChapters"
+                        name="totalChapters"
+                        placeholder="Total Chapters"
+                        value={formData.totalChapters}
+                        onChange={handleChange}
                         required
                       />
                     </div>
                     <div className="form-group col-md-6">
-                      <label htmlFor="descriptionVN">Mô tả tiếng Việt:</label>{" "}
+                      <label htmlFor="vietnameseDescriptions">
+                        Mô tả tiếng Việt:
+                      </label>
                       <input
                         type="text"
                         className="form-control"
-                        id="descriptionVN"
-                        name="descriptionVN"
-                        placeholder="Description VN"
+                        id="vietnameseDescriptions"
+                        name="vietnameseDescriptions"
+                        placeholder="Vietnamese Descriptions"
+                        value={formData.vietnameseDescriptions}
+                        onChange={handleChange}
                         required
                       />
                     </div>
                     <div className="form-group col-md-6">
-                      <label htmlFor="descriptionEN">Mô tả tiếng Anh:</label>{" "}
+                      <label htmlFor="englishDescriptions">
+                        Mô tả tiếng Anh:
+                      </label>
                       <input
                         type="text"
                         className="form-control"
-                        id="descriptionEN"
-                        name="descriptionEN"
-                        placeholder="Description EN"
+                        id="englishDescriptions"
+                        name="englishDescriptions"
+                        placeholder="English Descriptions"
+                        value={formData.englishDescriptions}
+                        onChange={handleChange}
                         required
                       />
                     </div>
                     <div className="form-group col-md-6">
-                      <label htmlFor="producer">Nhà sản xuất:</label>{" "}
+                      <label htmlFor="producer">Nhà sản xuất:</label>
                       <input
                         type="text"
                         className="form-control"
                         id="producer"
                         name="producer"
-                        placeholder="producer"
+                        placeholder="Producer"
+                        value={formData.producer}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label htmlFor="trailer">Trailer:</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="trailer"
+                        name="trailer"
+                        placeholder="Trailer"
+                        value={formData.trailer}
+                        onChange={handleChange}
                         required
                       />
                     </div>
@@ -121,28 +307,52 @@ export const AddMovie = () => {
                   <hr />
                   <h5 className="mb-3">Mở rộng</h5>
                   <div className="row">
-                    <div className="form-group col-md-12">
-                      <div id="pickedGenre"></div>
+                    <div className="form-group col-md-6">
                       <div id="GenresRender">
                         <label>Chọn thể loại</label>
-                        {/* <c:forEach
-                          var="genre"
-                          items="${requestScope.listGenre}"
-                        >
-                          <input
-                            type="checkbox"
-                            name="genreValue"
-                            value="${genre.id}"
-                          />
-                          ${genre.description}
-                        </c:forEach> */}
+                        <DataTable columns={columns} data={genres} />
                       </div>
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label htmlFor="series">Chọn Serie:</label>
+                      <select
+                        className="form-control"
+                        id="series"
+                        name="series"
+                        onChange={handleChange}
+                      >
+                        <option value="">Chọn serie (nếu có)</option>
+                        {series.map((serie) => (
+                          <option key={serie.id} value={serie.id}>
+                            {serie.descriptions}
+                          </option>
+                        ))}
+                      </select>
+                      {formData.series && (
+                        <div
+                          className="form-group col-md-12"
+                          style={{ marginTop: "15px" }}
+                        >
+                          <label htmlFor="producer">Mô tả trong serie:</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="seriesDescriptions"
+                            name="seriesDescriptions"
+                            placeholder="seriesDescriptions"
+                            value={formData.seriesDescriptions}
+                            onChange={handleChange}
+                            required
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <button
                     type="button"
                     className="btn btn-primary"
                     id="addMovieBt"
+                    onClick={submidAdd}
                   >
                     Xác nhận
                   </button>

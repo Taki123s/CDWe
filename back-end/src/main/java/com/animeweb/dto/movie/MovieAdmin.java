@@ -23,6 +23,7 @@ public class MovieAdmin {
     private String avatarMovie;
     private String trailer;
     private String seriesDescriptions;
+    private String series;
     private List<Genre> genres;
     private Integer currentChapters;
     private Integer views;

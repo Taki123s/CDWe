@@ -20,7 +20,6 @@ public class Chapter {
     private Long id;
     @Column(name = "ordinal")
     private Integer ordinal;
-
     @Column(name = "link")
     private String link;
     @Column(name = "status", columnDefinition = "TINYINT(1)")

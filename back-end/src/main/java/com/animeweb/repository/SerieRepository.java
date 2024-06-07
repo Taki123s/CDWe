@@ -11,10 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface SerieRepository extends JpaRepository<Serie,Long> {
-    @Query("select s from Serie s where s.id = :id and s.status = true")
-    Optional<Serie> findSerieById(Long id);
-    @Query("select s from Serie s where s.status = true")
-    List<Serie> getAllSerie();
-    @Query("select count(s) > 0 from Serie s where s.descriptions=:descriptions and s.status = true")
-    boolean findByDescriptions(String descriptions);
+
+    Optional<Serie> findByIdAndStatus(Long id,boolean status);
+    List<Serie> getAllByStatus(boolean status);
+    boolean existsByDescriptionsAndStatus(String descriptions,boolean status);
 }

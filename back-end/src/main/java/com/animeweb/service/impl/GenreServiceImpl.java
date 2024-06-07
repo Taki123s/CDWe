@@ -26,7 +26,7 @@ public class GenreServiceImpl implements GenreService {
     private MovieRepository movieRepository;
     @Override
     public List<GenreDTO> getAllGenre() {
-        List<Genre> genreList = genreRepository.findAll();
+        List<Genre> genreList = genreRepository.findAllByStatus(true);
         List<GenreDTO> genreDTOList = new ArrayList<>();
         for(Genre genre : genreList){
             genreDTOList.add(GenreMapper.mapToTitleGenreDto(genre));
@@ -56,5 +56,10 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Integer totalMoviesByGenresId(Integer idGenre) {
         return movieRepository.totalMoviesByGenresId(idGenre);
+    }
+
+    @Override
+    public List<Genre> findGenresByList(List<Long> genres) {
+        return genreRepository.findGenresByIds(genres);
     }
 }

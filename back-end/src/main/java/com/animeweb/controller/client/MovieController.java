@@ -5,7 +5,7 @@ import com.animeweb.dto.movie.MovieDTO;
 import com.animeweb.entities.User;
 import com.animeweb.security.JwtGenerator;
 import com.animeweb.service.MovieService;
-import com.animeweb.service.impl.ImageService;
+import com.animeweb.service.impl.CloudinaryService;
 import com.animeweb.service.impl.UserPackedServiceImpl;
 import com.animeweb.service.impl.UserServiceImpl;
 import com.nimbusds.jwt.SignedJWT;
@@ -33,24 +33,7 @@ public class MovieController {
     @Autowired
     UserPackedServiceImpl userPackedService;
     @Autowired
-    ImageService imageService;
-
-    @PostMapping
-    public ResponseEntity<MovieDTO> createMovie(@RequestBody MovieDTO movieDTO) {
-        MovieDTO savedMovie = movieService.createMovie(movieDTO);
-        return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
-    }
-    @PostMapping("/uploadChapter")
-    public ResponseEntity<String> uploadChapter(@RequestParam("file")MultipartFile file) throws IOException {
-        String url = imageService.uploadChapter(file);
-        System.out.println("call");
-        return ResponseEntity.ok(url);
-    }
-    @GetMapping
-    public ResponseEntity<List<MovieDTO>> getMovie() {
-        return ResponseEntity.ok(movieService.getAllMovie());
-    }
-
+    CloudinaryService imageService;
     @GetMapping("/index")
     public ResponseEntity<Map<String, Object>> getMovies(
             @RequestParam(defaultValue = "0") int page,
@@ -59,7 +42,7 @@ public class MovieController {
             @RequestParam(defaultValue = "false") boolean ascending) {
 
         List<MovieDTO> movies = movieService.index(page, size, sortBy, ascending);
-        int totalMovies = movieService.findAll().size(); // Assume you have a method to get the total number of movies
+        int totalMovies = movieService.findAll().size();
 
         Map<String, Object> response = new HashMap<>();
         response.put("movies", movies);

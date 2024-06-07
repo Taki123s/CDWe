@@ -26,7 +26,7 @@ public class AdminSerieController {
     public ResponseEntity<SerieDTO> addSerie(@RequestBody SerieUpdate serieUpdate){
         String descriptions = serieUpdate.getDescriptions();
         boolean isExit = serieService.findByDescription(descriptions);
-        if (isExit) throw new RuntimeException("Serie đã tồn tại");
+        if (isExit) throw new RuntimeException("Tên serie đã tồn tại");
         Serie newSerie = new Serie();
         newSerie.setDescriptions(descriptions);
         serieService.save(newSerie);
@@ -34,6 +34,8 @@ public class AdminSerieController {
     }
     @PutMapping("/edit/{id}")
     public ResponseEntity<SerieDTO> editSerie(@PathVariable Long id, @RequestBody SerieUpdate serieUpdate){
+        boolean isExit = serieService.findByDescription(serieUpdate.getDescriptions());
+        if (isExit) throw new RuntimeException("Tên serie đã tồn tại");
         Serie updateSerie = serieService.findById(id);
         updateSerie.setDescriptions(serieUpdate.getDescriptions());
         updateSerie.setUpdateAt(new Date());

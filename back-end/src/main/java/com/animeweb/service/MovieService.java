@@ -2,13 +2,12 @@ package com.animeweb.service;
 
 import com.animeweb.dto.movie.MovieAdmin;
 import com.animeweb.dto.movie.MovieDTO;
-
 import com.animeweb.entities.Movie;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.util.List;
 
 public interface MovieService {
-    MovieDTO createMovie(MovieDTO movieDTO);
+    void save(Movie movie);
 //    @PreAuthorize("hasAuthority('per1')")
     List<MovieAdmin> getAdminMovie();
     List<MovieDTO> getAllMovie();
@@ -21,5 +20,7 @@ public interface MovieService {
     List<MovieDTO> getTopViewDay();
     List<MovieDTO> getTopViewMonth();
     List<MovieDTO> getTopViewYear();
-
+    boolean findByName(String name);
+    boolean existById(Long id);
+    Movie findById(Long id);
 }

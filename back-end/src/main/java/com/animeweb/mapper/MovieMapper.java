@@ -1,5 +1,6 @@
 package com.animeweb.mapper;
 
+import com.animeweb.dto.movie.MovieAdd;
 import com.animeweb.dto.movie.MovieAdmin;
 import com.animeweb.dto.movie.MovieDTO;
 import com.animeweb.entities.*;
@@ -42,6 +43,7 @@ public class MovieMapper {
                 movie.getAvatarMovie(),
                 movie.getTrailer(),
                 movie.getSeriesDescriptions(),
+                movie.getSerie()!=null?movie.getSerie().getDescriptions():"",
                 movie.getGenres(),
                 movie.getCurrentChapters().size(),
                 movie.getViews().size(),
@@ -84,7 +86,16 @@ public class MovieMapper {
                 movieDTO.getFollows());
 
     }
-
-
+    public static Movie mapToMovie(MovieAdd movieAdd) {
+        Movie movie = new Movie();
+        movie.setName(movieAdd.getName());
+        movie.setVietnameseDescriptions(movieAdd.getVietnameseDescriptions());
+        movie.setEnglishDescriptions(movieAdd.getEnglishDescriptions());
+        movie.setTotalChapters(movieAdd.getTotalChapters());
+        movie.setProducer(movieAdd.getProducer());
+        movie.setTrailer(movieAdd.getTrailer());
+        movie.setSeriesDescriptions(movieAdd.getSeriesDescriptions());
+        return movie;
+    }
 
 }

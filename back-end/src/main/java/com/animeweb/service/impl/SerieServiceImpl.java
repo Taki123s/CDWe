@@ -18,7 +18,7 @@ public class SerieServiceImpl implements SerieService {
     SerieRepository serieRepository;
     @Override
     public List<SerieDTO> getAllSerie() {
-        List<Serie> serieList = serieRepository.getAllSerie();
+        List<Serie> serieList = serieRepository.getAllByStatus(true);
         List<SerieDTO> serieDTOList = new ArrayList<>();
         for(Serie serie:serieList){
             serieDTOList.add(SerieMapper.mapToSerieDto(serie));
@@ -28,7 +28,7 @@ public class SerieServiceImpl implements SerieService {
 
     @Override
     public Serie findById(Long id) {
-        return serieRepository.findSerieById(id).orElseThrow(()->new ResourceNotFoundException("Không tìm thấy Serie này"));
+        return serieRepository.findByIdAndStatus(id,true).orElse(null);
     }
     @Override
     public void save(Serie updateSerie) {
@@ -37,7 +37,7 @@ public class SerieServiceImpl implements SerieService {
 
     @Override
     public boolean findByDescription(String descriptions) {
-        return serieRepository.findByDescriptions(descriptions);
+        return serieRepository.existsByDescriptionsAndStatus(descriptions,true);
     }
 
 

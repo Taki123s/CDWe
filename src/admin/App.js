@@ -10,8 +10,6 @@ import "./css/responsive.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from "sweetalert2";
 import "jquery-confirm";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { AddChapter } from "./movie/AddChapter";

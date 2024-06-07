@@ -8,14 +8,14 @@ import Modal from "react-modal";
 import Swal from "sweetalert2";
 import { adminListMovie, deleteMovie } from "../../service/MovieServices";
 import { Link } from "react-router-dom";
-
+import { Loading } from "../../component/Loading";
 Modal.setAppElement("#root");
 
 export const ListMovie = () => {
   const [movies, setMovies] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
-
+  const [isUploading, setIsUploading] = useState(false);
   useEffect(() => {
     adminListMovie()
       .then((response) => {
@@ -52,8 +52,10 @@ export const ListMovie = () => {
       cancelButtonText: "Hủy bỏ",
     }).then((result) => {
       if (result.isConfirmed) {
+        setIsUploading(true)
         deleteMovie(id)
           .then((response) => {
+            setIsUploading(false)
             setMovies((prevMovies) =>
               prevMovies.filter((movie) => movie.id !== id)
             );
@@ -66,9 +68,10 @@ export const ListMovie = () => {
             });
           })
           .catch((error) => {
+            setIsUploading(false)
             Swal.fire({
               title: "Lỗi",
-              text: error.response?.data?.message || "Lỗi kết nối",
+              text: error.response.data || "Lỗi kết nối",
               icon: "error",
               timer: 2000,
               showConfirmButton: false,
@@ -141,7 +144,7 @@ export const ListMovie = () => {
                     width="100%"
                     height="100%"
                     src={row.trailer}
-                    title={ row.name + " trailer"}
+                    title={row.name + " trailer"}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
@@ -204,11 +207,16 @@ export const ListMovie = () => {
     },
     {
       id: 9,
+      name: "Series",
+      selector: (row) => row.series,
+    },
+    {
+      id: 10,
       name: "Series Descriptions",
       selector: (row) => row.seriesDescriptions,
     },
     {
-      id: 10,
+      id: 11,
       name: "Genres",
       cell: (row) => (
         <div>
@@ -224,42 +232,42 @@ export const ListMovie = () => {
       ),
     },
     {
-      id: 11,
+      id: 12,
       name: "Total Chapters",
       selector: (row) => row.totalChapters,
       sortable: true,
       reorder: true,
     },
     {
-      id: 12,
+      id: 13,
       name: "Current Chapters",
       selector: (row) => row.currentChapters,
       sortable: true,
       reorder: true,
     },
     {
-      id: 13,
+      id: 14,
       name: "View",
       selector: (row) => row.views,
       sortable: true,
       reorder: true,
     },
     {
-      id: 14,
+      id: 15,
       name: "Rate",
       selector: (row) => row.rates,
       sortable: true,
       reorder: true,
     },
     {
-      id: 15,
+      id: 16,
       name: "Follows",
       selector: (row) => row.follows,
       sortable: true,
       reorder: true,
     },
     {
-      id: 16,
+      id: 17,
       name: "Create At",
       cell: (row) => (
         <div
@@ -283,7 +291,7 @@ export const ListMovie = () => {
       reorder: true,
     },
     {
-      id: 17,
+      id: 18,
       name: "Update At",
       cell: (row) => (
         <div
@@ -307,7 +315,7 @@ export const ListMovie = () => {
       reorder: true,
     },
     {
-      id: 18,
+      id: 19,
       name: "Option",
       style: "word-wrap:unset;word-break:unset;",
       cell: (row) => (
@@ -340,6 +348,7 @@ export const ListMovie = () => {
 
   return (
     <div>
+      <Loading open={isUploading} />
       <DataTable
         title="List Movie"
         columns={columns}
@@ -355,7 +364,6 @@ export const ListMovie = () => {
         style={{
           overlay: {
             backgroundColor: "rgb(121 127 222 / 50%)",
-
           },
           content: {
             top: "50%",
@@ -364,7 +372,8 @@ export const ListMovie = () => {
             bottom: "auto",
             marginRight: "-50%",
             transform: "translate(-50%, -50%)",
-            width: "400px",
+            minWidth: "400px",
+            maxWidth: "60%",
             padding: "20px",
             borderRadius: "8px",
             boxShadow: "0 3px 6px rgba(0, 0, 0, 0.1)",
@@ -376,13 +385,12 @@ export const ListMovie = () => {
         <h2>Details</h2>
         <div
           style={{
-            maxWitdh: "500px",
+            maxWitdh: "100",
             maxHeight: "500px",
             overflowY: "scroll",
             fontSize: "20px",
             color: "black",
             fontWeight: "200",
-            textAlign: "center",
             marginBottom: "10px",
           }}
         >

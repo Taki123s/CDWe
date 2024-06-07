@@ -4,7 +4,6 @@ import Cookies from 'js-cookie';
 const AUTH_API_BASE_URL = "http://localhost:8080/auth";
 
 const axiosInstance = axios.create({
-  baseURL: AUTH_API_BASE_URL
 });
 
 axiosInstance.interceptors.request.use(

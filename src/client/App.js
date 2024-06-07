@@ -6,6 +6,10 @@ import {
   Navigate,
 } from "react-router-dom";
 import "../App.css";
+import "../css/bootstrap.min.css";
+import "../css/owl.carousel.min.css";
+import "../css/ds/style.css";
+import "../css/home.css"
 import MovieDetail from "../page/MovieDetail";
 import ProductItem from "../page/ProductItem";
 import AnimePage from "../component/Index";

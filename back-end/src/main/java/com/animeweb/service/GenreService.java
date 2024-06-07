@@ -1,8 +1,7 @@
 package com.animeweb.service;
 
-import com.animeweb.dto.GenreDTO;
-import com.animeweb.dto.MovieDTO;
-import com.animeweb.entities.Serie;
+import com.animeweb.dto.genre.GenreDTO;
+import com.animeweb.dto.movie.MovieDTO;
 
 import java.util.List;
 

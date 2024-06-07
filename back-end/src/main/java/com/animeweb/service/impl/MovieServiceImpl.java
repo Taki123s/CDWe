@@ -1,6 +1,7 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.dto.MovieDTO;
+import com.animeweb.dto.movie.MovieAdmin;
+import com.animeweb.dto.movie.MovieDTO;
 import com.animeweb.entities.Movie;
 import com.animeweb.exception.ResourceNotFoundException;
 import com.animeweb.mapper.MovieMapper;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,6 +30,16 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDTO createMovie(MovieDTO movieDTO) {
         return null;
+    }
+
+    @Override
+    public List<MovieAdmin> getAdminMovie() {
+        List<Movie> movieList = movieRepository.findAll();
+        List<MovieAdmin> movieDTOList  = new ArrayList<>();
+        for(Movie movie : movieList){
+            movieDTOList.add(MovieMapper.mapToMovieAdmin(movie));
+        }
+        return movieDTOList;
     }
 
     @Override

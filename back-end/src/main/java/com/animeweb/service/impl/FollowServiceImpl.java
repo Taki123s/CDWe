@@ -1,22 +1,12 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.dto.FollowDTO;
+import com.animeweb.dto.movie.FollowDTO;
 import com.animeweb.entities.Follow;
-import com.animeweb.entities.Movie;
-import com.animeweb.entities.User;
 import com.animeweb.mapper.FollowMapper;
-import com.animeweb.mapper.MovieMapper;
 import com.animeweb.repository.FollowRepository;
-import com.animeweb.repository.MovieRepository;
 import com.animeweb.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FollowServiceImpl implements FollowService {

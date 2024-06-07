@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './bootstrap.min.css'; // Import Bootstrap CSS
-import PayPalButton from './PayPal'; // Ensure correct import path
+import '../css/bootstrap.min.css'; 
+import PayPalButton from './PayPal';
 import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";
 

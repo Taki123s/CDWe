@@ -50,7 +50,8 @@ public class Movie {
 
     @Column(name = "avatar_movie")
     private String avatarMovie;
-
+    @Column(name = "trailer")
+    private String trailer;
     @Column(name = "series_descriptions")
     private String seriesDescriptions;
 

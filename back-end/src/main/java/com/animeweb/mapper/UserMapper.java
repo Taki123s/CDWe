@@ -1,7 +1,7 @@
 package com.animeweb.mapper;
 
-import com.animeweb.dto.RegisterDTO;
-import com.animeweb.dto.UserDTO;
+import com.animeweb.dto.user.RegisterDTO;
+import com.animeweb.dto.user.UserDTO;
 import com.animeweb.entities.User;
 
 public class UserMapper {

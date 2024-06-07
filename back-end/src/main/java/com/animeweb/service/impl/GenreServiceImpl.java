@@ -1,7 +1,7 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.dto.GenreDTO;
-import com.animeweb.dto.MovieDTO;
+import com.animeweb.dto.genre.GenreDTO;
+import com.animeweb.dto.movie.MovieDTO;
 import com.animeweb.entities.Genre;
 import com.animeweb.entities.Movie;
 import com.animeweb.mapper.GenreMapper;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

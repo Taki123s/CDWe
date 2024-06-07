@@ -1,6 +1,6 @@
 package com.animeweb.service;
 
-import com.animeweb.dto.RoleDTO;
+import com.animeweb.dto.oauth.RoleDTO;
 
 import java.util.List;
 

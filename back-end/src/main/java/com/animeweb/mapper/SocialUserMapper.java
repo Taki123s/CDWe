@@ -1,6 +1,6 @@
 package com.animeweb.mapper;
 
-import com.animeweb.dto.SocialUser;
+import com.animeweb.dto.user.SocialUser;
 import com.animeweb.entities.User;
 
 public class SocialUserMapper {

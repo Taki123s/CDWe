@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './bootstrap.min.css'; // Import Bootstrap CSS
 
 function ProductItem(props) {
   const [movies, setMovies] = useState([]);

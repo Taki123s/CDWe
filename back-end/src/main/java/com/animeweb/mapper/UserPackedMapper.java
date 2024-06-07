@@ -1,6 +1,6 @@
 package com.animeweb.mapper;
 
-import com.animeweb.dto.UserPackedDTO;
+import com.animeweb.dto.payment.UserPackedDTO;
 import com.animeweb.entities.UserPacked;
 
 public class UserPackedMapper {

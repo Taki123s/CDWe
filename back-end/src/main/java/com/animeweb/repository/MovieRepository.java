@@ -23,10 +23,10 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     List<Movie> findTopMoviesMonth();
     @Query("SELECT m FROM Movie m JOIN View v ON m.id = v.movie.id  WHERE YEAR(v.watchAt) = YEAR(CURDATE()) AND m.status = true ORDER BY SIZE(m.views) DESC")
     List<Movie> findTopMoviesYear();
-    @Query("select m from Movie m  join Serie s on m.serie.id=s.id")
-    List<Movie> findAllSeries(Long movieId);
     @Query("select m from Movie m  where m.status = true")
     List<Movie>findAll();
+    @Query("select m from Movie m  where m.status = true")
+    Page<Movie> findAll(Pageable pageable);
     @Query("select m from Movie m where m.name like :term% and m.status = true")
     List<Movie> findByNameContainingIgnoreCase(@Param("term")String term,Pageable pageable);
     @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.id = :idGenre AND m.status = true AND g.status = true")
@@ -35,5 +35,6 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     Integer totalMoviesByGenresId(@Param("idGenre") Integer idGenre);
     @Query("SELECT m FROM Movie m WHERE m.id != :movieId AND m.serie.id = :serieId AND m.status = true")
     List<Movie> findAllSeries(@Param("movieId") Long movieId, @Param("serieId") Long serieId);
+    boolean existsByNameAndStatus(String name,boolean status);
 }
 

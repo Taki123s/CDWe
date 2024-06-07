@@ -1,8 +1,6 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.dto.SocialUser;
 import com.animeweb.entities.User;
-import com.animeweb.mapper.SocialUserMapper;
 import com.animeweb.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

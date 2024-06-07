@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './bootstrap.min.css';
-import './owl.carousel.min.css';
 import Carousel from './Carousel';
 import ServicePackItems from './ServicePackDetail';
-
-import '../css/ds/style.css'
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
 import Swal from "sweetalert2";

@@ -1,7 +1,10 @@
 package com.animeweb.mapper;
 
-import com.animeweb.dto.MovieDTO;
+import com.animeweb.dto.movie.MovieAdd;
+import com.animeweb.dto.movie.MovieAdmin;
+import com.animeweb.dto.movie.MovieDTO;
 import com.animeweb.entities.*;
+import com.animeweb.service.FormatDate;
 
 public class MovieMapper {
     public static MovieDTO mapToMovieDTO(Movie movie){
@@ -17,6 +20,7 @@ public class MovieMapper {
                 movie.getStatus(),
                 movie.getProducer(),
                 movie.getAvatarMovie(),
+                movie.getTrailer(),
                 movie.getSeriesDescriptions(),
                 movie.getGenres(),
                 movie.getCurrentChapters(),
@@ -24,6 +28,28 @@ public class MovieMapper {
                 movie.getViews(),
                 movie.getRates(),
                 movie.getFollows());
+    }
+    public static MovieAdmin mapToMovieAdmin(Movie movie){
+        return new MovieAdmin(movie.getId(),
+                movie.getName(),
+                movie.getTotalChapters(),
+                movie.getVietnameseDescriptions(),
+                movie.getEnglishDescriptions(),
+                FormatDate.formatDate(movie.getCreateAt()),
+                FormatDate.formatDate(movie.getUpdateAt()),
+                FormatDate.formatDate(movie.getDeleteAt()),
+                movie.getStatus(),
+                movie.getProducer(),
+                movie.getAvatarMovie(),
+                movie.getTrailer(),
+                movie.getSeriesDescriptions(),
+                movie.getSerie()!=null?movie.getSerie().getDescriptions():"",
+                movie.getGenres(),
+                movie.getCurrentChapters().size(),
+                movie.getViews().size(),
+                movie.getRates().size(),
+                movie.getFollows().size()
+                );
     }
     public static MovieDTO mapToMovieWatching(Movie movie){
         return new MovieDTO(movie.getId(),movie.getName(),movie.getTotalChapters(),movie.getCurrentChapters());
@@ -50,6 +76,7 @@ public class MovieMapper {
                 movieDTO.getStatus(),
                 movieDTO.getProducer(),
                 movieDTO.getAvatarMovie(),
+                movieDTO.getTrailer(),
                 movieDTO.getSeriesDescriptions(),
                 movieDTO.getGenres(),
                 movieDTO.getCurrentChapters(),
@@ -59,7 +86,16 @@ public class MovieMapper {
                 movieDTO.getFollows());
 
     }
-
-
+    public static Movie mapToMovie(MovieAdd movieAdd) {
+        Movie movie = new Movie();
+        movie.setName(movieAdd.getName());
+        movie.setVietnameseDescriptions(movieAdd.getVietnameseDescriptions());
+        movie.setEnglishDescriptions(movieAdd.getEnglishDescriptions());
+        movie.setTotalChapters(movieAdd.getTotalChapters());
+        movie.setProducer(movieAdd.getProducer());
+        movie.setTrailer(movieAdd.getTrailer());
+        movie.setSeriesDescriptions(movieAdd.getSeriesDescriptions());
+        return movie;
+    }
 
 }

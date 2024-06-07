@@ -6,7 +6,6 @@ import axios from "axios";
 import { useTranslation, Trans } from "react-i18next";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import "./bootstrap.min.css";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { LikeShare } from "../component/LikeShare";

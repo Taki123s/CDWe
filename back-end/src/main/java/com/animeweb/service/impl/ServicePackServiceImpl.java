@@ -1,6 +1,6 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.dto.ServicePackDTO;
+import com.animeweb.dto.payment.ServicePackDTO;
 import com.animeweb.entities.ServicePack;
 import com.animeweb.mapper.ServicePackMapper;
 import com.animeweb.repository.ServicePackRepository;

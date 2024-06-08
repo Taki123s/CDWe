@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,35 +23,33 @@ import LoginFacebook from "../component/LoginFacebookSuccess";
 import PayPal from "../component/PayPal";
 import ExecutePaymentComponent from "../component/ExecutePaymentComponent";
 import Follow from "../page/Follow";
-import History from "../component/history-packed";
 
 function IndexApp() {
   return (
-    <Router>
-      <HeaderPage />
-      <Routes>
-        <Route path="/" element={<AnimePage />} />
-        <Route path="/movie/:id" element={<MovieDetail />} />
-        <Route path="/item" element={<ProductItem />} />
-        <Route path="/history-packed" element={<History />} />
-        <Route
-          path="/categories/:idGenre/:nameGenre"
-          element={<CategoriesPage />}
-        />
-        <Route path="/index" element={<AnimePage />} />
-        <Route path="/servicePack" element={<ServicePack />} />
-        <Route path="/login-google" element={<LoginGoogle />} />
-        <Route path="/login-facebook" element={<LoginFacebook />} />
-        <Route path="/execute-payment" element={<ExecutePaymentComponent />} />
-        <Route
-          path="/movie/watching/:movieId/:chapterId"
-          element={<MovieWatching />}
-        />
-        <Route path="/follow" element={<Follow />} />
-        <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
-        <Route path="/PayPal" element={<PayPal />} />
-      </Routes>
-    </Router>
+      <Router>
+        <HeaderPage />
+        <Routes>
+          <Route path="/" element={<AnimePage />} />
+          <Route path="/movie/:id" element={<MovieDetail />} />
+          <Route path="/item" element={<ProductItem />} />
+          <Route
+              path="/categories/:idGenre/:nameGenre"
+              element={<CategoriesPage />}
+          />
+          <Route path="/index" element={<AnimePage />} />
+          <Route path="/servicePack" element={<ServicePack />} />
+          <Route path="/login-google" element={<LoginGoogle />} />
+          <Route path="/login-facebook" element={<LoginFacebook />} />
+          <Route path="/execute-payment" element={<ExecutePaymentComponent />} />
+          <Route
+              path="/movie/watching/:movieId/:chapterId"
+              element={<MovieWatching />}
+          />
+          <Route path="/follow" element={<Follow />} />
+          <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
+          <Route path="/PayPal" element={<PayPal />} />
+        </Routes>
+      </Router>
   );
 }
 

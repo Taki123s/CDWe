@@ -1,6 +1,7 @@
 package com.animeweb.service;
 
 import com.animeweb.entities.User;
+import com.animeweb.entities.UserPacked;
 
 import java.util.List;
 

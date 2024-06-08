@@ -1,8 +1,8 @@
-    package com.animeweb.controller;
+    package com.animeweb.controller.client;
 
 
-    import com.animeweb.dto.FollowDTO;
-    import com.animeweb.dto.RateDTO;
+    import com.animeweb.dto.movie.FollowDTO;
+    import com.animeweb.dto.movie.RateDTO;
     import com.animeweb.entities.Movie;
     import com.animeweb.entities.Rate;
     import com.animeweb.entities.User;

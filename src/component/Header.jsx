@@ -17,6 +17,7 @@ import { getGenreList } from "../service/CategoryServices";
 import { useTranslation, Trans } from "react-i18next";
 import { Dropdown, Space, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
+
 import Swal from "sweetalert2";
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");

@@ -6,7 +6,7 @@ import "../css/moviedetail.css";
 
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode"; // Fix: Removed extra curly braces
-import "./bootstrap.min.css";
+import "../css/bootstrap.min.css";
 
 import {parseISO} from 'date-fns';
 import {

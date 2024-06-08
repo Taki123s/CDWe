@@ -1,8 +1,7 @@
 package com.animeweb.controller.client;
 
-import com.animeweb.dto.SerieDTO;
-import com.animeweb.dto.ServicePackDTO;
-import com.animeweb.dto.UserPackedDTO;
+import com.animeweb.dto.payment.ServicePackDTO;
+import com.animeweb.dto.payment.UserPackedDTO;
 import com.animeweb.entities.ServicePack;
 import com.animeweb.entities.UserPacked;
 import com.animeweb.mapper.ServicePackMapper;

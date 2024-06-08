@@ -3,18 +3,20 @@ package com.animeweb.service.impl;
 import com.animeweb.entities.User;
 import com.animeweb.entities.UserPacked;
 import com.animeweb.repository.UserPackedRepository;
+import com.animeweb.repository.UserRepository;
 import com.animeweb.service.UserPackedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserPackedServiceImpl implements UserPackedService {
     @Autowired
     UserPackedRepository userPackedRepository;
-
+@Autowired
+    UserRepository userRepository;
     public void save(UserPacked userPacked) {
         userPackedRepository.save(userPacked);
     }
@@ -32,5 +34,30 @@ public class UserPackedServiceImpl implements UserPackedService {
                 return false;
             }
         }
+    }
+
+    @Override
+    public UserPacked getUserPacked(User idUser) {
+        return userPackedRepository.checkUserBuyedService(idUser);
+    }
+
+    @Override
+    public List<UserPacked> findAllUserPacked() {
+        return userPackedRepository.findAllUserPacked();
+    }
+
+    public List<UserPacked> findAllUserPackedById(User user) {
+        return userPackedRepository.findAllUserPackedByUserId(user);
+    }
+
+    @Override
+    public void deleteUserPacked(Long id) {
+        Date now = new Date();
+
+        UserPacked userPacked = userPackedRepository.findById(id).get();
+        userPacked.setStatus(false);
+        userPacked.setDeletedAt(now);
+        userPacked.setExpiredTime(now);
+        userPackedRepository.save(userPacked);
     }
 }

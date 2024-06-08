@@ -11,6 +11,7 @@ import com.animeweb.mapper.ServicePackMapper;
 import com.animeweb.mapper.UserPackedMapper;
 import com.animeweb.repository.ServicePackRepository;
 import com.animeweb.repository.UserPackedRepository;
+import com.animeweb.service.UserPackedService;
 import com.animeweb.service.impl.PayPalService;
 import com.animeweb.service.impl.ServicePackServiceImpl;
 import com.animeweb.service.impl.UserPackedServiceImpl;
@@ -95,6 +96,13 @@ public class PaymentController {
             System.out.println(serviceId);
             System.out.println(captureId);
             User user = userService.getUserById(userId);
+            boolean checkBuyed = userPackedService.checkUserBuyedService(user);
+            if(checkBuyed){
+                UserPacked userPacked = userPackedService.getUserPacked(user);
+                userPacked.setStatus(false);
+                userPacked.setExpiredTime(now);
+                userPackedService.save(userPacked);
+            }
             ServicePackDTO servicePackDTO = servicePackService.getById(Long.parseLong(serviceId));
             ServicePack servicePackEn = ServicePackMapper.MaptoEntiy(servicePackDTO);
             UserPackedDTO userPackedDTO = new UserPackedDTO(user ,servicePackEn, expireTime);

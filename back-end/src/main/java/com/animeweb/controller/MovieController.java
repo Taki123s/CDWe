@@ -100,7 +100,7 @@ public class MovieController {
         } else if ("year".equals(type)) {
             List<MovieDTO> topMovies = movieService.getTopViewYear();
             response.put("topMovies", topMovies);
-        }        // Thêm thông tin khác vào map nếu cần
+        }
 
         return ResponseEntity.ok(response);
     }

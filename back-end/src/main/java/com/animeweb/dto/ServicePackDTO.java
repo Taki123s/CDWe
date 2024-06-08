@@ -14,6 +14,6 @@ public class ServicePackDTO {
     private String service_type;
     private Double price;
     private Date createdAt;
-
+    private String service_img;
 
 }

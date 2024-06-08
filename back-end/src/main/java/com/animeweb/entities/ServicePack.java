@@ -17,6 +17,8 @@ public class ServicePack {
     private Long id;
     @Column(name = "service_type")
     private String service_type;
+    @Column(name = "service_img")
+    private String service_img;
     @Column(name="price")
     private Double price;
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

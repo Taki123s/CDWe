@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT a from User a where a.userName=:userName and a.status = true and a.authenticated = true" )
     Optional<User> findByUserName(String userName);
+    @Query("SELECT a from User a where a.id= :id and a.status = true " )
+    User findUserByid(Long id);
     @Query("select count(a) > 0 from User a where a.userName=:userName and a.status=true and  a.authenticated = true")
     Boolean existsByUserName(String userName);
     @Query( "SELECT a from User a where a.email= :email and a.userType = 2 and  a.status  = true " )

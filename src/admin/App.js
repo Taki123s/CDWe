@@ -10,6 +10,8 @@ import HeaderAdmin from "./HeaderAdmin";
 // import GenreList from './GenreList'; // Example component, you need to create/import this
 // import Login from './Login'; // Example component, you need to create/import this
 import AddUserForm from "./user/AddUser";
+import  ServicePacks from "./component/packed-service"
+import  UserPacked from "./component/user-packed"
 import "../component/bootstrap.min.css"
 // import "line-awesome/dist/line-awesome/css/line-awesome.min.css";
 // import "remixicon/fonts/remixicon.css";
@@ -26,13 +28,20 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+
 function App() {
   return (
     <BrowserRouter>
     <HeaderAdmin />
       <Sidebar />
+      <div className="wrapper">
+        <div className="content-page" id="content-page">
+          <div className="container-fluid">
       <Routes>
         <Route path="/admin/add" element={<AddUserForm />} />
+        <Route path="/admin/packed-service" element={<ServicePacks />} />
+
+        <Route path="/admin/user-packed" element={<UserPacked />} />
         {/*<Route path="/admin" element={<Login />} />*/}
         {/*<Route path="/admin/dashBoard" element={<Dashboard />} />*/}
         {/*<Route path="/admin/UserAdd" element={<UserAdd />} />*/}
@@ -42,6 +51,9 @@ function App() {
         {/*<Route path="/admin/GenreList" element={<GenreList />} />*/}
         {/* Add more routes as needed */}
       </Routes>
+          </div>
+        </div>
+      </div>
     </BrowserRouter>
   );
 }

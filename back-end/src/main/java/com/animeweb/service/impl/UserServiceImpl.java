@@ -88,6 +88,6 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     public User getUserById(String id){
-        return userRepository.findById(Long.valueOf(id)).get();
+        return userRepository.findUserByid(Long.valueOf(id));
     }
 }

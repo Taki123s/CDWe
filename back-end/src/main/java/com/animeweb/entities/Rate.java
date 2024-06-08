@@ -25,12 +25,19 @@ public class Rate {
     @Column(name = "delete_at")
     private Date deleteAt;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id", referencedColumnName = "id")
     @JsonBackReference
     private User userId;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
     @JsonBackReference
     private Movie movie;
+
+    public Rate(User userId, Double score, Movie movie, Date createAt) {
+        this.userId = userId;
+        this.score = score;
+        this.movie = movie;
+        this.createAt=createAt;
+    }
 }
 

@@ -7,7 +7,7 @@ import com.animeweb.entities.*;
 public class ServicePackMapper {
     public static ServicePackDTO MaptoDto(ServicePack servicePack){
 return new ServicePackDTO(servicePack.getId(), servicePack.getService_type(),servicePack.getPrice(),
-        servicePack.getCreateAt());
+        servicePack.getCreateAt(), servicePack.getService_img());
     }
 
     public static ServicePack MaptoEntiy(ServicePackDTO servicePack){

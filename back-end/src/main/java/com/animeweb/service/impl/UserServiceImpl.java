@@ -1,7 +1,7 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.dto.LoginDTO;
-import com.animeweb.dto.VerifyUser;
+import com.animeweb.dto.oauth.LoginDTO;
+import com.animeweb.dto.oauth.VerifyUser;
 import com.animeweb.entities.ExpiredToken;
 import com.animeweb.entities.Role;
 import com.animeweb.entities.User;

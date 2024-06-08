@@ -1,6 +1,6 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.dto.RoleDTO;
+import com.animeweb.dto.oauth.RoleDTO;
 import com.animeweb.entities.Role;
 import com.animeweb.repository.RoleRepository;
 import com.animeweb.service.RoleService;

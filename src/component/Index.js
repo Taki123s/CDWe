@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import "../../src/component/bootstrap.min.css";
 import "../css/ds/style.css";
 
+import { useTranslation, Trans } from "react-i18next";
 function AnimePage() {
     const [movies, setMovies] = useState([]);
     const [ratings, setRatings] = useState({});
@@ -15,7 +16,7 @@ function AnimePage() {
     const [totalPages, setTotalPages] = useState(1);
     const [sortBy, setSortBy] = useState('createAt');
     const [ascending, setAscending] = useState(false);
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         fetchMovies();

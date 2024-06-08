@@ -20,20 +20,12 @@ public class Chapter {
     private Long id;
     @Column(name = "ordinal")
     private Integer ordinal;
-
     @Column(name = "link")
     private String link;
-
     @Column(name = "status", columnDefinition = "TINYINT(1)")
     private Boolean status = true;
-
-    @Column(name = "type")
-    private Integer type;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
     @JsonBackReference
     private Movie movie;
-    @OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<Comment> comments;
 }

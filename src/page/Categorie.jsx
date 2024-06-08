@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../../src/component/bootstrap.min.css";
 import Carousel from "../../src/component/Carousel";
-import "../css/ds/style.css";
 import Topview from "../component/Topview";
 import { useParams } from "react-router-dom";
 import { getMoviesByGenre } from "../service/CategoryServices";

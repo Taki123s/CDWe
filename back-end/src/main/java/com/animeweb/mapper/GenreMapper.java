@@ -1,6 +1,6 @@
 package com.animeweb.mapper;
 
-import com.animeweb.dto.GenreDTO;
+import com.animeweb.dto.genre.GenreDTO;
 import com.animeweb.entities.Genre;
 
 public class GenreMapper {

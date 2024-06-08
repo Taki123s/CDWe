@@ -8,33 +8,27 @@ import {
   logout,
   checkUsername,
   sendMail,
-  register,
-} from "../service/AuthServices";
+  register,} from "../service/AuthServices";
 import { jwtDecode } from "jwt-decode";
-import {ServicePack} from "../component/ServicePack";
 import Cookies from "js-cookie";
 import axios from "axios";
-import "./bootstrap.min.css";
-import "./owl.carousel.min.css";
-import "../css/ds/style.css";
-import "../css/home.css";
 import logo from "../img/logo.png";
 import { getGenreList } from "../service/CategoryServices";
 import { useTranslation, Trans } from "react-i18next";
 import { Dropdown, Space, Typography } from "antd";
-import {useNavigate} from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  // const lngs = {
-  //   en: {
-  //     nativeName: "English",
-  //   },
-  //   vi: {
-  //     nativeName: "Vietnamese",
-  //   },
-  // };
+  const lngs = {
+    en: {
+      nativeName: "English",
+    },
+    vi: {
+      nativeName: "Vietnamese",
+    },
+  };
 
   const items = [
     {
@@ -101,12 +95,12 @@ export const HeaderPage = () => {
       })
       .catch((error) => {
         Swal.fire({
-            title: "Lỗi",
-            text: error.response.data.message,
-            icon: "error",
-            timer: 2000,
-            showConfirmButton: false,
-          });
+          title: "Lỗi",
+          text: error.response.data.message,
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       });
   };
   const validateEmail = (email) => {
@@ -191,7 +185,7 @@ export const HeaderPage = () => {
         email: registerUser.email,
         verifyCode: verificationCode,
       };
-      if(verifyUser.verifyCode=="" || verifyUser.verifyCode == null){
+      if (verifyUser.verifyCode == "" || verifyUser.verifyCode == null) {
         Swal.fire({
           title: "Lỗi",
           text: "Không được để trống mã xác nhận",
@@ -278,7 +272,7 @@ export const HeaderPage = () => {
       document.body.appendChild(modalDiv);
       const root = createRoot(modalDiv);
       root.render(<EmailVerificationDialog onClose={() => root.unmount()} />);
-    }else{
+    } else {
       Swal.fire({
         title: "Lỗi",
         text: "Vui lòng điền đầy đủ và hợp lệ các trường",
@@ -421,8 +415,10 @@ export const HeaderPage = () => {
       <nav className="fixed top-0 left-0 right-0 bg-white shadow dark:shadow-slate-700 bg-white dark:bg-slate-800 dark:shadow-slate-700  z-1000">
         <div className="container px-[10px] s1024:px-0 mx-auto h-[60px] flex s375:gap-3 items-center">
           <div className="navbar-brand h-[50px] w-[200px] s768:w-[180px] flex justify-between shrink-0 s1280:mr-2 s1366:mr-3 z-50">
-            <a className="" >
-               <Link to={'/index'}><img className="h-full" src={logo} alt="" /> </Link>
+            <a className="">
+              <Link to={"/index"}>
+                <img className="h-full" src={logo} alt="" />{" "}
+              </Link>
             </a>
             <div
               className="navbar-toggle h-[50px] p-[10px] flex items-center s768:hidden"
@@ -447,7 +443,6 @@ export const HeaderPage = () => {
           <div
             className="navbar-left overflow-scroll h-full s768:left-0 s768:h-[50px] shadow s768:relative w-[300px] s768:w-auto s768:h-auto s768:flex top-0 -left-[300px] bottom-0 bg-white s768:bg-transparent dark:s768:bg-transparent dark:bg-slate-800/90 dark:shadow-slate-700 s768:shadow-none s768:grow s768:overflow-visible pl-[10px] pr-0 pt-[60px] s768:p-0 z-40 transition-all duration-300 absolute"
             id="navbar-left"
-
           >
             <div className="navbar-close absolute top-4 right-4 hidden">
               <svg
@@ -465,12 +460,12 @@ export const HeaderPage = () => {
                 />
               </svg>
             </div>
-            <div className="s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow  gap-4 s768:gap-2 s1280:gap-3" style={{background:"white"}}>
+            <div
+              className="s768:mt-0 s768:pr-0 flex flex-col s768:flex-row s768:grow  gap-4 s768:gap-2 s1280:gap-3"
+              style={{ background: "white" }}
+            >
               <div className="navbar-item  s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
-                <a
-                  className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
-
-                >
+                <a className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -485,10 +480,12 @@ export const HeaderPage = () => {
                       d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75m-9.75 0A1.125 1.125 0 016 10.875M7.125 12C6.504 12 6 12.504 6 13.125m0-2.25C6 11.496 5.496 12 4.875 12M18 10.875c0 .621-.504 1.125-1.125 1.125M18 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m-12 5.25v-5.25m0 5.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125m-12 0v-1.5c0-.621-.504-1.125-1.125-1.125M18 18.375v-5.25m0 5.25v-1.5c0-.621.504-1.125 1.125-1.125M18 13.125v1.5c0 .621.504 1.125 1.125 1.125M18 13.125c0-.621.504-1.125 1.125-1.125M6 13.125v1.5c0 .621-.504 1.125-1.125 1.125M6 13.125C6 12.504 5.496 12 4.875 12m-1.5 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M19.125 12h1.5m0 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h1.5m14.25 0h1.5"
                     />
                   </svg>
-                  <Link to={'/index'}> <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    {t("menu.home")}
-                  </span></Link>
-
+                  <Link to={"/index"}>
+                    {" "}
+                    <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
+                      {t("menu.home")}
+                    </span>
+                  </Link>
                 </a>
               </div>
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:order-2">
@@ -543,12 +540,7 @@ export const HeaderPage = () => {
               </div>
 
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-5">
-                <a
-                  className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
-
-                >
-
-
+                <a className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -568,10 +560,12 @@ export const HeaderPage = () => {
                       d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"
                     />
                   </svg>
-                  <Link to={'/servicePack'}>  <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    {t("menu.servicepack")}
-                  </span></Link>
-
+                  <Link to={"/servicePack"}>
+                    {" "}
+                    <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
+                      {t("menu.servicepack")}
+                    </span>
+                  </Link>
                 </a>
               </div>
 
@@ -988,10 +982,10 @@ export const HeaderPage = () => {
                     </div>
                     <hr className="mb-3 border-gray-300 dark:border-slate-600" />
                     <div className="navbar-form-group relative mb-3 h-8 rounded bg-orange-600/90 text-center text-white text-[14px] font-light">
-
-                      <a  className="social-login"
-                          href="http://localhost:8080/oauth2/authorization/google">
-
+                      <a
+                        className="social-login"
+                        href="http://localhost:8080/oauth2/authorization/google"
+                      >
                         <input
                           type="button"
                           className="google w-full h-full rounded cursor-pointer"
@@ -1000,8 +994,10 @@ export const HeaderPage = () => {
                       </a>
                     </div>
                     <div className="navbar-form-group relative mb-3 h-8 rounded bg-blue-600/90 text-center text-white text-[14px] font-light">
-                      <a  className="social-login"
-                          href="http://localhost:8080/oauth2/authorization/facebook">
+                      <a
+                        className="social-login"
+                        href="http://localhost:8080/oauth2/authorization/facebook"
+                      >
                         <input
                           type="button"
                           className="facebook w-full h-full rounded cursor-pointer"

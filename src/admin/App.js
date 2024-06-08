@@ -1,15 +1,12 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import HeaderAdmin from "./HeaderAdmin";
-// import Dashboard from './Dashboard'; // Example component, you need to create/import this
-// import UserAdd from './UserAdd'; // Example component, you need to create/import this
-// import UserList from './UserList'; // Example component, you need to create/import this
-// import MovieList from './MovieList'; // Example component, you need to create/import this
-// import MovieAdd from './MovieAdd'; // Example component, you need to create/import this
-// import GenreList from './GenreList'; // Example component, you need to create/import this
-// import Login from './Login'; // Example component, you need to create/import this
 import AddUserForm from "./user/AddUser";
+import "boxicons";
+import "./css/main.css";
+import "./images/favicon.ico";
+import "./css/typography.css";
+import "./css/responsive.css";
 import  ServicePacks from "./component/packed-service"
 import  UserPacked from "./component/user-packed"
 import "../component/bootstrap.min.css"
@@ -22,35 +19,32 @@ import "./images/favicon.ico"
 import "./css/typography.css"
 import "./css/responsive.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Swal from 'sweetalert2';
-import 'jquery-confirm';
-import Highcharts from 'highcharts'
-import HighchartsReact from 'highcharts-react-official'
+import Swal from "sweetalert2";
+import "jquery-confirm";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-
+import { AddChapter } from "./movie/AddChapter";
+import { ListSerie } from "./movie/ListSerie";
+import { ListMovie } from "./movie/ListMovie";
+import { AddMovie } from "./movie/AddMovie";
+import "../css/bootstrap.min.css";
+import "./css/style.css";
 function App() {
   return (
     <BrowserRouter>
-    <HeaderAdmin />
-      <Sidebar />
       <div className="wrapper">
+      <Sidebar />
         <div className="content-page" id="content-page">
           <div className="container-fluid">
-      <Routes>
-        <Route path="/admin/add" element={<AddUserForm />} />
-        <Route path="/admin/packed-service" element={<ServicePacks />} />
+            <Routes>
+              <Route path="/admin/add" element={<AddUserForm />} />
+              <Route path="/admin/upload" element={<AddChapter />} />
+              <Route path="/admin/listSerie" element={<ListSerie />} />
+              <Route path="/admin/listMovie" element={<ListMovie/>}/>
+              <Route path="/admin/addMovie" element={<AddMovie/>}/>
+              <Route path="/admin/packed-service" element={<ServicePacks />} />
 
-        <Route path="/admin/user-packed" element={<UserPacked />} />
-        {/*<Route path="/admin" element={<Login />} />*/}
-        {/*<Route path="/admin/dashBoard" element={<Dashboard />} />*/}
-        {/*<Route path="/admin/UserAdd" element={<UserAdd />} />*/}
-        {/*<Route path="/admin/UserList" element={<UserList />} />*/}
-        {/*<Route path="/admin/MovieList" element={<MovieList />} />*/}
-        {/*<Route path="/admin/MovieAdd" element={<MovieAdd />} />*/}
-        {/*<Route path="/admin/GenreList" element={<GenreList />} />*/}
-        {/* Add more routes as needed */}
-      </Routes>
+              <Route path="/admin/user-packed" element={<UserPacked />} />
           </div>
         </div>
       </div>

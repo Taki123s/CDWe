@@ -17,10 +17,10 @@ public interface MovieService {
     MovieDTO findMovieWatching(Long movieId);
     List<MovieDTO> searchMovie(String name);
     List<MovieDTO> findAllMovieSameSeries(Long movieId);
-
     List<MovieDTO> getTopViewDay();
     List<MovieDTO> getTopViewMonth();
     List<MovieDTO> getTopViewYear();
-    List<MovieDTO> findAllMovieFollowedByUserId(Long userId);
-
+    boolean findByName(String name);
+    boolean existById(Long id);
+    Movie findById(Long id);
 }

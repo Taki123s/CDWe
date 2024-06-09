@@ -27,6 +27,7 @@ public class UserDTOBuilder {
     private Date deletedAt;
     private Boolean status;
     private String externalId;
+    private Boolean isActive;
     private List<Long> viewIdList;
     private List<Long> rateIdList;
     private List<Long> followIdList;

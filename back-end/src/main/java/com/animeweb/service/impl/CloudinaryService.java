@@ -14,6 +14,7 @@ import java.util.Map;
 public class CloudinaryService {
     public static final String MOVIE_SAVE_FOLDER ="/MovieStorage/";
     public static final String MOVIE_GET_FOLDER ="MovieStorage/";
+
     @Autowired
     private Cloudinary cloudinary;
     public String uploadChapter(MultipartFile file) throws IOException {

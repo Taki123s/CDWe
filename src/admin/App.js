@@ -18,19 +18,25 @@ import { ListMovie } from "./movie/ListMovie";
 import { AddMovie } from "./movie/AddMovie";
 import "../css/bootstrap.min.css";
 import "./css/style.css";
+import UserAdd from "./user/AddUser";
+import UserList from "./user/ListUser";
+import EditUser from "./user/EditUser";
 function App() {
   return (
     <BrowserRouter>
       <div className="wrapper">
-      <Sidebar />
+        <Sidebar />
         <div className="content-page" id="content-page">
           <div className="container-fluid">
             <Routes>
               <Route path="/admin/add" element={<AddUserForm />} />
               <Route path="/admin/upload" element={<AddChapter />} />
               <Route path="/admin/listSerie" element={<ListSerie />} />
-              <Route path="/admin/listMovie" element={<ListMovie/>}/>
-              <Route path="/admin/addMovie" element={<AddMovie/>}/>
+              <Route path="/admin/listMovie" element={<ListMovie />} />
+              <Route path="/admin/addMovie" element={<AddMovie />} />
+              <Route path="/admin/adduser" element={<UserAdd />} />
+              <Route path="/admin/UserList" element={<UserList />} />
+              <Route path="/admin/EditUser" element={<EditUser />} />
             </Routes>
           </div>
         </div>

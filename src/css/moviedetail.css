@@ -131,12 +131,3 @@ button.setValue.btn.btn-outline-info.btn-reply {
 .hoverWhite:hover{
   color: white!important;
 }
-h1, h2, h3, h4, h5, h6{
-  filter: none !important;
-}
-.anime__review__item__text {
-  background: #fff !important;
-}
-.movie_name_comment{
-  color: black !important;
-}

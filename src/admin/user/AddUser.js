@@ -1,10 +1,12 @@
+import { Title } from 'chart.js';
 import React from 'react';
+import axios from 'axios';
 const AddUserForm = () => {
+
     return (
         <div className="wrapper">
             <div id="content-page" className="content-page">
                 <div className="container-fluid">
-                    <form method="post" action="/admin/UserAdd" encType="multipart/form-data">
                         <div className="row">
                             <div className="col-lg-3">
                                 <div className="iq-card">
@@ -72,18 +74,31 @@ const AddUserForm = () => {
                                                     <input type="password" className="form-control" id="pass" name="password" placeholder="Mật khẩu" />
                                                 </div>
                                             </div>
-                                            <button type="submit" className="btn btn-primary">Xác nhận</button>
+                                            <button type="submit" className="btn btn-primary" onClick={handleClick}>Xác nhận</button>
                                           
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
     );
+}
+
+const handleClick = async () => {
+    const user = {
+        name: document.getElementById("fullName").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        username: document.getElementById("uname").value,
+        password: document.getElementById("pass").value
+    };
+    await axios.post("http://localhost:8080/admin/user",
+    JSON.stringify(user), {headers: {'Content-Type': 'application/json'}})
+        .then(response => console.log(response.data))
+        .catch(err => console.log(err.response?.data?.detail));
 }
 
 export default AddUserForm;

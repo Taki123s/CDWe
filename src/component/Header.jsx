@@ -21,14 +21,14 @@ import Swal from "sweetalert2";
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  // const lngs = {
-  //   en: {
-  //     nativeName: "English",
-  //   },
-  //   vi: {
-  //     nativeName: "Vietnamese",
-  //   },
-  // };
+  const lngs = {
+    en: {
+      nativeName: "English",
+    },
+    vi: {
+      nativeName: "Vietnamese",
+    },
+  };
 
   const items = [
     {
@@ -465,10 +465,7 @@ export const HeaderPage = () => {
               style={{ background: "white" }}
             >
               <div className="navbar-item  s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-1">
-                <a
-                  className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]"
-
-                >
+                <a className="h-full flex gap-4 uppercase s768:normal-case items-center text-[14px]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -1294,7 +1291,7 @@ export const HeaderPage = () => {
                   <div className="user-item">
                     <a
                       className="block flex gap-4 items-center h-8"
-                      href="/sua-thong-tin"
+                      href="/profile"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1383,7 +1380,7 @@ export const HeaderPage = () => {
                   <div className="user-item">
                     <a
                       className="block flex gap-4 items-center h-8"
-                      href="/phim-dang-theo-doi"
+                      href="/follow_page"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

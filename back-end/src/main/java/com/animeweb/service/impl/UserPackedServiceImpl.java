@@ -1,6 +1,5 @@
 package com.animeweb.service.impl;
 
-import com.animeweb.dto.UserPackedDTO;
 import com.animeweb.dto.UserServicePackedDTO;
 import com.animeweb.entities.User;
 import com.animeweb.entities.UserPacked;
@@ -10,7 +9,6 @@ import com.animeweb.service.UserPackedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

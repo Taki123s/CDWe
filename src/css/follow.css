@@ -8,10 +8,6 @@
     filter: none !important;
     color: rgb(154, 43, 43);
 }
-.title_movie :hover {
-    color: blue !important;
-
-}
 .element {
     
     display: flex;

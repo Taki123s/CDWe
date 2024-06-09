@@ -1,8 +1,6 @@
 package com.animeweb.controller.client;
-
-import com.animeweb.dto.MovieDTO;
-import com.animeweb.dto.UserDTO;
-import com.animeweb.dto.UserDTOBuilder;
+import com.animeweb.dto.UpdateUser;
+import com.animeweb.dto.user.UserDTOBuilder;
 import com.animeweb.entities.*;
 import com.animeweb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,9 +35,8 @@ public class UserController {
                 .collect(Collectors.toList());
         UserDTOBuilder userDTO=new UserDTOBuilder(user.getId(),roleIDList,user.getUserName(),user.getAvatarPicture()
         ,"",user.getEmail(),user.getFullName(),user.getPhone(),user.getUserType(),user.getCreatedAt(),user.getUpdatedAt()
-        ,user.getDeletedAt(),user.getStatus(),user.getExternalId(),viewIdList,rateIDList,followIdList);
-
-               return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        ,user.getDeletedAt(),user.getStatus(),user.getExternalId(),user.getIsActive(),viewIdList,rateIDList,followIdList);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
     @PostMapping("/update")
     public ResponseEntity<User> updateProfile(@RequestBody UpdateUser user){
@@ -66,7 +61,8 @@ public class UserController {
                         ,existingUser.get().getAuthCode()
                         ,existingUser.get().getExpiredAt()
                         ,existingUser.get().getAuthenticated()
-                        ,existingUser.get().getExternalId()
+                        ,existingUser.get().getExternalId(),
+                        existingUser.get().getIsActive()
                         ,existingUser.get().getViews(),
                         existingUser.get().getRates(),
                         existingUser.get().getFollows()));

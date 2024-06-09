@@ -23,7 +23,6 @@ import PayPal from "../component/PayPal";
 import ExecutePaymentComponent from "../component/ExecutePaymentComponent";
 import Follow from "../page/Follow";
 import Profile from "../page/ProfilePage"
-import axios from "axios";
 
 function IndexApp() {
   return (
@@ -49,7 +48,7 @@ function IndexApp() {
         <Route path="/follow_page" element={<Follow />} />
         <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
         <Route path="/PayPal" element={<PayPal />} />
-        <Route path="/profile" element={<Profile/>}></Route>
+        <Route path="/profile" element={<Profile/>}/>
       </Routes>
     </Router>
   );

@@ -1,9 +1,7 @@
 package com.animeweb.mapper;
 
 import com.animeweb.dto.payment.UserPackedDTO;
-import com.animeweb.dto.UserPackedDTO;
 import com.animeweb.dto.UserServicePackedDTO;
-import com.animeweb.entities.ServicePack;
 import com.animeweb.entities.UserPacked;
 
 import java.util.Date;

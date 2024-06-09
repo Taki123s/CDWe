@@ -2,7 +2,6 @@ package com.animeweb.security;
 
 
 import com.animeweb.service.impl.UserServiceImpl;
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

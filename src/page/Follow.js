@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import { AiOutlineMore } from "react-icons/ai";
 import MovieFollowItem from "./MovieFollowItem.js"; // Import MovieComment component
 import "../css/follow.css";
@@ -73,5 +74,4 @@ function Follow() {
     </section>
   );
 }
-
 export default Follow;

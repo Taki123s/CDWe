@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -152,14 +151,18 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieDTO> findAllMovieFollowedByUserId(Long userId) {
-        List<MovieDTO> result = new ArrayList<>();
-        List<Movie> follows = movieRepository.findAllMovieFollowedByUserId(userId);
-        for (Movie f : follows) {
-            result.add(MovieMapper.mapToMovieDTO(f));
-        }
-        return result;
+    public boolean findByName(String name) {
+        return movieRepository.existsByNameAndStatus(name,true);
+    }
 
+    @Override
+    public boolean existById(Long id) {
+        return movieRepository.existsById(id);
+    }
+
+    @Override
+    public Movie findById(Long id) {
+        return movieRepository.findById(id).orElse(null);
     }
 
     @Override

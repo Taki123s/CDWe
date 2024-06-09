@@ -1,6 +1,5 @@
 package com.animeweb.service;
 
-import com.animeweb.dto.UserPackedDTO;
 import com.animeweb.dto.UserServicePackedDTO;
 import com.animeweb.entities.User;
 import java.util.List;

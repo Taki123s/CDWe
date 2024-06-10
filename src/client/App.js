@@ -22,6 +22,7 @@ import LoginFacebook from "../component/LoginFacebookSuccess";
 import PayPal from "../component/PayPal";
 import ExecutePaymentComponent from "../component/ExecutePaymentComponent";
 import Follow from "../page/Follow";
+import History from "../component/history-packed";
 
 function IndexApp() {
   return (
@@ -31,6 +32,7 @@ function IndexApp() {
         <Route path="/" element={<AnimePage />} />
         <Route path="/movie/:id" element={<MovieDetail />} />
         <Route path="/item" element={<ProductItem />} />
+        <Route path="/history-packed" element={<History />} />
         <Route
           path="/categories/:idGenre/:nameGenre"
           element={<CategoriesPage />}

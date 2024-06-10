@@ -109,6 +109,10 @@ public class User {
         this.follows = follows;
     }
 
+    public User(Long userId) {
+        this.id = userId;
+    }
+
     public List<Role> getRoleDetails() {
         return this.roles.stream()
                 .map(role -> new Role(role.getId(), role.getName()))

@@ -1,30 +1,53 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
 import {Link} from 'react-router-dom';
 import Carousel from './Carousel';
 import Topview from './Topview';
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
+
+
 function AnimePage() {
     const [movies, setMovies] = useState([]);
+    const [ratings, setRatings] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(9);
     const [totalPages, setTotalPages] = useState(1);
     const [sortBy, setSortBy] = useState('createAt');
     const [ascending, setAscending] = useState(false);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+
     useEffect(() => {
         fetchMovies();
-    }, [currentPage, sortBy, ascending]); // Fetch movies when currentPage, sortBy or ascending changes
+    }, [currentPage, sortBy, ascending]);
 
     const fetchMovies = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/movie/index?page=${currentPage - 1}&size=${pageSize}&sortBy=${sortBy}&ascending=${ascending}`);
             const responseData = response.data;
-            console.log(responseData.movies)
             setMovies(responseData.movies);
             setTotalPages(Math.ceil(responseData.totalMovies / pageSize));
+
+            // Fetch ratings for all movies
+            const ratingPromises = responseData.movies.map(movie => fetchRating(movie.id));
+            const ratingsArray = await Promise.all(ratingPromises);
+            const ratingsObject = ratingsArray.reduce((acc, rating, index) => {
+                acc[responseData.movies[index].id] = rating;
+                return acc;
+            }, {});
+            setRatings(ratingsObject);
         } catch (error) {
             console.error('Error fetching movies:', error);
+        }
+    };
+
+    const fetchRating = async (movieId) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/rates/average/${movieId}`);
+            console.log(response)
+            return response.data; // Assuming the rating is in response.data.rating
+        } catch (error) {
+            console.error("Error fetching rating:", error);
+            return null; // Return null or a default value in case of error
         }
     };
 
@@ -38,14 +61,7 @@ function AnimePage() {
 
     const handleOrderChange = (event) => {
         const selectedOption = event.target.value;
-
-        // Nếu chọn A-Z hoặc Newest
-        if (selectedOption === 'asc') {
-            setAscending(true); // Cập nhật thứ tự sắp xếp là tăng dần
-        } else {
-            // Nếu chọn Z-A hoặc Oldest
-            setAscending(false); // Cập nhật thứ tự sắp xếp là giảm dần
-        }
+        setAscending(selectedOption === 'asc');
     };
 
     return (
@@ -70,13 +86,11 @@ function AnimePage() {
                                                     <option value="name">Name</option>
                                                 </select>
                                                 {sortBy === 'createAt' ? (
-                                                    // Nếu là thời gian, hiển thị lựa chọn sắp xếp thời gian
                                                     <select className="filter" value={ascending ? 'asc' : 'desc'} onChange={handleOrderChange}>
                                                         <option value="desc">{t("sort.new")}</option>
                                                         <option value="asc">{t("sort.oldest")}</option>
                                                     </select>
                                                 ) : (
-                                                    // Nếu là tên, hiển thị lựa chọn sắp xếp theo tên
                                                     <select className="filter" value={ascending ? 'asc' : 'desc'} onChange={handleOrderChange}>
                                                         <option value="asc">A-Z</option>
                                                         <option value="desc">Z-A</option>
@@ -85,9 +99,7 @@ function AnimePage() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col-lg-4 col-md-4 col-sm-4">
-
-                                    </div>
+                                    <div className="col-lg-4 col-md-4 col-sm-4"></div>
                                 </div>
                                 <div className="row">
                                     {movies.map(movie => (
@@ -95,14 +107,19 @@ function AnimePage() {
                                             <div className="product__item">
                                                 <div className="product__item__pic set-bg"
                                                      style={{backgroundImage: `url(${movie.avatarMovie})`}}>
-                                                    <div
-                                                        className="ep">{movie.currentChapters.length} / {movie.totalChapters}</div>
-                                                    <div className="view"><i className="fa fa-eye"></i> {movie.views.length}
+                                                    <div className="ep">{movie.currentChapters.length} / {movie.totalChapters}</div>
+                                                    <div className="view"><i className="fa fa-eye"></i> {movie.views.length}</div>
+                                                    <div className="rate">
+
+                                                        {ratings[movie.id]}   <i className="fa fa-star" style={{ color: '#f3da35' }}></i>
+
+
                                                     </div>
                                                 </div>
                                                 <div className="product__item__text">
                                                     <h5>
-                                                        <Link to={`/movie/${movie.id}`}>{movie.name}</Link></h5>
+                                                        <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
+                                                    </h5>
                                                 </div>
                                             </div>
                                         </div>

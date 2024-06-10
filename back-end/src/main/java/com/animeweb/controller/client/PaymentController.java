@@ -8,6 +8,9 @@ import com.animeweb.entities.User;
 import com.animeweb.entities.UserPacked;
 import com.animeweb.mapper.ServicePackMapper;
 import com.animeweb.mapper.UserPackedMapper;
+import com.animeweb.repository.ServicePackRepository;
+import com.animeweb.repository.UserPackedRepository;
+import com.animeweb.service.UserPackedService;
 import com.animeweb.service.impl.PayPalService;
 import com.animeweb.service.impl.ServicePackServiceImpl;
 import com.animeweb.service.impl.UserPackedServiceImpl;
@@ -20,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -90,6 +95,13 @@ public class PaymentController {
             System.out.println(serviceId);
             System.out.println(captureId);
             User user = userService.getUserById(userId);
+            boolean checkBuyed = userPackedService.checkUserBuyedService(user);
+            if(checkBuyed){
+                UserPacked userPacked = userPackedService.getUserPacked(user);
+                userPacked.setStatus(false);
+                userPacked.setExpiredTime(now);
+                userPackedService.save(userPacked);
+            }
             ServicePackDTO servicePackDTO = servicePackService.getById(Long.parseLong(serviceId));
             ServicePack servicePackEn = ServicePackMapper.MaptoEntiy(servicePackDTO);
             UserPackedDTO userPackedDTO = new UserPackedDTO(user ,servicePackEn, expireTime);

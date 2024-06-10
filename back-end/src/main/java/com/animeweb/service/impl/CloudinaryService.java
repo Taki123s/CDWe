@@ -14,6 +14,8 @@ import java.util.Map;
 public class CloudinaryService {
     public static final String MOVIE_SAVE_FOLDER ="/MovieStorage/";
     public static final String MOVIE_GET_FOLDER ="MovieStorage/";
+    public static final String SERVICE_SAVE_FOLDER ="/ServicePack/";
+    public static final String SERVICE_GET_FOLDER ="ServicePack/";
     @Autowired
     private Cloudinary cloudinary;
     public String uploadChapter(MultipartFile file) throws IOException {
@@ -30,10 +32,21 @@ public class CloudinaryService {
                 ));
         return (String) uploadResult.get("url");
     }
+    public String uploadServiceAvt(MultipartFile file,Long idMovie) throws IOException {
+        String saveUrl = SERVICE_SAVE_FOLDER + "servicePack_" + idMovie + "/avatar";
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap(
+                        "resource_type", "image",
+                        "folder", saveUrl
+                ));
+        return (String) uploadResult.get("url");
+    }
     public String getMovieFolderById(Long idMovie){
         return MOVIE_GET_FOLDER + "movie_" + idMovie;
     }
-
+    public String getServiceFolderById(Long idMovie){
+        return SERVICE_GET_FOLDER + "servicePack_" + idMovie;
+    }
     public void deleteFolderMovie(String folderPath) throws Exception {
         Map<String, Object> params = ObjectUtils.asMap(
                 "prefix",folderPath+"/",

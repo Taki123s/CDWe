@@ -6,14 +6,14 @@ import { parse } from 'date-fns';
 import { getServiceList, editServicePack, deleteServicePack, createServicePack } from '../../service/ServicePacksService';
 import EditServiceModal from './packed-edit';
 import NewServiceModal from './create-packed';
-import Swal from "sweetalert2"; // Thêm modal mới
+import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 
 export const ListService = () => {
     const [services, setServices] = useState([]);
     const [selectedService, setSelectedService] = useState(null);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
-    const [isNewModalOpen, setNewModalOpen] = useState(false); // Thêm state cho modal tạo mới
+    const [isNewModalOpen, setNewModalOpen] = useState(false);
 
     const navigate = useNavigate();
 
@@ -33,6 +33,7 @@ export const ListService = () => {
     };
 
     const handleSave = (editedService) => {
+        console.log(editedService)
         editServicePack(editedService.id, editedService)
             .then((response) => {
                 const updatedServices = services.map((service) =>
@@ -42,9 +43,10 @@ export const ListService = () => {
                 setEditModalOpen(false);
             })
             .catch((error) => {
-                console.log(editedService);
+                console.log(error);
             });
     };
+
     const handleDelete = (editedService) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -54,33 +56,37 @@ export const ListService = () => {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-            deleteServicePack(editedService.id)
-                .then((response) => {
-                    const updatedServices = services.filter((service) => service.id !== editedService.id);
-                    setServices(updatedServices);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+                deleteServicePack(editedService.id)
+                    .then((response) => {
+                        const updatedServices = services.filter((service) => service.id !== editedService.id);
+                        setServices(updatedServices);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         });
     };
+
     const handleNew = () => {
         setNewModalOpen(true);
     };
 
     const handleNewService = (newService) => {
         if (newService.service_type === "WEEK" || newService.service_type === "MONTH" || newService.service_type === "YEAR") {
-            createServicePack(newService)
+            const formData = new FormData();
+            formData.append("service_type",newService.service_type);
+            formData.append("price",newService.price);
+            formData.append("file",newService.file)
+            createServicePack(formData)
                 .then((response) => {
-                    console.log(response)
                     if (response.data === "") {
                         setNewModalOpen(false);
                         Swal.fire({
                             icon: 'error',
                             title: 'Create Failed',
                             text: 'A similar service pack already exists.',
-                            showConfirmButton: true, // Hiển thị nút "OK"
+                            showConfirmButton: true,
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 navigate('/admin/packed-service')
@@ -93,7 +99,7 @@ export const ListService = () => {
                             icon: 'success',
                             title: 'Create Successful',
                             text: 'Successfully processed.',
-                            showConfirmButton: true, // Hiển thị nút "OK"
+                            showConfirmButton: true,
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 navigate('/admin/packed-service')

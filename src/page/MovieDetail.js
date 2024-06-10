@@ -6,7 +6,6 @@ import axios from "axios";
 import { useTranslation, Trans } from "react-i18next";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode"; // Fix: Removed extra curly braces
-import "./bootstrap.min.css";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { LikeShare } from "../component/LikeShare";
@@ -123,7 +122,7 @@ function MovieDetail() {
       }
     };
     fetchAverageRating();
-  }, [id]);
+  }, [rating]);
 
   const ShowMore = () => {
     setFlag(!flag);
@@ -386,7 +385,7 @@ function MovieDetail() {
                           <iframe
                               width="1236"
                               height="695"
-                              src="https://www.youtube.com/embed/1dUiBPxOcp0?si=NlTrbJiMCMtp-5bl"
+                              src={movie.trailer}
                               title="Avatar: Dòng Chảy Của Nước | Official Trailer"
                               frameBorder="0"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

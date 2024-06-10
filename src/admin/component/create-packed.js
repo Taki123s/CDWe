@@ -22,10 +22,22 @@ const serviceTypes = [
 const NewServiceModal = ({ open, handleClose, handleSave }) => {
     const [serviceType, setServiceType] = useState('');
     const [price, setPrice] = useState('');
-
+    const [selectedImage, setSelectedImage] = useState('');
+    const [imagePreview, setImagePreview] = useState( '');
     const handleSubmit = () => {
-        const newService = { service_type: serviceType, price: parseFloat(price) };
+        const newService = { service_type: serviceType, price: parseFloat(price),file:selectedImage};
         handleSave(newService);
+    };
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setSelectedImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result);
+
+        };
+
+        reader.readAsDataURL(file);
     };
 
     return (
@@ -57,6 +69,21 @@ const NewServiceModal = ({ open, handleClose, handleSave }) => {
                         endAdornment: <InputAdornment position="end">VND</InputAdornment>,
                     }}
                 />
+                <Button
+                    variant="contained"
+                    component="label"
+                    fullWidth
+                    sx={{ mt: 2 }}
+                >
+                    Upload Image
+                    <input
+                        type="file"
+                        name="service_img"
+                        hidden
+                        accept="image/*"
+                        onChange={handleImageChange}
+                    />
+                </Button>
                 <Box display="flex" justifyContent="space-between" marginTop="20px">
                     <Button variant="contained" color="primary" onClick={handleSubmit}>
                         Save

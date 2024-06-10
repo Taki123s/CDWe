@@ -1,5 +1,6 @@
 package com.animeweb.service;
 
+import com.animeweb.dto.payment.ServicePackAdmin;
 import com.animeweb.dto.payment.ServicePackDTO;
 
 import com.animeweb.entities.ServicePack;
@@ -10,6 +11,8 @@ public interface ServicePackService {
     List<ServicePackDTO> getListServicePack();
     ServicePackDTO getById(long id);
     void save(long id,ServicePack servicePack);
-    ServicePackDTO createServicePack(ServicePack servicePack);
-    void updateServicePack(Long id);
+    ServicePackAdmin createServicePack(ServicePack servicePack);
+    void updateServicePack(Long id) throws Exception;
+
+    boolean existType(String serviceType);
 }

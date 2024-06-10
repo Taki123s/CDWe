@@ -16,7 +16,7 @@ const style = {
 const EditServiceModal = ({ open, handleClose, service, handleSave }) => {
     const [editedService, setEditedService] = useState({ ...service });
     const [selectedImage, setSelectedImage] = useState(null);
-    const [imagePreview, setImagePreview] = useState(service.service_img || ''); // Assuming service has an image field
+    const [imagePreview, setImagePreview] = useState(service.service_img || '');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -29,7 +29,9 @@ const EditServiceModal = ({ open, handleClose, service, handleSave }) => {
         const reader = new FileReader();
         reader.onloadend = () => {
             setImagePreview(reader.result);
+
         };
+        setEditedService((prev) => ({ ...prev, service_img: file }));
         reader.readAsDataURL(file);
     };
 
@@ -90,6 +92,7 @@ const EditServiceModal = ({ open, handleClose, service, handleSave }) => {
                     Upload Image
                     <input
                         type="file"
+                        name="service_img"
                         hidden
                         accept="image/*"
                         onChange={handleImageChange}

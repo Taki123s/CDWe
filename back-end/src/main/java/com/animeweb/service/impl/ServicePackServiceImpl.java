@@ -1,5 +1,6 @@
 package com.animeweb.service.impl;
 
+import com.animeweb.dto.payment.ServicePackAdmin;
 import com.animeweb.dto.payment.ServicePackDTO;
 import com.animeweb.entities.ServicePack;
 import com.animeweb.mapper.ServicePackMapper;
@@ -17,13 +18,18 @@ import java.util.List;
 public class ServicePackServiceImpl implements ServicePackService {
     @Autowired
     private ServicePackRepository servicePackRepository;
+    @Autowired
+    CloudinaryService uploadService;
 
     @Override
     public List<ServicePackDTO> getListServicePack() {
         List<ServicePack> servicePacks = servicePackRepository.findAll();
         List<ServicePackDTO> servicePackDTOS = new ArrayList<>();
         for (ServicePack servicePack : servicePacks) {
-            servicePackDTOS.add(ServicePackMapper.MaptoDto(servicePack));
+            ServicePackDTO servicePackDTO = ServicePackMapper.MaptoDto(servicePack);
+            servicePackDTO.setId(servicePack.getId());
+            servicePackDTO.setService_img(servicePack.getService_img());
+            servicePackDTOS.add(servicePackDTO);
         }
         return servicePackDTOS;
     }
@@ -48,22 +54,27 @@ public class ServicePackServiceImpl implements ServicePackService {
     }
 
     @Override
-    public ServicePackDTO createServicePack(ServicePack servicePack) {
+    public ServicePackAdmin createServicePack(ServicePack servicePack) {
         ServicePack pack =   servicePackRepository.save(servicePack);
-
-        return ServicePackMapper.MaptoDto(pack);
+        return ServicePackMapper.Maptoadmin(pack);
     }
 
     @Override
-    public void updateServicePack(Long id) {
+    public void updateServicePack(Long id) throws Exception {
             Date now = new Date();
         ServicePack pack =    servicePackRepository.findServicePackById(id);
+        uploadService.deleteFolderMovie(uploadService.getServiceFolderById(pack.getId()));
         if(pack!= null){
             pack.setDeleteAt(now);
             pack.setStatus(false);
             servicePackRepository.save(pack);
         }
 
+    }
+
+    @Override
+    public boolean existType(String serviceType) {
+        return servicePackRepository.existByType(serviceType);
     }
 
 }

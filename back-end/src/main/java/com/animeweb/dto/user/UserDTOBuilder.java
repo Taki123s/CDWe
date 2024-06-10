@@ -1,5 +1,6 @@
 package com.animeweb.dto.user;
 
+import com.animeweb.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDTOBuilder {
     private Long id;
-    private List<Long> roleIdList;
+    private List<Role> roleList;
     private String userName;
     private String avatarPicture;
     private String password;

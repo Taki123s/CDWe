@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
@@ -27,8 +28,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Integer updateUserVerificationStatus(String userName, String email, Integer verifyCode);
     @Query( "SELECT a from User a where  a.status  = true and a.id= :id " )
     Optional<User> findById(Long id);
-
     Boolean existsByEmail(String email);
+    @Query("update User a set a.status=false where a.id= :id")
+    User deleteUserById(Long id);
+    @Query("SELECT a from User a where a.status = true " )
+    List<User> findAllUser();
+
 }
 
 

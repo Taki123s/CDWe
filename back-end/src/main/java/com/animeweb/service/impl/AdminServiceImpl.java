@@ -14,8 +14,11 @@ import com.animeweb.service.RoleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,64 +32,77 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final RoleRepository roleRepository;
+    private final CloudinaryService uploadService;
+    private final UserServiceImpl userService;
 
     /**
      * Delete user by id<br/>
      * <strong>This method will delete the user completely, consider when using this method</strong>
+     *
      * @param id user id
      */
     @Override
     public void deleteUser(Long id) {
-//        userRepository.deleteById(id);
-        log.info("Delete user successfully");
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty())
+            throw new UserNotFoundException("User with the id does not exist");
+        else {
+            var newUser = user.get();
+            newUser.setStatus(false);
+            userRepository.save(newUser);
+            log.info("Delete user successfully: {}", newUser.getId());
+
+        }
+
     }
 
     @Override
-    public void updateUser(Long id, UpdateUserRequest request) {
+    public void updateUser(Long id, UpdateUserRequest request) throws IOException {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty())
             throw new RuntimeException("User with the id does not exist");
         else {
             var newUser = user.get();
-            newUser.setPhone(request.phone());
-            newUser.setUserName(request.username());
-            newUser.setFullName(request.name());
-            newUser.setEmail(request.email());
+            newUser.setPhone(request.phone()!=null?request.phone(): newUser.getPhone());
+            newUser.setFullName(request.name()!=null?request.name(): newUser.getFullName());
+            newUser.setEmail(request.email()!=null?request.email(): newUser.getEmail());
             newUser.setUpdatedAt(new Date());
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+            newUser.setPassword(request.password()!=null?passwordEncoder.encode(request.password()): newUser.getPassword());
+
             userRepository.save(newUser);
+            if (request.avatarPicture() != null) {
+                String avatar = uploadService.uploadUserAvt(request.avatarPicture(), newUser.getId());
+                newUser.setAvatarPicture(avatar);
+            }
             log.info("Update user successfully: {}", newUser.getId());
         }
     }
 
 
     @Override
-    public void createUser(CreateUserRequest request) {
-//        Optional<User> newUser = userRepository.findByUserName(request.username());
-
+    public void createUser(CreateUserRequest request) throws IOException {
         log.info("status: {}", userRepository.existsByUserName(request.username()));
 
         isAccountValid(request.username(), request.email());
-
         User user = new User();
         user.setUserName(request.username());
-        user.setPassword(request.password());
+
         user.setFullName(request.name());
         user.setPhone(request.phone());
         user.setEmail(request.email());
+        user.setAuthenticated(true);
         user.setStatus(true);
-//        user.setCreatedAt(new Date());
-        user.setRoles(List.of(roleRepository.findById(2L).orElseThrow()));
-        user.setAvatarPicture(request.avatarPicture()); // <-- Default image go here
-
+        user.setRoles(List.of(roleRepository.findByName("USER").orElseThrow()));
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.password()));
         userRepository.save(user);
+        String avatar = uploadService.uploadUserAvt(request.avatarPicture(), user.getId());
+        user.setAvatarPicture(avatar);
         log.info("Insert user successfully: {}", user.getId());
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        log.info("Get all users");
-        return userRepository.findAll();
-    }
 
     @Override
     public void deactivateUser(Long id) {
@@ -119,6 +135,31 @@ public class AdminServiceImpl implements AdminService {
             log.info("Set role for user successfully: {}", newUser.getId());
         }
     }
+
+    @Override
+    public List<User> getAllUser() {
+        return userRepository.findAllUser();
+    }
+
+    @Override
+    public void changPassword(String newPassword, String oldPassword, Long id) {
+        Optional<User> user = userRepository.findById(id);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+        if (user.isPresent()) {
+            User existingUser = user.get();
+
+            if (passwordEncoder.matches(oldPassword, existingUser.getPassword())) {
+                existingUser.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(existingUser);
+            } else {
+                throw new RuntimeException("Wrong password!");
+            }
+        } else {
+            throw new RuntimeException("User not found!");
+        }
+    }
+
 
     private void isAccountValid(String username, String email) {
         if (userRepository.existsByUserName(username)) {

@@ -9,31 +9,54 @@ import {
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import $ from "jquery";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const EditUser = () => {
-  const { userId } = useParams();
+  const [avatar, setAvatar] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const { id } = useParams();
   const [account, setAccount] = useState({});
   const [roles, setRoles] = useState([]);
   const [unableRoles, setUnableRoles] = useState([]);
+  const [activeTab, setActiveTab] = useState("personal-information");
+  const [imageSrc, setImageSrc] = useState("");
+  const navigate = useNavigate();
+  const [fullName, setFullName] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Phone, setPhone] = useState("");
 
+  const handleChangeFullName = (e) => {
+    setFullName(e.target.value);
+  };
+  const handleChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleChangePhone = (e) => {
+    setPhone(e.target.value);
+  };
   useEffect(() => {
     // Fetch user data and roles from API
     fetchUserData();
     fetchRoles();
-    // Initialize DataTables
+    console.log(account.roleIdList)
+    // Initialize DataTables if necessary
     // $('#roleHaveTable').DataTable();
     // $('#roleMayHadTable').DataTable();
   }, []);
 
   const fetchUserData = () => {
-    // Fetch user data by userId from API and update state
-    // Example:
-    // fetch(`/api/user/${userId}`)
-    //   .then((response) => response.json())
-    //   .then((data) => setAccount(data))
-    //   .catch((error) => console.error("Error fetching user data:", error));
+    axios
+      .get(`http://localhost:8080/account/view/${id}`)
+      .then((response) => {
+        setAccount(response.data);
+        setFullName(response.data.fullName);
+        setImageSrc(response.data.avatarPicture);
+        setEmail(response.data.email);
+        setPhone(response.data.phone);
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
   };
-
   const fetchRoles = () => {
     // Fetch all roles from API and update state
     // Example:
@@ -82,232 +105,413 @@ const EditUser = () => {
     //   .catch((error) => console.error("Error removing role:", error));
   };
 
-  const handlePasswordChange = () => {
-    // Handle password change logic
+  const handlePasswordChange = async () => {
+    const password = {
+      oldPassword: document.getElementById("Password").value,
+      newPassword: document.getElementById("newpassword").value,
+    };
+    const formData = new FormData();
+    Object.keys(password).forEach((key) => formData.append(key, password[key]));
+
+    const response = await axios
+      .patch(
+        `http://localhost:8080/admin/user/changePassword/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Đổi mật khẩu thành công",
+          text: response.data,
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "Lỗi",
+          text: error.response.data,
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      });
+  };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setAvatar(file);
+    }
   };
 
+  const backToUserList = () => {
+    // navigate(`/admin/UserList`);
+  };
+  const submitEdit = async () => {
+    const user = {
+      name: document.getElementById("fname").value,
+      phone: document.getElementById("phone").value,
+      email: document.getElementById("email").value,
+    };
+
+    const formData = new FormData();
+    Object.keys(user).forEach((key) => formData.append(key, user[key]));
+
+    if (avatar != null) {
+      formData.append("avatarPicture", avatar);
+    }
+
+    setIsUploading(true);
+
+    const response = await axios
+      .patch(`http://localhost:8080/admin/user/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        setIsUploading(false);
+        Swal.fire({
+          title: "Cập nhật thành công",
+          text: response.data,
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      })
+      .catch((error) => {
+        setIsUploading(false);
+        Swal.fire({
+          title: "Lỗi",
+          text: error.response.data,
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      });
+  };
   return (
     <div className="wrapper">
-      {/* Page Content */}
-      <div id="content-page" className="content-page">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="iq-card">
-                <div className="iq-card-header d-flex justify-content-between">
-                  <div className="iq-header-title">
-                    <h4 className="card-title">Chỉnh sửa người dùng</h4>
-                  </div>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="iq-card">
+              <div className="iq-card-header d-flex justify-content-between">
+                <div className="iq-header-title">
+                  <h4 className="card-title">Chỉnh sửa người dùng</h4>
                 </div>
-                <div className="iq-card-body p-0">
-                  <div className="iq-edit-list">
-                    <ul className="iq-edit-profile d-flex nav nav-pills">
-                      <li className="col-md-3 p-0">
-                        <a
-                          className="nav-link active"
-                          data-toggle="pill"
-                          href="#personal-information"
-                        >
-                          Thông tin người dùng
-                        </a>
-                      </li>
-                      <li className="col-md-3 p-0">
-                        <a
-                          className="nav-link"
-                          data-toggle="pill"
-                          href="#change-password"
-                        >
-                          Thay đổi mật khẩu
-                        </a>
-                      </li>
-                      <li className="col-md-3 p-0">
-                        <a
-                          className="nav-link"
-                          data-toggle="pill"
-                          href="#change-roles"
-                        >
-                          Chỉnh sửa vai trò
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+              </div>
+              <div className="iq-card-body p-0">
+                <div className="iq-edit-list">
+                  <ul className="iq-edit-profile d-flex nav nav-pills">
+                    <li className="col-md-3 p-0">
+                      <a
+                        className={`nav-link ${
+                          activeTab === "personal-information" ? "active" : ""
+                        }`}
+                        onClick={() => setActiveTab("personal-information")}
+                        href="#personal-information"
+                      >
+                        Thông tin người dùng
+                      </a>
+                    </li>
+                    <li className="col-md-3 p-0">
+                      <a
+                        className={`nav-link ${
+                          activeTab === "change-password" ? "active" : ""
+                        }`}
+                        onClick={() => setActiveTab("change-password")}
+                        href="#change-password"
+                      >
+                        Thay đổi mật khẩu
+                      </a>
+                    </li>
+                    <li className="col-md-3 p-0">
+                      <a
+                        className={`nav-link ${
+                          activeTab === "change-roles" ? "active" : ""
+                        }`}
+                        onClick={() => setActiveTab("change-roles")}
+                        href="#change-roles"
+                      >
+                        Chỉnh sửa vai trò
+                      </a>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <div className="col-lg-12">
-              <div className="iq-edit-list-data">
-                <div className="tab-content">
-                  <div
-                    className="tab-pane fade active show"
-                    id="personal-information"
-                    role="tabpanel"
-                  >
-                    <div className="iq-card">
-                      <div className="iq-card-header d-flex justify-content-between">
-                        <div className="iq-header-title">
-                          <h4 className="card-title">Thông tin cá nhân</h4>
-                        </div>
+          </div>
+          <div className="col-lg-12">
+            <div className="iq-edit-list-data">
+              <div className="tab-content">
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "personal-information" ? "active show" : ""
+                  }`}
+                  id="personal-information"
+                  role="tabpanel"
+                >
+                  <div className="iq-card">
+                    <div className="iq-card-header d-flex justify-content-between">
+                      <div className="iq-header-title">
+                        <h4 className="card-title">Thông tin cá nhân</h4>
                       </div>
-                      <div className="iq-card-body">
-                        <form
-                          method="post"
-                        //   action={SubmitEditAccount}
-                          enctype="multipart/form-data"
-                        //   onSubmit={onSubmit}
-                        >
-                          <div className="form-group row align-items-center">
-                            <div className="col-md-12 add-img-user">
-                              <div className="profile-img-edit">
-                                <img
-                                  className="profile-pic imgUserCustom"
-                                //   src={accountAvatar}
-                                  alt="profile-pic"
+                    </div>
+                    <div className="iq-card-body">
+                      <div
+                      // method="post"
+                      // enctype="multipart/form-data"
+                      // action=""
+                      >
+                        <div className="form-group row align-items-center">
+                          <div className="col-md-12 add-img-user">
+                            <div className="profile-img-edit">
+                              <img
+                                className="profile-pic imgUserCustom"
+                                src={imageSrc}
+                                alt="profile-pic"
+                              />
+                              <div className="p-image">
+                                <i className="ri-pencil-line upload-button"></i>
+                                <input
+                                  className="img-upload"
+                                  type="file"
+                                  accept="image/*"
+                                  name="imageUser"
+                                  onChange={handleImageChange}
                                 />
-                                <div className="p-image">
-                                  <i className="ri-pencil-line upload-button"></i>
-                                  <input
-                                    className="img-upload"
-                                    type="file"
-                                    accept="image/*"
-                                    name="imageUser"
-                                    // onChange={onChange}
-                                  />
-                                </div>
                               </div>
                             </div>
                           </div>
-                          <div className=" row align-items-center">
-                            <div className="form-group col-sm-6">
-                              <label htmlFor="fname">Tên người dùng :</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                id="fname"
-                                value={account.fullName}
-                                name="fullName"
-                                required="required"
-                                // onChange={onChange}
-                              />
-                            </div>
-                            <div className="form-group col-sm-6">
-                              <label htmlFor="email">Email :</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                id="email"
-                                value={account.email}
-                                name="email"
-                                required="required"
-                                // onChange={onChange}
-                              />
-                            </div>
-                            <div className="form-group col-sm-6">
-                              <label>Loại tài khoản :</label>
-                              {/* <p>{account.getTypeAccount()}</p> */}
-                              
-                              <p></p>
-                            </div>
-                            <div className="form-group col-sm-6">
-                              <label htmlFor="dob">Số điện thoại :</label>
-                              <input
-                                className="form-control"
-                                id="dob"
-                                value={account.phone}
-                                name="phoneNumber"
-                                required="required"
-                                // onChange={onChange}
-                              />
-                            </div>
+                        </div>
+                        <div className="row align-items-center">
+                          <div className="form-group col-sm-6">
+                            <label htmlFor="fname">Tên người dùng :</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="fname"
+                              onChange={handleChangeFullName}
+                              value={fullName}
+                              name="fullName"
+                              required="required"
+                            />
                           </div>
-                          <div id="error" style={{ color: "red" }}>
-                            {/* {error} */}
+                          <div className="form-group col-sm-6">
+                            <label htmlFor="email">Email :</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="email"
+                              onChange={handleChangeEmail}
+                              value={Email}
+                              name="email"
+                              required="required"
+                            />
                           </div>
-                          <button
-                            type="submit"
-                            className="btn btn-primary mr-2"
-                          >
-                            Xác nhận
-                          </button>
-                          <button type="reset" className="btn iq-bg-danger">
-                            Hủy
-                          </button>
-                        </form>
+                          <div className="form-group col-sm-6">
+                            <label>Loại tài khoản :</label>
+                            <>
+                              {account.userType === 1 && (
+                                <p>Tài khoản thường</p>
+                              )}
+                              {account.userType === 2 && (
+                                <p>Tài khoản Google</p>
+                              )}
+                              {account.userType === 3 && (
+                                <p>Tài khoản Facebook</p>
+                              )}
+                            </>
+                          </div>
+                          <div className="form-group col-sm-6">
+                            <label htmlFor="phone">Số điện thoại :</label>
+                            <input
+                              className="form-control"
+                              id="phone"
+                              onChange={handleChangePhone}
+                              value={Phone}
+                              name="phoneNumber"
+                              required="required"
+                            />
+                          </div>
+                        </div>
+                        <div id="error" style={{ color: "red" }}></div>
+                        <button
+                          type="submit"
+                          className="btn btn-primary mr-2"
+                          onClick={submitEdit}
+                        >
+                          Xác nhận
+                        </button>
+                        <button
+                          type="reset"
+                          className="btn iq-bg-danger"
+                          onClick={backToUserList()}
+                        >
+                          Hủy
+                        </button>
                       </div>
                     </div>
                   </div>
-                  <div
-                    className="tab-pane fade"
-                    id="change-password"
-                    role="tabpanel"
-                  >
-                    <div className="iq-card">
-                      <div className="iq-card-header d-flex justify-content-between">
-                        <div className="iq-header-title">
-                          <h4 className="card-title">Đổi mật khẩu</h4>
-                        </div>
-                      </div>
-                      <div className="iq-card-body">
-                        {/* Change password form */}
+                </div>
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "change-password" ? "active show" : ""
+                  }`}
+                  id="change-password"
+                  role="tabpanel"
+                >
+                  <div className="iq-card">
+                    <div className="iq-card-header d-flex justify-content-between">
+                      <div className="iq-header-title">
+                        <h4 className="card-title">Đổi mật khẩu</h4>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    className="tab-pane fade"
-                    id="change-roles"
-                    role="tabpanel"
-                  >
-                    <div className="iq-card">
-                      <div className="iq-card-header d-flex justify-content-between">
-                        <div className="iq-header-title">
-                          <h4 className="card-title">Chỉnh sửa vai trò</h4>
+                    <div className="iq-card-body">
+                      <form>
+                        <div className="form-group">
+                          <label htmlFor="Password">Mật khẩu cũ:</label>
+                          <input
+                            type="Password"
+                            className="form-control"
+                            id="Password"
+                            required
+                          />
                         </div>
+                        <div className="form-group">
+                          <label htmlFor="newpassword">Mật khẩu mới:</label>
+                          <input
+                            type="Password"
+                            className="form-control"
+                            id="newpassword"
+                            required
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          className="btn btn-primary mr-2"
+                          onClick={handlePasswordChange}
+                        >
+                          Xác nhận
+                        </button>
+                        <button type="reset" className="btn iq-bg-danger">
+                          Hủy
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={`tab-pane fade ${
+                    activeTab === "change-roles" ? "active show" : ""
+                  }`}
+                  id="change-roles"
+                  role="tabpanel"
+                >
+                  <div className="iq-card">
+                    <div className="iq-card-header d-flex justify-content-between">
+                      <div className="iq-header-title">
+                        <h4 className="card-title">Chỉnh sửa vai trò</h4>
                       </div>
-                      <div className="iq-card-body">
-                        <div className="container">
-                          <div className="row">
-                            <div className="col-md-6">
-                              <p>Vai trò đang có</p>
-                              <table className="table" id="roleHaveTable">
-                                <thead>
-                                  <tr>
-                                    <th></th>
-                                    <th>Tên</th>
-                                    <th>Tùy chọn</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {/* Add dynamic rows for roles */}
-                                </tbody>
-                              </table>
-                            </div>
-                            <div className="col-md-6">
-                              <p>Vai trò có thể thêm</p>
-                              <table className="table" id="roleMayHadTable">
-                                <thead>
-                                  <tr>
-                                    <th></th>
-                                    <th>Tên</th>
-                                    <th>Tùy chỉnh</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {unableRoles.map((role) => (
-                                    <tr key={role.id}>
-                                      <td></td>
-                                      <td>{role.name}</td>
-                                      <td>
+                    </div>
+                    <div className="iq-card-body">
+                      <div className="container">
+                        <div className="row">
+                          <div className="col-md-6">
+                            <p>Vai trò đang có</p>
+                            <table className="table" id="roleHaveTable">
+                              <thead>
+                                <tr>
+                                  <th></th>
+                                  <th>Tên</th>
+                                  <th>Tuỳ chọn</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {/* {account.roles.map((role) => (
+                                  <tr key={role.id}>
+                                    <td></td>
+                                    <td>{role.description}</td>
+                                    <td>
+                                      {role.id !== 1 && (
                                         <button
-                                          className="btn iq-bg-info fa fa-plus-circle"
-                                          onClick={() =>
-                                            addRole(role.id, role.name)
-                                          }
-                                        ></button>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
+                                          type="button"
+                                          className="btn iq-bg-danger btn-rounded btn-sm my-0"
+                                          // onClick={() => removeRole(role.id, role.description)}
+                                        >
+                                          <i className="ri-delete-bin-line"></i>
+                                        </button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))} */}
+                              </tbody>
+                            </table>
+                          </div>
+                          <div className="col-md-6">
+                            <p>Vai trò có thể thêm</p>
+                            <table className="table" id="roleMayHadTable">
+                              <thead>
+                                <tr>
+                                  <th></th>
+                                  <th>Tên</th>
+                                  <th>Tùy chỉnh</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {/* {availableRoles.map((role) => (
+                                  <tr key={role.id}>
+                                    <td></td>
+                                    <td>{role.description}</td>
+                                    <td>
+                                      <button
+                                        className="btn iq-bg-info fa fa-plus-circle"
+                                        // onClick={() => addRole(role.id, role.description)}
+                                      ></button>
+                                    </td>
+                                  </tr>
+                                ))} */}
+                              </tbody>
+                            </table>
+                          </div>
+                          <div className="col-md-6">
+                            <p>Vai trò có thể thêm</p>
+                            <table className="table" id="roleMayHadTable">
+                              <thead>
+                                <tr>
+                                  <th></th>
+                                  <th>Tên</th>
+                                  <th>Tùy chỉnh</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {unableRoles.map((role) => (
+                                  <tr key={role.id}>
+                                    <td></td>
+                                    <td>{role.name}</td>
+                                    <td>
+                                      <button
+                                        className="btn iq-bg-info fa fa-plus-circle"
+                                        onClick={() =>
+                                          addRole(role.id, role.name)
+                                        }
+                                      ></button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                         </div>
                       </div>

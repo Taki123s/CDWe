@@ -82,7 +82,7 @@ public class SocialLoginController {
         }
 
         // Retrieve roles safely
-        Role roles = roleRepository.findByName("USER")
+            Role roles = roleRepository.findByName("USER")
                 .orElseThrow(() -> new RuntimeException("Role 'USER' not found"));
 
         User socialUser = accountOAuth2UserService.findByEmailFacebook(email);

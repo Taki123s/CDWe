@@ -36,7 +36,7 @@ function App() {
               <Route path="/admin/addMovie" element={<AddMovie />} />
               <Route path="/admin/adduser" element={<UserAdd />} />
               <Route path="/admin/UserList" element={<UserList />} />
-              <Route path="/admin/EditUser" element={<EditUser />} />
+              <Route path="/admin/EditUser/:id" element={<EditUser />} />
             </Routes>
           </div>
         </div>

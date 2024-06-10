@@ -6,9 +6,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface FollowService {
-    public FollowDTO addFollow(Follow follow);
-
-    public FollowDTO updateFollow(Follow follow) ;
-    FollowDTO findFollowByIdUserAndIdMovie(Long movieId,Long userId);
+    FollowDTO addFollow(Follow follow);
+    FollowDTO updateFollow(Follow follow);
+    FollowDTO findFollowByIdUserAndIdMovie(Long movieId, Long userId);
 
 }

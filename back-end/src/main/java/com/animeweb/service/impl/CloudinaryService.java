@@ -16,6 +16,8 @@ public class CloudinaryService {
     public static final String MOVIE_GET_FOLDER ="MovieStorage/";
     public static final String SERVICE_SAVE_FOLDER ="/ServicePack/";
     public static final String SERVICE_GET_FOLDER ="ServicePack/";
+    public  static  final String USER_SAVE_FOLDER="/AvatarUser/";
+
     @Autowired
     private Cloudinary cloudinary;
     public String uploadChapter(MultipartFile file) throws IOException {
@@ -61,6 +63,15 @@ public class CloudinaryService {
                 cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
             }
         }
+    }
+    public String uploadUserAvt(MultipartFile file,Long idUser) throws IOException {
+        String saveUrl = USER_SAVE_FOLDER + "user_" + idUser;
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap(
+                        "resource_type", "image",
+                        "folder", saveUrl
+                ));
+        return (String) uploadResult.get("url");
     }
 }
 

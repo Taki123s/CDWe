@@ -1,204 +1,352 @@
-import React from 'react';
-import {
-  MDBCol,
-  MDBContainer,
-  MDBRow,
-  MDBCard,
-  MDBCardText,
-  MDBCardBody,
-  MDBCardImage,
-  MDBBtn,
-  MDBBreadcrumb,
-  MDBBreadcrumbItem,
-  MDBProgress,
-  MDBProgressBar,
-  MDBIcon,
-  MDBListGroup,
-  MDBListGroupItem
-} from 'mdb-react-ui-kit';
+import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+function ProfilePage() {
+  const [account, setAccount] = useState("");
+  var token = Cookies.get("jwt_token");
+  const [emailError, setEmailError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
-export default function ProfilePage() {
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
+  const [service, setService] = useState([]);
+
+  const user = typeof token === "undefined" ? null : jwtDecode(token);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (user) {
+          const response = await axios.get(
+              `http://localhost:8080/account/view/${user.idUser}`
+          );
+          const data = response.data;
+          setAccount(data);
+          setUsername(data.userName);
+          setFullName(data.fullName);
+          setPhone(data.phone);
+          setEmail(data.email);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const FetchService = async () => {
+      try {
+        if (user) {
+          const response = await axios.get(
+              `http://localhost:8080/servicePack/findAll?userID=${user.idUser}`
+          );
+          const data = response.data;
+          console.log(data);
+          setService(data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+    FetchService();
+  }, []); // Empty dependency array ensures useEffect runs only once after the initial render
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    setEmail(email);
+
+    if (!validateEmail(email)) {
+      setEmailError("Invalid email address format");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handlePhoneChange = (e) => {
+    const phone = e.target.value;
+    setPhone(phone);
+
+    if (!validatePhone(phone)) {
+      setPhoneError("Invalid phone number format");
+    } else {
+      setPhoneError("");
+    }
+  };
+  const handleFullNameChange = (e) => {
+    const fullName = e.target.value;
+    setFullName(fullName);
+  };
+  const handleUserNameChange = (e) => {
+    const userName = e.target.value;
+    setUsername(userName);
+  };
+  const isSaveDisabled = emailError || phoneError;
+
+  const ChangeInformation = async () => {
+    try {
+      // Make POST request using Axios
+      const response = await axios.post(
+          "http://localhost:8080/account/update",
+          {
+            id: account.id,
+            userName: username,
+            avatarPicture: account.avatarPicture,
+            password: account.password,
+            email: email,
+            fullName: fullName,
+            phone: phone,
+          }
+      );
+
+      // Optionally, handle success response
+      console.log("User information updated successfully:", response.data);
+    } catch (error) {
+      // Handle error
+      console.error("Error updating user information:", error.message);
+    }
+  };
+  const convertToDateOnly = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
   return (
-    <section style={{ backgroundColor: '#eee' }}>
-      <MDBContainer className="py-5">
-        <MDBRow>
-          <MDBCol>
-            <MDBBreadcrumb className="bg-light rounded-3 p-3 mb-4">
-              <MDBBreadcrumbItem>
-                <a href='#'>Home</a>
-              </MDBBreadcrumbItem>
-              <MDBBreadcrumbItem>
-                <a href="#">User</a>
-              </MDBBreadcrumbItem>
-              <MDBBreadcrumbItem active>User Profile</MDBBreadcrumbItem>
-            </MDBBreadcrumb>
-          </MDBCol>
-        </MDBRow>
+      <section style={{ backgroundColor: "#eee" }}>
+        <div className="container py-5">
+          <div className="row">
+            <div className="col">
+              <nav
+                  aria-label="breadcrumb"
+                  className="bg-light rounded-3 p-3 mb-4"
+              >
+                <ol className="breadcrumb mb-0">
+                  <li className="breadcrumb-item">
+                    <a className="text-dark" href="#">
+                      Home
+                    </a>
+                  </li>
+                  <li className="breadcrumb-item">
+                    <a className="text-dark" href="#">
+                      User
+                    </a>
+                  </li>
+                  <li
+                      className="breadcrumb-item active text-primary"
+                      aria-current="page"
+                  >
+                    User Profile
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
 
-        <MDBRow>
-          <MDBCol lg="4">
-            <MDBCard className="mb-4">
-              <MDBCardBody className="text-center">
-                <MDBCardImage
-                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+          <div className="row">
+            <div className="col-md-8">
+              <div className="card mb-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">Full Name</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <input
+                          type="text"
+                          className="form-control text-dark border-0"
+                          defaultValue={account.fullName}
+                          onChange={handleFullNameChange}
+                      />
+                    </div>
+                  </div>
+
+                  <hr />
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">User Name</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <input
+                          type="text"
+                          className="form-control text-dark border-0"
+                          defaultValue={account.userName}
+                          onChange={handleUserNameChange}
+                      />
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">Email</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <input
+                          type="text"
+                          className="form-control text-dark border-0"
+                          defaultValue={account.email}
+                          onChange={handleEmailChange}
+                      />
+                      {emailError && (
+                          <div style={{ color: "red" }}>{emailError}</div>
+                      )}
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <p className="mb-0">Phone</p>
+                    </div>
+                    <div className="col-sm-9">
+                      <input
+                          type="text"
+                          className="form-control text-dark border-0"
+                          defaultValue={account.phone}
+                          onChange={handlePhoneChange}
+                      />
+                      {phoneError && (
+                          <div style={{ color: "red" }}>{phoneError}</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col">
+                  <button
+                      className="btn btn-primary"
+                      onClick={() => ChangeInformation()}
+                      disabled={isSaveDisabled}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <img
+                  src={account.avatarPicture}
                   alt="avatar"
                   className="rounded-circle"
-                  style={{ width: '150px' }}
-                  fluid />
-                <p className="text-muted mb-1">Full Stack Developer</p>
-                <p className="text-muted mb-4">Bay Area, San Francisco, CA</p>
-                <div className="d-flex justify-content-center mb-2">
-                  <MDBBtn>Follow</MDBBtn>
-                  <MDBBtn outline className="ms-1">Message</MDBBtn>
+                  style={{ width: "200px", height: "200px" }}
+              />
+            </div>
+          </div>
+          {/* <div className="row">
+          <div className="col-md-8">
+            <div className="display-5  text-primary mb-1">Gói Đã Mua</div>
+            <div className="card mb-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Tên gói</p>
+                  </div>
+                  <div className="col-sm-3">
+                    <p>Ngày Mua</p>
+                  </div>
+                  <div className="col-sm-3">
+                    <p>Ngày hết hạn</p>
+                  </div>{" "}
+                  <div className="col-sm-3">
+                    <p>Trạng thái</p>
+                  </div>
                 </div>
-              </MDBCardBody>
-            </MDBCard>
+                {service.map((s) => (
+                  <>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <p className="mb-0">{s.servicePackId.service_type}</p>
+                      </div>
+                      <div className="col-sm-3">
+                        <p>{convertToDateOnly(s.servicePackId.createAt)}</p>
+                      </div>
+                      <div className="col-sm-3">
+                        <p>{convertToDateOnly(s.expiredTime)}</p>
+                      </div>
+                      <div className="col-sm-3">
+                        {s.status ? (
+                          <a className="text-success">Còn hạng</a>
+                        ) : (
+                          <a className="text-danger">Hết hạng</a>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div> */}
+          <div className="row">
+            {service.map((s) => (
+                <>
+                  <div className="col-md-8">
+                    <div className="display-5  text-primary mb-1">Gói Đã Mua</div>
 
-            <MDBCard className="mb-4 mb-lg-0">
-              <MDBCardBody className="p-0">
-                <MDBListGroup flush className="rounded-3">
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fas icon="globe fa-lg text-warning" />
-                    <MDBCardText>https://mdbootstrap.com</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="github fa-lg" style={{ color: '#333333' }} />
-                    <MDBCardText>mdbootstrap</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
-                    <MDBCardText>@mdbootstrap</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
-                    <MDBCardText>mdbootstrap</MDBCardText>
-                  </MDBListGroupItem>
-                  <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                    <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
-                    <MDBCardText>mdbootstrap</MDBCardText>
-                  </MDBListGroupItem>
-                </MDBListGroup>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-          <MDBCol lg="8">
-            <MDBCard className="mb-4">
-              <MDBCardBody>
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Full Name</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Johnatan Smith</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Email</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">example@example.com</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Phone</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">(097) 234-5678</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Mobile</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">(098) 765-4321</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
-                  <MDBCol sm="3">
-                    <MDBCardText>Address</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">Bay Area, San Francisco, CA</MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-              </MDBCardBody>
-            </MDBCard>
+                    <div className="card mb-4">
+                      <div className="card-body">
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <p className="mb-0">Tên gói</p>
+                          </div>
+                          <div className="col-sm-9">
+                            <p className="mb-0">{s.servicePackId.service_type}</p>
+                          </div>
+                        </div>
 
-            <MDBRow>
-              <MDBCol md="6">
-                <MDBCard className="mb-4 mb-md-0">
-                  <MDBCardBody>
-                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">assigment</span> Project Status</MDBCardText>
-                    <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Website Markup</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={72} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>One Page</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={89} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Mobile Template</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={55} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Backend API</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={66} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-
-              <MDBCol md="6">
-                <MDBCard className="mb-4 mb-md-0">
-                  <MDBCardBody>
-                    <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">assigment</span> Project Status</MDBCardText>
-                    <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Website Markup</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={72} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>One Page</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={89} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Mobile Template</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={55} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-
-                    <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Backend API</MDBCardText>
-                    <MDBProgress className="rounded">
-                      <MDBProgressBar width={66} valuemin={0} valuemax={100} />
-                    </MDBProgress>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-            </MDBRow>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-    </section>
+                        <hr />
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <p className="mb-0">Ngày mua</p>
+                          </div>
+                          <div className="col-sm-9">
+                            <p>{convertToDateOnly(s.servicePackId.createAt)}</p>
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <p className="mb-0">Ngày hết hạn</p>
+                          </div>
+                          <div className="col-sm-9">
+                            <p>{convertToDateOnly(s.expiredTime)}</p>
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <p className="mb-0">Trạng thái</p>
+                          </div>
+                          <div className="col-sm-9">
+                            {s.status ? (
+                                <a className="text-success">Còn hạng</a>
+                            ) : (
+                                <a className="text-danger">Hết hạng</a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+            ))}
+          </div>
+        </div>
+      </section>
   );
 }
+export default ProfilePage;

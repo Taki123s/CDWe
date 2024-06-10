@@ -9,9 +9,10 @@ import {jwtDecode} from "jwt-decode"; // Fix: Removed extra curly braces
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { LikeShare } from "../component/LikeShare";
-import MovieComment from "./MovieComment";
+import { Comment } from "../component/Comment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { API_POST_PATHS,API_GET_PATHS } from "../service/Constant.js";
 
 function MovieDetail() {
   const { t } = useTranslation();
@@ -27,6 +28,7 @@ function MovieDetail() {
   const [rating, setRating] = useState(0); // State to store the user's rating
   const [hoverRating, setHoverRating] = useState(0); // State to store the hover rating
   const [averageRating, setAverageRating] = useState(0); // State to store the average rating
+  const [description, setDescription] = useState("");
 
   const currentUrl = `http://animeweb.site/like/${id}`;
 
@@ -43,8 +45,10 @@ function MovieDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/movie/${id}`);
+        const response = await axios.get(API_GET_PATHS.GET_ALL_MOVIE+`${id}`);
         setMovies(response.data);
+        setDescription(response.data.vietnameseDescriptions);
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -55,7 +59,7 @@ function MovieDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/movie/same/${id}`);
+        const response = await axios.get(API_GET_PATHS.GET_MOVIE_SAME+`${id}`);
         setMovieSameSeries(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -67,7 +71,7 @@ function MovieDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/genre`);
+        const response = await axios.get(API_GET_PATHS.GET_ALL_GENRE);
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -80,7 +84,7 @@ function MovieDetail() {
     if (user) {
       const fetchFollowData = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/follow?movieId=${id}&userId=${user.idUser}`);
+          const response = await axios.get(API_GET_PATHS.GET_FOLLOW`?movieId=${id}&userId=${user.idUser}`);
           if (response.data) {
             setFollow(response.data);
             setFavorite(response.data.status);
@@ -141,7 +145,7 @@ function MovieDetail() {
         movieId: movie.id,
       };
       axios
-          .post("http://localhost:8080/follow/save", newFollow)
+          .post(API_POST_PATHS.FOLLOW_MOVIE, newFollow)
           .then((response) => {})
           .catch((error) => {
             console.error("Error posting follow:", error);
@@ -348,28 +352,30 @@ function MovieDetail() {
                       <div className="col-lg-9 anime_showmore">
                         <div className="anime__details__text">
                           <div className="anime_details_title">
-                            <h4 className="des_detail">
-                              {movie.vietnameseDescriptions != null
-                                  ? movie.vietnameseDescriptions.substring(0, 500)
-                                  : ""}
-                            </h4>
+                            {/*<h4 className="des_detail">*/}
+                            {/*  {movie.vietnameseDescriptions != null*/}
+                            {/*      ? movie.vietnameseDescriptions.substring(0, 500)*/}
+                            {/*      : ""}*/}
+                            {/*</h4>*/}
                           </div>
-                          {flag ? (
+                          {flag==false ? (
                               <>
-                                <h5 className="des_detail">
-                                  {" "}
-                                  {movie.vietnameseDescriptions.substring(500, movie.vietnameseDescriptions.length)}
-                                </h5>
+                                <h4 className="des_detail">
+                                  {description.substring(0, 500)}
+                                </h4>
+                                <a onClick={() => ShowMore()}>
+                                  <i> {t("content.showmore")}</i>
+                                </a>
+                              </>
+                          ) : (
+                              <>
+                                <h4 className="des_detail">{description}</h4>
                                 <a onClick={() => ShowMore()}>
                                   <i> {t("content.showless")}</i>
                                 </a>
                               </>
-                          ) : (
-                              <a onClick={() => ShowMore()}>
-                                <i> {t("content.showmore")}</i>
-                              </a>
                           )}
-                          <br />
+                          <br></br>
                           <LikeShare appId="583739630280650" url={currentUrl} />
                         </div>
                       </div>
@@ -399,7 +405,7 @@ function MovieDetail() {
                 </div>
               </div>
             </div>
-            <MovieComment />
+            <Comment appId="583739630280650" url={currentUrl} />
           </div>
         </section>
       </div>

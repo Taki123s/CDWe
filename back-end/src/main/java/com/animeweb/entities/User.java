@@ -52,7 +52,8 @@ public class User {
     private Boolean authenticated = false;
     @Column(name="externalId")
     private String externalId;
-
+    @Column(name = "isActive", nullable = false, columnDefinition = "TINYINT(1)")
+    private Boolean isActive = true;
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
     private List<View> views = new ArrayList<>();
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)

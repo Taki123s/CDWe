@@ -26,10 +26,8 @@ public class ServicePackServiceImpl implements ServicePackService {
         List<ServicePack> servicePacks = servicePackRepository.findAll();
         List<ServicePackDTO> servicePackDTOS = new ArrayList<>();
         for (ServicePack servicePack : servicePacks) {
-            ServicePackDTO servicePackDTO = ServicePackMapper.MaptoDto(servicePack);
-            servicePackDTO.setId(servicePack.getId());
-            servicePackDTO.setService_img(servicePack.getService_img());
-            servicePackDTOS.add(servicePackDTO);
+            servicePackDTOS.add(ServicePackMapper.MaptoDto(servicePack));
+
         }
         return servicePackDTOS;
     }

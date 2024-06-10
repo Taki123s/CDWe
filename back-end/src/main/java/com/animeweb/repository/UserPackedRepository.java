@@ -16,4 +16,9 @@ public interface UserPackedRepository extends JpaRepository<UserPacked,Long> {
     List<UserPacked> findAllUserPacked();
     @Query("select u from UserPacked u where u.userId = :userId ")
     List<UserPacked> findAllUserPackedByUserId(User userId);
+    @Query("select u from ServicePack s join UserPacked u on s.id=u.servicePackId.id where u.status=true and u.userId.id= :userID and u.expiredTime = (SELECT max (u.expiredTime) FROM UserPacked u )")
+    List<UserPacked> GetAllServicePackBoughtActive(@Param("userID") Long userID);
+    @Query("select u from ServicePack s join UserPacked u on s.id=u.servicePackId.id where u.status=false and u.userId.id= :userID and u.expiredTime = (SELECT max (u.expiredTime) FROM UserPacked u )")
+    List<UserPacked> GetAllServicePackBoughtExpired(@Param("userID") Long userID);
+
 }

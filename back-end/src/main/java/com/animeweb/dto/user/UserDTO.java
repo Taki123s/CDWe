@@ -26,6 +26,7 @@ public class UserDTO {
     private Date deletedAt;
     private Boolean status;
     private String externalId;
+    private Boolean isActive;
     private List<View> views;
     private List<Rate> rates;
     private List<Follow> follows;

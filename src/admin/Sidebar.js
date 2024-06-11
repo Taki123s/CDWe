@@ -84,12 +84,12 @@ const Sidebar = () => {
                     data-parent="#iq-sidebar-toggle"
                 >
                   <li>
-                    <Link to="/user/add">
+                    <Link to="/admin/AddUser">
                       <i className="las la-plus-circle"></i>Thêm người dùng
                     </Link>
                   </li>
                   <li>
-                    <Link to="/user/list">
+                    <Link to="/admin/UserList">
                       <i className="las la-th-list"></i>Danh sách người dùng
                     </Link>
                   </li>

@@ -3,11 +3,13 @@ package com.animeweb.controller.client;
 import com.animeweb.dto.payment.ServicePackAdmin;
 import com.animeweb.dto.payment.ServicePackDTO;
 import com.animeweb.dto.payment.UserPackedDTO;
+import com.animeweb.dto.user.UserServicePackedDTO;
 import com.animeweb.entities.ServicePack;
 import com.animeweb.entities.UserPacked;
 import com.animeweb.mapper.ServicePackMapper;
 import com.animeweb.mapper.UserPackedMapper;
 import com.animeweb.service.ServicePackService;
+import com.animeweb.service.UserPackedService;
 import com.animeweb.service.impl.CloudinaryService;
 import com.animeweb.service.impl.ServicePackServiceImpl;
 import com.animeweb.service.impl.UserPackedServiceImpl;
@@ -15,7 +17,6 @@ import com.animeweb.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class ServicePackController {
     private ServicePackServiceImpl servicePackService;
     @Autowired
     private UserPackedServiceImpl userPackedService;
+    @Autowired
+    private UserPackedService userPackedServices;
     @Autowired
     UserServiceImpl userService;
     @Autowired
@@ -51,7 +54,7 @@ public class ServicePackController {
     }
 
     @PutMapping("/delete/{id}")
-    public ResponseEntity<String> updateServicePack(@PathVariable Long id) {
+    public ResponseEntity<String> updateServicePack(@PathVariable Long id) throws Exception {
 
         servicePackService.updateServicePack(id);
         return ResponseEntity.ok("Service Pack updated successfully");
@@ -61,7 +64,7 @@ public class ServicePackController {
     public ResponseEntity<ServicePackAdmin> createServicePack(@ModelAttribute ServicePackAdmin service) throws IOException {
         ServicePack servicePack = ServicePackMapper.mapToEntity(service);
 
-        if(servicePackService.existType(service.getService_type())) {
+        if (servicePackService.existType(service.getService_type())) {
             return ResponseEntity.ok(null);
         }
         String avatar = uploadService.uploadServiceAvt(service.getFile(), service.getId());
@@ -70,7 +73,6 @@ public class ServicePackController {
         Date now = new Date();
         servicePack.setCreateAt(now);
 //        System.out.println(service.getService_type());
-
 
 
         servicePackService.createServicePack(servicePack);
@@ -115,4 +117,12 @@ public class ServicePackController {
         return ResponseEntity.ok("Service Pack updated successfully");
     }
 
+    @GetMapping("/findAll")
+    public ResponseEntity<List<UserServicePackedDTO>> getAllServicePackByUserId(@RequestParam Long userID) {
+        List<UserServicePackedDTO> list = userPackedServices.getServicePackActiveByUserId(userID);
+        if (list.isEmpty()) {
+            list = userPackedServices.getServicePackExpiredByUserId(userID);
+        }
+        return ResponseEntity.ok(list);
+    }
 }

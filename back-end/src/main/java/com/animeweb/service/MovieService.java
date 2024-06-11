@@ -23,4 +23,7 @@ public interface MovieService {
     boolean findByName(String name);
     boolean existById(Long id);
     Movie findById(Long id);
+    List<MovieDTO> findAllMovieFollowedByUserId(Long userId);
+
+
 }

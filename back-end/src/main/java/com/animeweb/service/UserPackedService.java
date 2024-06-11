@@ -1,5 +1,6 @@
 package com.animeweb.service;
 
+import com.animeweb.dto.user.UserServicePackedDTO;
 import com.animeweb.entities.User;
 import com.animeweb.entities.UserPacked;
 
@@ -11,5 +12,6 @@ public interface UserPackedService {
 
     List<UserPacked>  findAllUserPacked();
     void deleteUserPacked(Long id);
-
+    List<UserServicePackedDTO> getServicePackActiveByUserId(Long userId);
+    List<UserServicePackedDTO> getServicePackExpiredByUserId(Long userId);
 }

@@ -8,7 +8,8 @@ import {
   logout,
   checkUsername,
   sendMail,
-  register,} from "../service/AuthServices";
+  register,
+} from "../service/AuthServices";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -17,7 +18,7 @@ import { getGenreList } from "../service/CategoryServices";
 import { useTranslation, Trans } from "react-i18next";
 import { Dropdown, Space, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
-
+import { searchMovie } from "../service/MovieServices";
 import Swal from "sweetalert2";
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,15 +47,9 @@ export const HeaderPage = () => {
   const { t, i18n } = useTranslation();
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/movie/search?term=${searchTerm}`
-        );
-        console.log(response.data);
+      searchMovie(searchTerm).then((response) => {
         setSearchResults(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      });
     };
 
     if (searchTerm !== "") {
@@ -1292,7 +1287,7 @@ export const HeaderPage = () => {
                   <div className="user-item">
                     <a
                       className="block flex gap-4 items-center h-8"
-                      href="/sua-thong-tin"
+                      href="/profile"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1381,7 +1376,7 @@ export const HeaderPage = () => {
                   <div className="user-item">
                     <a
                       className="block flex gap-4 items-center h-8"
-                      href="/phim-dang-theo-doi"
+                      href="/follow_page"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1426,10 +1421,7 @@ export const HeaderPage = () => {
                   </div>
 
                   <div className="user-item">
-                    <a
-                      className="block flex gap-4 items-center h-8"
-
-                    >
+                    <a className="block flex gap-4 items-center h-8">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -1444,7 +1436,10 @@ export const HeaderPage = () => {
                           d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"
                         ></path>
                       </svg>
-                      <Link to={'/history-packed'}>   <span> {t("content.transactionhistory")}</span></Link>
+                      <Link to={"/history-packed"}>
+                        {" "}
+                        <span> {t("content.transactionhistory")}</span>
+                      </Link>
                     </a>
                   </div>
 

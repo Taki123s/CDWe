@@ -1,13 +1,16 @@
 package com.animeweb.service.impl;
 
+import com.animeweb.dto.user.UserServicePackedDTO;
 import com.animeweb.entities.User;
 import com.animeweb.entities.UserPacked;
+import com.animeweb.mapper.UserPackedMapper;
 import com.animeweb.repository.UserPackedRepository;
 import com.animeweb.repository.UserRepository;
 import com.animeweb.service.UserPackedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -59,5 +62,27 @@ public class UserPackedServiceImpl implements UserPackedService {
         userPacked.setDeletedAt(now);
         userPacked.setExpiredTime(now);
         userPackedRepository.save(userPacked);
+    }
+
+    @Override
+    public List<UserServicePackedDTO> getServicePackActiveByUserId(Long userId) {
+        List<UserPacked> list= userPackedRepository.GetAllServicePackBoughtActive(userId);
+        List<UserServicePackedDTO> userPackedDTOList=new ArrayList<>();
+        for (UserPacked u:list
+        ) {
+            userPackedDTOList.add(UserPackedMapper.mapToEntity(u));
+        }
+        return userPackedDTOList;
+    }
+
+    @Override
+    public List<UserServicePackedDTO> getServicePackExpiredByUserId(Long userId) {
+        List<UserPacked> list= userPackedRepository.GetAllServicePackBoughtExpired(userId);
+        List<UserServicePackedDTO> userPackedDTOList=new ArrayList<>();
+        for (UserPacked u:list
+        ) {
+            userPackedDTOList.add(UserPackedMapper.mapToEntity(u));
+        }
+        return userPackedDTOList;
     }
 }

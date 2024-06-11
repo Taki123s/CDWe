@@ -8,7 +8,6 @@ import {
   faEdit,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"; // Import Font Awesome icons
-import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { getAllUser ,deleteUser,lockUser} from "../../service/UserAdmin";
@@ -22,9 +21,7 @@ const UserList = () => {
 
   const data = async () => {
     const response = await getAllUser().catch((err)=>console.log(err));
-   
-        console.log(response.data);
-        setListAccount(response.data);
+           setListAccount(response.data);
     
   };
   // Simulated data for demonstration

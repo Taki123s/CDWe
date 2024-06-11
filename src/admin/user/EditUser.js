@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faLock,
-  faLockOpen,
-  faPlusCircle,
-  faTrashAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import $ from "jquery";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_GET_PATHS,API_PATCH_PATHS } from "../service/Constant";
 
 const EditUser = () => {
   const [avatar, setAvatar] = useState(null);
@@ -36,18 +29,15 @@ const EditUser = () => {
     setPhone(e.target.value);
   };
   useEffect(() => {
-    // Fetch user data and roles from API
     fetchUserData();
     fetchRoles();
     console.log(account.roleIdList)
-    // Initialize DataTables if necessary
-    // $('#roleHaveTable').DataTable();
-    // $('#roleMayHadTable').DataTable();
+  
   }, []);
 
   const fetchUserData = () => {
     axios
-      .get(`http://localhost:8080/account/view/${id}`)
+      .get(API_GET_PATHS.GET_PROFILE+`${id}`)
       .then((response) => {
         setAccount(response.data);
         setFullName(response.data.fullName);
@@ -58,51 +48,12 @@ const EditUser = () => {
       .catch((error) => console.error("Error fetching user data:", error));
   };
   const fetchRoles = () => {
-    // Fetch all roles from API and update state
-    // Example:
-    // fetch(`/api/roles`)
-    //   .then((response) => response.json())
-    //   .then((data) => setRoles(data))
-    //   .catch((error) => console.error("Error fetching roles:", error));
   };
 
   const addRole = (roleId, roleName) => {
-    // Add role to user by roleId using API
-    // Example:
-    // fetch(`/api/user/${userId}/roles`, {
-    //   method: "POST",
-    //   body: JSON.stringify({ roleId }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     } else {
-    //       throw new Error("Failed to add role to user");
-    //     }
-    //   })
-    //   .then((data) => {
-    //     // Update UI with added role
-    //   })
-    //   .catch((error) => console.error("Error adding role:", error));
   };
 
   const removeRole = (roleId) => {
-    // Remove role from user by roleId using API
-    // Example:
-    // fetch(`/api/user/${userId}/roles/${roleId}`, {
-    //   method: "DELETE",
-    // })
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       // Update UI to remove role
-    //     } else {
-    //       throw new Error("Failed to remove role from user");
-    //     }
-    //   })
-    //   .catch((error) => console.error("Error removing role:", error));
   };
 
   const handlePasswordChange = async () => {
@@ -115,7 +66,7 @@ const EditUser = () => {
 
     const response = await axios
       .patch(
-        `http://localhost:8080/admin/user/changePassword/${id}`,
+        API_PATCH_PATHS.CHANGE_PASSWORD+`${id}`,
         formData,
         {
           headers: {
@@ -131,6 +82,9 @@ const EditUser = () => {
           timer: 2000,
           showConfirmButton: false,
         });
+        
+        navigate(`/admin/UserList`);
+
       })
       .catch((error) => {
         Swal.fire({
@@ -155,7 +109,6 @@ const EditUser = () => {
   };
 
   const backToUserList = () => {
-    // navigate(`/admin/UserList`);
   };
   const submitEdit = async () => {
     const user = {
@@ -174,10 +127,10 @@ const EditUser = () => {
     setIsUploading(true);
 
     const response = await axios
-      .patch(`http://localhost:8080/admin/user/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      .patch(API_PATCH_PATHS.EDIT_USER+`${id}`, formData, {
+        // headers: {
+        //   "Content-Type": "multipart/form-data",
+        // },
       })
       .then((response) => {
         setIsUploading(false);
@@ -188,6 +141,8 @@ const EditUser = () => {
           timer: 2000,
           showConfirmButton: false,
         });
+    navigate(`/admin/UserList`);
+
       })
       .catch((error) => {
         setIsUploading(false);

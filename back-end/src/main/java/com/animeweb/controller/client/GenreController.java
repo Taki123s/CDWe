@@ -22,6 +22,7 @@ public class GenreController {
     GenreService genreService;
     @GetMapping
     public ResponseEntity<List<GenreDTO>> getGenres(){
+
         return ResponseEntity.ok(genreService.getAllGenre());
     }
     @GetMapping("/movies")

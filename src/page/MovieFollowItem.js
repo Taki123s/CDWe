@@ -36,14 +36,14 @@ function MovieFollowItem({ movie, user, onRefresh }) {
       <span   className="image_movie col-md-3" col-md-3>
         <img className="" src={movie.avatarMovie} alt="movie"></img>
       </span>
-            <Link to={`/movie/${movie.id}`}> <span className="title_movie col-md-3">
+            <Link to={`/movie/${movie.id}`}> <span className="title_movie col-md-3" style={{color:"black" }}>
         {movie.name}
       </span></Link>
 
 
-            <span className="movie_time col-md-3">40 phút</span>
-            <span className="movie_viewer col-md-3">{movie.views.length}</span>
-            <span className="movie_icon col-md-3" onClick={RemoveFavorite}>
+            <span className="movie_time col-md-3"  style={{color:"black" }}>40 phút</span>
+            <span className="movie_viewer col-md-3"style={{color:"black" }}>{movie.views.length}</span>
+            <span className="movie_icon col-md-3" style={{color:"black" }} onClick={RemoveFavorite}>
         <MdDelete />
       </span>
             <br></br>

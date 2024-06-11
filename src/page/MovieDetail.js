@@ -72,6 +72,9 @@ function MovieDetail() {
     const fetchData = async () => {
       try {
         const response = await axios.get(API_GET_PATHS.GET_ALL_GENRE);
+        console.log(response.data)
+
+
         setGenres(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -86,6 +89,7 @@ function MovieDetail() {
         try {
           const response = await axios.get(API_GET_PATHS.GET_FOLLOW`?movieId=${id}&userId=${user.idUser}`);
           if (response.data) {
+
             setFollow(response.data);
             setFavorite(response.data.status);
           }
@@ -321,7 +325,7 @@ function MovieDetail() {
                           </li>
                           <li>
                           <span>
-                            <Trans i18nKey={"content.producer"}>{t("content.producer")}</Trans>:
+                            <Trans i18nKey={"content.producer"}>{t("content.producer")}</Trans>
                           </span>
                             <span style={{ width: "unset", fontWeight: "400" }}>{movie.producer}</span>
                           </li>

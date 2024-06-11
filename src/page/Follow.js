@@ -62,7 +62,7 @@ function Follow() {
               key={movie.id}
               movie={movie}
               user={user}
-              // onRefresh={handleRefresh}
+              onRefresh={handleRefresh}
             />
           ))}
         </div>

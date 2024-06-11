@@ -3,11 +3,13 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { addUser } from "../../service/UserAdmin";
+import { useNavigate } from "react-router-dom";
 
 const AddUserForm = () => {
   const [imageSrc, setImageSrc] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const navigate = useNavigate();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -71,6 +73,8 @@ const AddUserForm = () => {
           timer: 2000,
           showConfirmButton: false,
         });
+        navigate(`/admin/UserList`);
+
       }).catch((error) => {
         setIsUploading(false);
         Swal.fire({

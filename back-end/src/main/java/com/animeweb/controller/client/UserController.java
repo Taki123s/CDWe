@@ -4,6 +4,8 @@ import com.animeweb.dto.user.UpdateUser;
 import com.animeweb.dto.user.UserDTOBuilder;
 import com.animeweb.entities.*;
 import com.animeweb.repository.UserRepository;
+import com.animeweb.request.PasswordChangeRequest;
+import com.animeweb.service.AdminService;
 import com.animeweb.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,10 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AdminService adminService;
 
     @GetMapping("/view/{id}")
     public ResponseEntity<UserDTOBuilder> viewProfile(@PathVariable Long id) {
@@ -74,4 +79,14 @@ public class UserController {
         }
     }
 
+    @GetMapping("/deActive")
+    public ResponseEntity<List<User>> GetAllUserLocked() {
+        return ResponseEntity.ok(adminService.GetAllUserLocked());
+    }
+
+    @PatchMapping("/changePassword/{id}")
+    public ResponseEntity<User> updatePassword(@ModelAttribute PasswordChangeRequest password, @PathVariable Long id) {
+        User u = adminService.changPassword(password.oldPassword(), password.newPassword(), password.confirmPassword(), id);
+        return ResponseEntity.ok(u);
+    }
 }

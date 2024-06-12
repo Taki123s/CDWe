@@ -1,8 +1,10 @@
 package com.animeweb.service.impl;
 
+import com.animeweb.dto.user.UserDTO;
 import com.animeweb.dto.user.UserServicePackedDTO;
 import com.animeweb.entities.User;
 import com.animeweb.entities.UserPacked;
+import com.animeweb.mapper.UserMapper;
 import com.animeweb.mapper.UserPackedMapper;
 import com.animeweb.repository.UserPackedRepository;
 import com.animeweb.repository.UserRepository;
@@ -84,5 +86,16 @@ public class UserPackedServiceImpl implements UserPackedService {
             userPackedDTOList.add(UserPackedMapper.mapToEntity(u));
         }
         return userPackedDTOList;
+    }
+
+    @Override
+    public List<UserDTO> GetAllUserBought() {
+        List<User> userList=userPackedRepository.GetAllUserBought();
+        List<UserDTO> userDTO=new ArrayList<UserDTO>();
+        for (User u:userList
+             ) {
+            userDTO.add(UserMapper.mapToDto(u));
+        }
+        return userDTO;
     }
 }

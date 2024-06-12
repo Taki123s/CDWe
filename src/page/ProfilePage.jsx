@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { API_GET_PATHS } from "../service/Constant";
+
 function ProfilePage() {
   const [account, setAccount] = useState("");
   var token = Cookies.get("jwt_token");
@@ -20,7 +22,7 @@ function ProfilePage() {
       try {
         if (user) {
           const response = await axios.get(
-              `http://localhost:8080/account/view/${user.idUser}`
+              API_GET_PATHS.GET_PROFILE+`${user.idUser}`
           );
           const data = response.data;
           setAccount(data);

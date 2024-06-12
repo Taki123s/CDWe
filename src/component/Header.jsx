@@ -1309,7 +1309,7 @@ export const HeaderPage = () => {
                   <div className="user-item">
                     <a
                       className="block flex gap-4 items-center h-8"
-                      href="/doi-mat-khau"
+                      href="/changePassword"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

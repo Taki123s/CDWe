@@ -3,6 +3,7 @@ package com.animeweb.controller.client;
 import com.animeweb.dto.payment.ServicePackAdmin;
 import com.animeweb.dto.payment.ServicePackDTO;
 import com.animeweb.dto.payment.UserPackedDTO;
+import com.animeweb.dto.user.UserDTO;
 import com.animeweb.dto.user.UserServicePackedDTO;
 import com.animeweb.entities.ServicePack;
 import com.animeweb.entities.UserPacked;
@@ -124,5 +125,10 @@ public class ServicePackController {
             list = userPackedServices.getServicePackExpiredByUserId(userID);
         }
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/all/user/bought")
+    public ResponseEntity<List<UserDTO>> GetAllUserBought() {
+        return ResponseEntity.ok(userPackedService.GetAllUserBought());
     }
 }

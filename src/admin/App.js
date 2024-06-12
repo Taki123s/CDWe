@@ -31,6 +31,7 @@ import { AddMovie } from "./movie/AddMovie";
 import UserAdd from "./user/AddUser";
 import UserList from "./user/ListUser";
 import EditUser from "./user/EditUser";
+import DashBoard from"./Dashboard";
 import "./css/bootstrap.min.css";
 import "./css/style.css";
 function App() {
@@ -57,6 +58,8 @@ function App() {
               <Route path="/admin/adduser" element={<UserAdd />} />
               <Route path="/admin/UserList" element={<UserList />} />
               <Route path="/admin/EditUser/:id" element={<EditUser />} />
+              <Route path="/admin/DashBoard" element={<DashBoard />} />
+
             </Routes>
           </div>
         </div>

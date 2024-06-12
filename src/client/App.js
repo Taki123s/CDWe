@@ -24,7 +24,7 @@ import ExecutePaymentComponent from "../component/ExecutePaymentComponent";
 import Follow from "../page/Follow";
 import History from "../component/history-packed";
 import Profile from "../page/ProfilePage"
-
+import ChangePassword from "../page/Changepassword";
 function IndexApp() {
   return (
     <Router>
@@ -51,7 +51,7 @@ function IndexApp() {
         <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
         <Route path="/PayPal" element={<PayPal />} />
         <Route path="/profile" element={<Profile/>}/>
-
+        <Route path="/changePassword" element={<ChangePassword/>}/>
       </Routes>
     </Router>
   );

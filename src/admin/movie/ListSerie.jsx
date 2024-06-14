@@ -146,7 +146,7 @@ export const ListSerie = () => {
   const columns = [
     {
       id: 1,
-      name: "Số thứ tự",
+      name: "No",
       selector: (row, index) => index + 1,
       reorder: true,
     },
@@ -275,7 +275,7 @@ export const ListSerie = () => {
       <DataTable
         title={customTitle}
         columns={columns}
-        data={series}
+        data={Array.isArray(series) ? series : []}
         defaultSortFieldId={1}
         sortIcon={<ArrowDownward />}
         pagination

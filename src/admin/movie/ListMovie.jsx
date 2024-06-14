@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { Checkbox } from "@mui/material";
 import ArrowDownward from "@mui/icons-material/ArrowDownward";
 import Button from "@mui/material/Button";
-import { parse, format } from "date-fns";
+import { parse } from "date-fns";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
 import { adminListMovie, deleteMovie } from "../../service/MovieServices";
@@ -52,10 +51,10 @@ export const ListMovie = () => {
       cancelButtonText: "Hủy bỏ",
     }).then((result) => {
       if (result.isConfirmed) {
-        setIsUploading(true)
+        setIsUploading(true);
         deleteMovie(id)
           .then((response) => {
-            setIsUploading(false)
+            setIsUploading(false);
             setMovies((prevMovies) =>
               prevMovies.filter((movie) => movie.id !== id)
             );
@@ -68,7 +67,7 @@ export const ListMovie = () => {
             });
           })
           .catch((error) => {
-            setIsUploading(false)
+            setIsUploading(false);
             Swal.fire({
               title: "Lỗi",
               text: error.response.data || "Lỗi kết nối",
@@ -86,7 +85,7 @@ export const ListMovie = () => {
   const columns = [
     {
       id: 1,
-      name: "Số thứ tự",
+      name: "No",
       selector: (row, index) => index + 1,
       reorder: true,
     },
@@ -125,6 +124,7 @@ export const ListMovie = () => {
           <img
             src={row.avatarMovie}
             key={row.id}
+            alt={row.name}
             style={{ width: "100%", height: "100%" }}
           />
         </div>
@@ -241,7 +241,17 @@ export const ListMovie = () => {
     {
       id: 13,
       name: "Current Chapters",
-      selector: (row) => row.currentChapters,
+      cell: (row) => (
+        <div key={row.index}>
+          <Link
+            to={`/admin/chapterList/${row.id}`}
+            className="btn btn-outline-info ml-2 hoverWhite"
+          >
+            View
+          </Link>
+        </div>
+      ),
+
       sortable: true,
       reorder: true,
     },
@@ -352,7 +362,7 @@ export const ListMovie = () => {
       <DataTable
         title="List Movie"
         columns={columns}
-        data={movies}
+        data={Array.isArray(movies) ? movies : []}
         defaultSortFieldId={1}
         sortIcon={<ArrowDownward />}
         pagination

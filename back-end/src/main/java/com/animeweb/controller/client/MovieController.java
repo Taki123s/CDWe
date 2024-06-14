@@ -59,13 +59,13 @@ public class MovieController {
     public ResponseEntity<MovieDTO> findMovieWatching(@RequestParam Long movieId, @RequestParam String token) throws ParseException {
         SignedJWT signedJWT = jwtGenerator.verifyToken(token);
         Long idUser = (Long) signedJWT.getJWTClaimsSet().getClaim("idUser");
-        User user = userService.getUserById(String.valueOf(idUser));
-        boolean isBought = userPackedService.checkUserBuyedService(user);
-        if (isBought) {
+//        User user = userService.getUserById(String.valueOf(idUser));
+//        boolean isBought = userPackedService.checkUserBuyedService(user);
+//        if (isBought) {
             return ResponseEntity.ok(movieService.findMovieWatching(movieId));
-        } else {
-            return ResponseEntity.ok().body(null);
-        }
+//        } else {
+//            return ResponseEntity.ok().body(null);
+//        }
     }
 
     @GetMapping("/search")

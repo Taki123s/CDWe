@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
-    @Query("SELECT a from User a where a.userName=:userName and a.status = true and a.authenticated = true" )
+    @Query("SELECT a from User a where a.userName=:userName and a.status = true and a.authenticated = true and a.userType=1" )
     Optional<User> findByUserName(String userName);
     @Query("select count(a) > 0 from User a where a.userName=:userName and a.status=true and  a.authenticated = true")
     Boolean existsByUserName(String userName);

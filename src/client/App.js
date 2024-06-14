@@ -9,7 +9,7 @@ import "../App.css";
 import "../css/bootstrap.min.css";
 import "../css/owl.carousel.min.css";
 import "../css/ds/style.css";
-import "../css/home.css"
+import "../css/home.css";
 import MovieDetail from "../page/MovieDetail";
 import ProductItem from "../page/ProductItem";
 import AnimePage from "../component/Index";
@@ -41,11 +41,10 @@ function IndexApp() {
         <Route path="/login-facebook" element={<LoginFacebook />} />
         <Route path="/execute-payment" element={<ExecutePaymentComponent />} />
         <Route
-          path="/movie/watching/:movieId/:chapterId"
+          path="/movie/watching/:movieId/:ordinal"
           element={<MovieWatching />}
         />
         <Route path="/follow" element={<Follow />} />
-        <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
         <Route path="/PayPal" element={<PayPal />} />
       </Routes>
     </Router>

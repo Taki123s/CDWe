@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -24,6 +25,12 @@ public class Chapter {
     private String link;
     @Column(name = "status", columnDefinition = "TINYINT(1)")
     private Boolean status = true;
+    @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date createAt = new Date();
+    @Column(name = "update_at")
+    private Date updateAt;
+    @Column(name = "delete_at")
+    private Date deleteAt;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")
     @JsonBackReference

@@ -34,7 +34,6 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(mimeMessage);
             return "Mail Sent Successfully...";
         } catch (Exception e) {
-            e.printStackTrace();
             return "Error while Sending Mail";
         }
     }
@@ -52,10 +51,8 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(mimeMessage);
             return "Mail sent Successfully";
         } catch (MessagingException e) {
-            e.printStackTrace();
             return "Error while sending mail!!!";
         } catch (Exception e) {
-            e.printStackTrace();
             return "Error while sending mail!!!";
         }
     }

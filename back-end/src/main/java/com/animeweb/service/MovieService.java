@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface MovieService {
     void save(Movie movie);
-//    @PreAuthorize("hasAuthority('per1')")
     List<MovieAdmin> getAdminMovie();
     List<MovieDTO> getAllMovie();
     List<MovieDTO> index(int page, int size, String sortBy,boolean ascending);

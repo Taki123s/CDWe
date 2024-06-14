@@ -12,25 +12,35 @@ import Swal from "sweetalert2";
 import "jquery-confirm";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { AddChapter } from "./movie/AddChapter";
+import { ChapterMovie } from "./movie/ChapterMovie";
 import { ListSerie } from "./movie/ListSerie";
 import { ListMovie } from "./movie/ListMovie";
 import { AddMovie } from "./movie/AddMovie";
+import { AddRole } from "./role/AddRole";
+import { EditRole } from "./role/EditRole";
+import { RoleManager } from "./role/RoleManager";
 import "../css/bootstrap.min.css";
 import "./css/style.css";
 function App() {
   return (
     <BrowserRouter>
       <div className="wrapper">
-      <Sidebar />
+        <Sidebar />
         <div className="content-page" id="content-page">
           <div className="container-fluid">
             <Routes>
               <Route path="/admin/add" element={<AddUserForm />} />
-              <Route path="/admin/upload" element={<AddChapter />} />
+              <Route
+                path="/admin/chapterList/:idMovie"
+                element={<ChapterMovie />}
+              />
               <Route path="/admin/listSerie" element={<ListSerie />} />
-              <Route path="/admin/listMovie" element={<ListMovie/>}/>
-              <Route path="/admin/addMovie" element={<AddMovie/>}/>
+              <Route path="/admin/listMovie" element={<ListMovie />} />
+              <Route path="/admin/addMovie" element={<AddMovie />} />
+
+              <Route path="/admin/addRole" element={<AddRole />} />
+              <Route path="/admin/editRole" element={<EditRole />} />
+              <Route path="/admin/roleManager" element={<RoleManager />} />
             </Routes>
           </div>
         </div>

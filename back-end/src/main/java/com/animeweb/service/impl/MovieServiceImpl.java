@@ -88,8 +88,8 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDTO findMovieById(Long movieId) {
-        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-        return MovieMapper.mapToMovieDTO(movie);
+        Movie movie = movieRepository.findById(movieId).orElse(null);
+        return movie!=null?MovieMapper.mapToMovieDTO(movie):null;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie findById(Long id) {
-        return movieRepository.findById(id).orElse(null);
+        return movieRepository.findMovieByIdAndStatusTrue(id);
     }
 
     @Override

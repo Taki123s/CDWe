@@ -21,6 +21,7 @@ public class User {
     @Column(name = "id")
     private Long id;
     @ManyToMany(cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Role> roles = new ArrayList<>();
     @Column(name = "user_name", length = 500)
     private String userName;

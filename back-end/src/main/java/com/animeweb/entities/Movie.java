@@ -54,14 +54,12 @@ public class Movie {
     private String trailer;
     @Column(name = "series_descriptions")
     private String seriesDescriptions;
-
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Genre> genres = new ArrayList<>();
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<Chapter> currentChapters = new ArrayList<>();
     @ManyToOne()
     @JoinColumn(name ="serie_id",referencedColumnName = "id")
- //   @JsonBackReference
     private Serie serie;
     @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<View> views =new ArrayList<>();

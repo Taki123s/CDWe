@@ -1,5 +1,6 @@
 package com.animeweb.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,11 @@ public class Role {
     private String name;
     @Column(name="description")
     private String description;
+    @Column(name="status",columnDefinition = "tinyint default 1")
+    private Boolean status = true;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<User> users = new ArrayList<>();
     @ManyToMany
     List<Permission> permissions = new ArrayList<>();
     public Role(Long id, String name) {

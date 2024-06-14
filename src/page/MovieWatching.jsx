@@ -15,11 +15,11 @@ import {useNavigate} from 'react-router-dom';
 
 const MovieWatching = () => {
     const navigate = useNavigate();
-    const {movieId, chapterId} = useParams();
+    const {movieId, ordinal} = useParams();
     const [movie, setMovie] = useState([]);
     const [chapters, setChapters] = useState([]);
     const [videoSrc, setVideoSrc] = useState([]);
-    const currentUrl = `http://animeweb.site/movies/${movieId}&${chapterId}`;
+    const currentUrl = `http://animeweb.site/movies/${movieId}&${ordinal}`;
     const PlyrPlayer = React.forwardRef((props, ref) => {
         const {source, options = null, ...rest} = props;
         const playerRef = React.useRef(videoSrc);
@@ -52,7 +52,6 @@ const MovieWatching = () => {
         }
         findMovieWatching(movieId, token)
             .then((response) => {
-                console.log(response)
                 if (!response.data) {
                     Swal.fire({
                         icon: 'error',
@@ -68,7 +67,10 @@ const MovieWatching = () => {
                     });
                 } else {
                     setMovie(response.data);
-                    setChapters(response.data.currentChapters);
+                    const sortedChapters = response.data.currentChapters.sort(
+                        (a, b) => a.ordinal - b.ordinal
+                      );
+                    setChapters(sortedChapters);
                     window.scrollTo(0, 0);
                 }
 
@@ -78,10 +80,10 @@ const MovieWatching = () => {
 
 
             });
-    }, [movieId, chapterId]);
+    }, [movieId, ordinal]);
     useEffect(() => {
-        setVideoSrc(chapters[chapterId - 1]?.link);
-    }, [chapters]);
+        setVideoSrc(chapters.filter((chapter) => chapter.ordinal == ordinal)[0]?.link);
+    }, [chapters,ordinal]);
     useEffect(() => {
         const skip = () => {
             const vd = document.querySelector("#player video");
@@ -117,7 +119,7 @@ const MovieWatching = () => {
                             <p> /</p>
                             <p>{movie.name}</p>
                             <p> /</p>
-                            <p>Chap {chapterId}</p>
+                            <p>Chap {ordinal}</p>
                         </div>
                     </div>
                 </div>
@@ -161,7 +163,7 @@ const MovieWatching = () => {
                                     <h5>Danh sách tập</h5>
                                 </div>
                                 {chapters.map((chap) => {
-                                    let isActive = chap.ordinal == chapterId;
+                                    let isActive = chap.ordinal == ordinal;
                                     return (
                                         <Link
                                             to={`/movie/watching/${movieId}/${chap.ordinal}`}

@@ -50,8 +50,8 @@ public class AuthController {
         if(userService.existUserName(registerDto.getUserName())) return new ResponseEntity<>("Username is exist", HttpStatus.BAD_REQUEST);
         User user = UserMapper.mapToRegisterUser(registerDto);
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        Role roles = roleRepository.findByName("USER").get();
-        user.setRoles(Collections.singletonList(roles));
+        Role role = roleRepository.findByNameAndStatusTrue("USER");
+        user.setRoles(Collections.singletonList(role));
         Random random = new Random();
         int randomNumber = 100000 + random.nextInt(900000);
         user.setAuthCode(String.valueOf(randomNumber));

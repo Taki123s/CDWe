@@ -16,9 +16,13 @@ public class CloudinaryService {
     public static final String MOVIE_GET_FOLDER ="MovieStorage/";
     @Autowired
     private Cloudinary cloudinary;
-    public String uploadChapter(MultipartFile file) throws IOException {
+    public String uploadChapter(MultipartFile file,Long idMovie,Integer ordinal) throws Exception {
+        String saveUrl = MOVIE_SAVE_FOLDER+ "movie_"+idMovie+"/chapter_"+ordinal;
+        deleteChapter(idMovie,ordinal);
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
-                ObjectUtils.asMap("resource_type", "video"));
+                ObjectUtils.asMap("resource_type", "video",
+                        "folder",saveUrl
+                ));
         return (String) uploadResult.get("url");
     }
     public String uploadMovieAvt(MultipartFile file,Long idMovie) throws IOException {
@@ -47,6 +51,22 @@ public class CloudinaryService {
             if (resource.get("type").equals("upload")) {
                 cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
             }
+        }
+    }
+
+    public void deleteChapter(Long idMovie, Integer ordinal) throws Exception {
+        String folderPath = MOVIE_GET_FOLDER + "movie_" + idMovie+ "/chapter_" + ordinal;
+        Map<String, Object> params = ObjectUtils.asMap(
+                "prefix",folderPath+"/",
+                "folder", folderPath+"/",
+                "resource_type","video",
+                "type","upload"
+        );
+        Map result = cloudinary.api().resources(params);
+        List<Map> resources = (List<Map>) result.get("resources");
+        for (Map resource : resources) {
+            String publicId = (String) resource.get("public_id");
+                cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type","video"));
         }
     }
 }

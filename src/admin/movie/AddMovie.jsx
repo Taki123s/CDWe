@@ -7,7 +7,6 @@ import { addMovie } from "../../service/MovieServices";
 import Swal from "sweetalert2";
 import { Loading } from "../../component/Loading";
 
-
 export const AddMovie = () => {
   const [avatar, setAvatar] = useState(null);
   const [imageSrc, setImageSrc] = useState(defaultAvatar);
@@ -158,10 +157,10 @@ export const AddMovie = () => {
       selector: (row) => row.description,
     },
   ];
-  
+
   return (
     <div>
-     <Loading open={isUploading}/>
+      <Loading open={isUploading} />
       <h1>Nhập phim mới</h1>
       <form className="needs-validation">
         <div className="row">
@@ -310,7 +309,7 @@ export const AddMovie = () => {
                     <div className="form-group col-md-6">
                       <div id="GenresRender">
                         <label>Chọn thể loại</label>
-                        <DataTable columns={columns} data={genres} />
+                        <DataTable columns={columns} data={Array.isArray(genres) ? genres : []} />
                       </div>
                     </div>
                     <div className="form-group col-md-6">
@@ -357,7 +356,6 @@ export const AddMovie = () => {
                     Xác nhận
                   </button>
                 </div>
-                {/* <p>${requestScope.error}</p> */}
               </div>
             </div>
           </div>

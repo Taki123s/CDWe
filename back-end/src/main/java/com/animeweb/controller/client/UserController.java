@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,8 +23,7 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     private AdminService adminService;
 
@@ -45,38 +45,9 @@ public class UserController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<User> updateProfile(@RequestBody UpdateUser user) {
-        User existingUser = userService.findUserById(user.getId());
-        if (existingUser != null) {
-
-
-            User updatedUser = userRepository.save(new User(
-                    user.getId(),
-                    existingUser.getRoles()
-                    , user.getUserName(),
-                    user.getAvatarPicture() != null ? user.getAvatarPicture() : existingUser.getAvatarPicture(),
-                    existingUser.getPassword()
-                    , user.getEmail(),
-                    user.getFullName(),
-                    user.getPhone(),
-                    existingUser.getUserType(),
-                    existingUser.getCreatedAt(),
-                    existingUser.getUpdatedAt(),
-                    existingUser.getDeletedAt()
-                    , existingUser.getStatus()
-                    , existingUser.getAuthCode()
-                    , existingUser.getExpiredAt()
-                    , existingUser.getAuthenticated()
-                    , existingUser.getExternalId(),
-                    existingUser.getIsActive()
-                    , existingUser.getViews(),
-                    existingUser.getRates(),
-                    existingUser.getFollows()));
-            return ResponseEntity.ok(updatedUser);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @PatchMapping("/update")
+    public ResponseEntity<User> updateProfile( @ModelAttribute UpdateUser user) throws IOException {
+        return ResponseEntity.ok(userService.updateProfile(user));
     }
 
     @GetMapping("/deActive")

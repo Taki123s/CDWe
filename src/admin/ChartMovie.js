@@ -76,11 +76,6 @@ const ChartMovie = () => {
     };
   };
 
-  const chartStyle = {
-    width: "10px",
-    height: "10px",
-  };
-
   return (
     <div style={{ display: "flex", alignSelf: "auto"}}>
       <div style={{width: '300px'}}>

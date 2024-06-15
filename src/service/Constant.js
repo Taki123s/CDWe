@@ -14,4 +14,5 @@ export const API_POST_PATHS = {
 export const API_PATCH_PATHS = {
   CHANGE_PASSWORD: `${BASE_URL}/account/changePassword/`,
   EDIT_USER: `${BASE_URL}/admin/user/`,
+  UPDATE_PROFILE: `${BASE_URL}/account/update`
 };

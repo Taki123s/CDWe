@@ -75,4 +75,16 @@ public class ServicePackServiceImpl implements ServicePackService {
         return servicePackRepository.existByType(serviceType);
     }
 
+    @Override
+    public ServicePackDTO getUserPackedBoughtMostByMonth() {
+        return ServicePackMapper.MaptoDto(servicePackRepository.getUserPackedBoughtMostByMonth());
+    }
+
+    @Override
+    public ServicePackDTO getUserPackedBoughtMostByYear() {
+        return ServicePackMapper.MaptoDto(servicePackRepository.getUserPackedBoughtMostByYear());
+    }
+
+
+
 }

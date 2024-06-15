@@ -71,11 +71,12 @@ public class AdminServiceImpl implements AdminService {
 
             newUser.setPassword(request.password() != null ? passwordEncoder.encode(request.password()) : newUser.getPassword());
 
-            userRepository.save(newUser);
             if (request.avatarPicture() != null) {
                 String avatar = uploadService.uploadUserAvt(request.avatarPicture(), newUser.getId());
                 newUser.setAvatarPicture(avatar);
             }
+            userRepository.save(newUser);
+
             log.info("Update user successfully: {}", newUser.getId());
         }
     }
@@ -97,9 +98,10 @@ public class AdminServiceImpl implements AdminService {
         user.setRoles(List.of(roleRepository.findByName("USER").orElseThrow()));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.password()));
-        userRepository.save(user);
         String avatar = uploadService.uploadUserAvt(request.avatarPicture(), user.getId());
         user.setAvatarPicture(avatar);
+        userRepository.save(user);
+
         log.info("Insert user successfully: {}", user.getId());
     }
 

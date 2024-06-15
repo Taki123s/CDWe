@@ -13,6 +13,10 @@ public interface ServicePackService {
     void save(long id,ServicePack servicePack);
     ServicePackAdmin createServicePack(ServicePack servicePack);
     void updateServicePack(Long id) throws Exception;
-
     boolean existType(String serviceType);
+    ServicePackDTO getUserPackedBoughtMostByMonth();
+    ServicePackDTO getUserPackedBoughtMostByYear();
+
+
+
 }

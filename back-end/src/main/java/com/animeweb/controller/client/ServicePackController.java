@@ -131,4 +131,13 @@ public class ServicePackController {
     public ResponseEntity<List<UserDTO>> GetAllUserBought() {
         return ResponseEntity.ok(userPackedService.GetAllUserBought());
     }
+    @GetMapping("/hot/month")
+    public  ResponseEntity<ServicePackDTO>getUserPackedBoughtMostByMonth(){
+        return  ResponseEntity.ok(servicePackService.getUserPackedBoughtMostByMonth());
+    }
+    @GetMapping("/hot/year")
+    public  ResponseEntity<ServicePackDTO>getUserPackedBoughtMostByYear(){
+        return  ResponseEntity.ok(servicePackService.getUserPackedBoughtMostByYear());
+    }
+
 }

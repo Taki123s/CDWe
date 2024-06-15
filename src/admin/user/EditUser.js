@@ -59,8 +59,10 @@ const EditUser = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    console.log("hello tham,", file);
     if (file) {
       const reader = new FileReader();
+      console.log("hello tham:", file);
       reader.onloadend = () => {
         setImageSrc(reader.result);
       };

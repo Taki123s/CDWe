@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class UpdateUser {
     private Long id;
     private String userName;
-    private String avatarPicture;
+    private MultipartFile avatarPicture;
     private String email;
     private String fullName;
     private String phone;

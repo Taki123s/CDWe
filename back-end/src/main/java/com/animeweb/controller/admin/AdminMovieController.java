@@ -9,6 +9,7 @@ import com.animeweb.mapper.MovieMapper;
 import com.animeweb.service.GenreService;
 import com.animeweb.service.MovieService;
 import com.animeweb.service.SerieService;
+import com.animeweb.service.ViewService;
 import com.animeweb.service.impl.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class AdminMovieController {
     SerieService serieService;
     @Autowired
     GenreService genreService;
+    @Autowired
+    ViewService viewService;
     @GetMapping()
     public ResponseEntity<List<MovieAdmin>> getListMovie(){
         return new ResponseEntity<>(movieService.getAdminMovie(), HttpStatus.OK);
@@ -57,5 +60,13 @@ public class AdminMovieController {
         movieService.save(movie);
         uploadService.deleteFolderMovie(uploadService.getMovieFolderById(movie.getId()));
         return new ResponseEntity<>("Xóa thành công!",HttpStatus.CREATED);
+    }
+    @GetMapping("/viewed/month/top5")
+    public  ResponseEntity<List<Movie>>getTop5MovieViewedByMonth(){
+        return  ResponseEntity.ok(viewService.GetTop5MovieViewedByMonth());
+    }
+    @GetMapping("/viewed/year/top5")
+    public  ResponseEntity<List<Movie>>getTop5MovieViewedByYear(){
+        return  ResponseEntity.ok(viewService.GetTop5MovieViewedByYear());
     }
 }

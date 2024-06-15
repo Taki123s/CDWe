@@ -23,7 +23,6 @@ import java.util.List;
 @Slf4j
 public class UserManageController {
     private final AdminService adminService;
-    private final RoleRepository roleRepository;
 
     @GetMapping
     public List<User> getUsers() {
@@ -61,9 +60,5 @@ public class UserManageController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/changePassword/{id}")
-    public ResponseEntity<User> updatePassword(@ModelAttribute PasswordChangeRequest password, @PathVariable Long id) {
-        adminService.changPassword(password.newPassword(), password.oldPassword(), id);
-        return ResponseEntity.ok().build();
-    }
+
 }

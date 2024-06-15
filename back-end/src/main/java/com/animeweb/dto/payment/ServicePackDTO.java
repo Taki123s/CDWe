@@ -1,4 +1,5 @@
 package com.animeweb.dto.payment;
+
 import com.animeweb.entities.*;
 
 import lombok.*;
@@ -17,11 +18,12 @@ public class ServicePackDTO {
     private Date createdAt;
     private String service_img;
 
-
     public ServicePackDTO(Long id, String serviceType, Double price, Date createAt) {
         this.id = id;
         this.service_type = serviceType;
         this.price = price;
         this.createdAt = createAt;
     }
+
+
 }

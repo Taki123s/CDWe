@@ -71,7 +71,9 @@ public class CloudinaryService {
                         "resource_type", "image",
                         "folder", saveUrl
                 ));
-        return (String) uploadResult.get("url");
+        String url = uploadResult.get("url").toString();
+        System.out.println(url);
+        return url;
     }
 }
 

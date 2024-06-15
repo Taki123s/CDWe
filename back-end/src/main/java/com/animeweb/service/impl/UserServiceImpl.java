@@ -56,7 +56,11 @@ public class UserServiceImpl implements UserDetailsService {
     public User findUserById(Long idUser) {
         return userRepository.findById(idUser).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-
+    public User findUserByEmail(String email){
+        int userType = 1;
+        boolean status = true;
+        return userRepository.findByEmailAndUserTypeAndStatus(email, userType, status);
+    }
     public boolean existUserName(String userName) {
         return userRepository.existsByUserName(userName);
     }
@@ -64,12 +68,8 @@ public class UserServiceImpl implements UserDetailsService {
     public boolean existEmail(String email) {
         return userRepository.existByEmail(email);
     }
-    public User findUserByEmail(String email){
-        int userType = 1;
-        boolean status = true;
-        return userRepository.findByEmailAndUserTypeAndStatus(email, userType, status);
-    }
-    public void saveUser(User user){
+
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 

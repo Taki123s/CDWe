@@ -22,7 +22,6 @@ function ProfilePage() {
   const [avatar, setAvatar] = useState(null);
   const user = typeof token === "undefined" ? null : jwtDecode(token);
   useEffect(() => {
-   
     fetchData();
     FetchService();
   }, []); // Empty dependency array ensures useEffect runs only once after the initial render
@@ -40,7 +39,6 @@ function ProfilePage() {
         setFullName(data.fullName);
         setPhone(data.phone);
         setEmail(data.email);
-        setAvatar(data.avatarPicture);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -51,7 +49,7 @@ function ProfilePage() {
     try {
       if (user) {
         const response = await axios.get(
-          `http://localhost:8080/servicePack/findAll?userID=${user.idUser}`
+          API_GET_PATHS.GET_ALL_SERVICE_PACK + `?userID=${user.idUser}`
         );
         const data = response.data;
         setService(data);
@@ -72,10 +70,7 @@ function ProfilePage() {
         setImageSrc(reader.result);
       };
       reader.readAsDataURL(file);
-      console.log(file)
-
       setAvatar(file);
-
     }
   };
   const validatePhone = (phone) => {
@@ -115,24 +110,26 @@ function ProfilePage() {
   const isSaveDisabled = emailError || phoneError;
 
   const ChangeInformation = async () => {
+    console.log(user);
+    console.log(account);
+
     try {
       const newUserData = {
         id: account.id,
         userName: username,
-        password: account.password, 
+        password: "",
         email: email,
         fullName: fullName,
         phone: phone,
       };
-  
-      const formData = new FormData();
-      Object.keys(newUserData).forEach((key) => formData.append(key, newUserData[key]));
-      console.log("avatar")
-      console.log(avatar)
 
-      // Append avatar only if it's not null
+      const formData = new FormData();
+      Object.keys(newUserData).forEach((key) =>
+        formData.append(key, newUserData[key])
+      );
+
+      //   // Append avatar only if it's not null
       if (avatar !== null) {
-        console.log(avatar)
         formData.append("avatarPicture", avatar);
       } else {
         Swal.fire({
@@ -144,20 +141,24 @@ function ProfilePage() {
         });
         return; // Return early if avatar is not selected
       }
-  
+
       setIsUploading(true);
-  
-      const response = await axios.patch(API_PATCH_PATHS.UPDATE_PROFILE, formData);
-  
-      setIsUploading(false);
-      Swal.fire({
-        title: "Thành công",
-        text: response.data,
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-  
+
+      const response = await axios.patch(
+        API_PATCH_PATHS.UPDATE_PROFILE,
+        formData
+      ).then((response=>{
+        setIsUploading(false);
+        Swal.fire({
+          title: "Thành công",
+          text: response.data,
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }));
+
+      
     } catch (error) {
       setIsUploading(false);
       Swal.fire({
@@ -169,7 +170,7 @@ function ProfilePage() {
       });
     }
   };
-  
+
   const convertToDateOnly = (dateTimeString) => {
     const date = new Date(dateTimeString);
     const year = date.getUTCFullYear();
@@ -310,105 +311,69 @@ function ProfilePage() {
             </label>
           </div>
         </div>
-        {/* <div className="row">
-          <div className="col-md-8">
-            <div className="display-5  text-primary mb-1">Gói Đã Mua</div>
-            <div className="card mb-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-sm-3">
-                    <p className="mb-0">Tên gói</p>
-                  </div>
-                  <div className="col-sm-3">
-                    <p>Ngày Mua</p>
-                  </div>
-                  <div className="col-sm-3">
-                    <p>Ngày hết hạn</p>
-                  </div>{" "}
-                  <div className="col-sm-3">
-                    <p>Trạng thái</p>
-                  </div>
-                </div>
-                {service.map((s) => (
-                  <>
-                    <hr />
-                    <div className="row">
-                      <div className="col-sm-3">
-                        <p className="mb-0">{s.servicePackId.service_type}</p>
-                      </div>
-                      <div className="col-sm-3">
-                        <p>{convertToDateOnly(s.servicePackId.createAt)}</p>
-                      </div>
-                      <div className="col-sm-3">
-                        <p>{convertToDateOnly(s.expiredTime)}</p>
-                      </div>
-                      <div className="col-sm-3">
-                        {s.status ? (
-                          <a className="text-success">Còn hạng</a>
-                        ) : (
-                          <a className="text-danger">Hết hạng</a>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div> */}
         <div className="row">
-          {service.map((s) => (
+          {service == null ? (
             <>
-              <div className="col-md-8">
-                <div className="display-5  text-primary mb-1">Gói Đã Mua</div>
-
-                <div className="card mb-4">
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-sm-3">
-                        <p className="mb-0">Tên gói</p>
-                      </div>
-                      <div className="col-sm-9">
-                        <p className="mb-0">{s.servicePackId.service_type}</p>
-                      </div>
+              {service.map((s) => (
+                <>
+                  <div className="col-md-8">
+                    <div className="display-5  text-primary mb-1">
+                      Gói Đã Mua
                     </div>
 
-                    <hr />
-                    <div className="row">
-                      <div className="col-sm-3">
-                        <p className="mb-0">Ngày mua</p>
-                      </div>
-                      <div className="col-sm-9">
-                        <p>{convertToDateOnly(s.servicePackId.createAt)}</p>
-                      </div>
-                    </div>
-                    <hr />
-                    <div className="row">
-                      <div className="col-sm-3">
-                        <p className="mb-0">Ngày hết hạn</p>
-                      </div>
-                      <div className="col-sm-9">
-                        <p>{convertToDateOnly(s.expiredTime)}</p>
-                      </div>
-                    </div>
-                    <hr />
-                    <div className="row">
-                      <div className="col-sm-3">
-                        <p className="mb-0">Trạng thái</p>
-                      </div>
-                      <div className="col-sm-9">
-                        {s.status ? (
-                          <a className="text-success">Còn hạng</a>
-                        ) : (
-                          <a className="text-danger">Hết hạng</a>
-                        )}
+                    <div className="card mb-4">
+                      <div className="card-body">
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <p className="mb-0">Tên gói</p>
+                          </div>
+                          <div className="col-sm-9">
+                            <p className="mb-0">
+                              {s.servicePackId.service_type}
+                            </p>
+                          </div>
+                        </div>
+
+                        <hr />
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <p className="mb-0">Ngày mua</p>
+                          </div>
+                          <div className="col-sm-9">
+                            <p>{convertToDateOnly(s.servicePackId.createAt)}</p>
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <p className="mb-0">Ngày hết hạn</p>
+                          </div>
+                          <div className="col-sm-9">
+                            <p>{convertToDateOnly(s.expiredTime)}</p>
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="row">
+                          <div className="col-sm-3">
+                            <p className="mb-0">Trạng thái</p>
+                          </div>
+                          <div className="col-sm-9">
+                            {s.status ? (
+                              <a className="text-success">Hoạt động</a>
+                            ) : (
+                              <a className="text-danger">Hết hạn</a>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </>
+              ))}
             </>
-          ))}
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </section>

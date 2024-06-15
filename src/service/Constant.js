@@ -7,6 +7,7 @@ export const API_GET_PATHS = {
   GET_MOVIE_SAME: `${BASE_URL}/movie/same/`,
   GET_FOLLOW: `${BASE_URL}/follow/`,
   GET_PROFILE: `${BASE_URL}/account/view/`,
+  GET_ALL_SERVICE_PACK:`${BASE_URL}/servicePack/findAll`
 };
 export const API_POST_PATHS = {
   FOLLOW_MOVIE: `${BASE_URL}/follow/save`,

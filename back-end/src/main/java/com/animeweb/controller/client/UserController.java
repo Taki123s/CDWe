@@ -40,7 +40,7 @@ public class UserController {
                 .map(Follow::getId)
                 .collect(Collectors.toList());
         UserDTOBuilder userDTO = new UserDTOBuilder(user.getId(), user.getRoles(), user.getUserName(), user.getAvatarPicture()
-                , user.getPassword(), user.getEmail(), user.getFullName(), user.getPhone(), user.getUserType(), user.getCreatedAt(), user.getUpdatedAt()
+                , "", user.getEmail(), user.getFullName(), user.getPhone(), user.getUserType(), user.getCreatedAt(), user.getUpdatedAt()
                 , user.getDeletedAt(), user.getStatus(), user.getExternalId(), user.getIsActive(), viewIdList, rateIDList, followIdList);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }

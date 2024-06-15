@@ -81,3 +81,14 @@ export const deleteChapter = (idMovie, idChapter) => {
     MOVIE_API_ADMIN_URL + `/${idMovie}/chapter/${idChapter}`
   );
 };
+
+export const getMovieById =(idMovie) =>{
+  return axiosInstance.get(MOVIE_API_BASE_URL+`/${idMovie}`)
+}
+export const editMovie = (idMovie,data) => {
+  return axiosInstance.put(MOVIE_API_ADMIN_URL + `/${idMovie}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

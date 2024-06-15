@@ -38,7 +38,7 @@ public class SecurityConfig {
     CustomJwtDecoder jwtDecoder;
     @Autowired
     CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
-    private final String[] PUBLIC_ENDPOINTS ={"/account/view/**", "/auth/**","/genres","/movie/**","/topView", "/static/imgs","/servicePack","/comment/**"};
+    private final String[] PUBLIC_ENDPOINTS ={"/account/view/**", "/auth/**","/genre","/genres","/movie/**","/topView", "/static/imgs","/servicePack","/comment/**"};
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource())).authorizeHttpRequests(request->
@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.PUT,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.DELETE,PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers("/").hasRole("ADMIN")
                         .anyRequest().authenticated()).oauth2ResourceServer(oauth2->oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder)
                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))).
                 oauth2Login(oauth2 -> oauth2

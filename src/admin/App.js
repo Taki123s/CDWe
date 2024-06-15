@@ -18,6 +18,8 @@ import { ListMovie } from "./movie/ListMovie";
 import { AddMovie } from "./movie/AddMovie";
 import { EditRole } from "./role/EditRole";
 import { RoleManager } from "./role/RoleManager";
+import { ListGenre } from "./movie/ListGenre";
+import { EditMovie } from "./movie/EditMovie";
 import "../css/bootstrap.min.css";
 import "./css/style.css";
 function App() {
@@ -36,6 +38,8 @@ function App() {
               <Route path="/admin/listSerie" element={<ListSerie />} />
               <Route path="/admin/listMovie" element={<ListMovie />} />
               <Route path="/admin/addMovie" element={<AddMovie />} />
+              <Route path="/admin/editMovie/:movieId" element={<EditMovie />} />
+              <Route path="/admin/listGenre" element={<ListGenre />} />
 
               <Route path="/admin/editRole/:roleId" element={<EditRole />} />
               <Route path="/admin/roleManager" element={<RoleManager />} />

@@ -36,6 +36,7 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     @Query("SELECT m FROM Movie m WHERE m.id != :movieId AND m.serie.id = :serieId AND m.status = true")
     List<Movie> findAllSeries(@Param("movieId") Long movieId, @Param("serieId") Long serieId);
     Boolean existsByNameAndStatus(String name,boolean status);
+    Boolean existsByNameAndStatusTrueAndIdNot(String name,Long id);
     Movie findMovieByIdAndStatusTrue(Long id);
 }
 

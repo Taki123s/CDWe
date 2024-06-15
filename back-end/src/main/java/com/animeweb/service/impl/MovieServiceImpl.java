@@ -154,6 +154,10 @@ public class MovieServiceImpl implements MovieService {
     public boolean findByName(String name) {
         return movieRepository.existsByNameAndStatus(name,true);
     }
+    @Override
+    public boolean findByNameNotThis(Long idMovie, String name) {
+        return movieRepository.existsByNameAndStatusTrueAndIdNot(name,idMovie);
+    }
 
     @Override
     public boolean existById(Long id) {
@@ -164,6 +168,8 @@ public class MovieServiceImpl implements MovieService {
     public Movie findById(Long id) {
         return movieRepository.findMovieByIdAndStatusTrue(id);
     }
+
+
 
     @Override
     public List<MovieDTO> findAllMovieSameSeries(Long movieId) {

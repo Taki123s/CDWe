@@ -1,56 +1,30 @@
 import React, { useEffect, useState } from "react";
-import defaultAvatar from "../images/defaultImg.jpg";
-import { getGenreList } from "../../service/CategoryServices";
-import DataTable from "react-data-table-component";
-import { getAllSerie } from "../../service/SerieServices";
-import { addMovie } from "../../service/MovieServices";
+import { useParams } from "react-router-dom";
+import { editMovie, getMovieById } from "../../service/MovieServices";
 import Swal from "sweetalert2";
 import { Loading } from "../../component/Loading";
+import DataTable from "react-data-table-component";
+import { getGenreList } from "../../service/CategoryServices";
+import { getAllSerie } from "../../service/SerieServices";
 import { useNavigate } from "react-router-dom";
 
-export const AddMovie = () => {
+export const EditMovie = () => {
   const navigate = useNavigate();
+  const { movieId } = useParams();
+  const [movie, setMovie] = useState({});
   const [avatar, setAvatar] = useState(null);
-  const [imageSrc, setImageSrc] = useState(defaultAvatar);
+  const [imageSrc, setImageSrc] = useState(movie.avatarMovie);
   const [isUploading, setIsUploading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    totalChapters: "",
-    vietnameseDescriptions: "",
-    englishDescriptions: "",
-    producer: "",
-    seriesDescriptions: "",
-    series: "",
-    trailer: "",
-    genres: [],
-  });
-  const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
+  const [formData, setFormData] = useState({});
+  const [genres, setGenres] = useState([]);
   const [series, setSeries] = useState([]);
-  useEffect(() => {
-    getGenreList()
-      .then((response) => {
-        setGenres(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    getAllSerie()
-      .then((response) => {
-        setSeries(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-  const handleGenreSelect = (genreId) => {
-    setSelectedGenres((prevSelectedGenres) => {
-      if (prevSelectedGenres.includes(genreId)) {
-        return prevSelectedGenres.filter((id) => id !== genreId);
-      } else {
-        return [...prevSelectedGenres, genreId];
-      }
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -63,6 +37,46 @@ export const AddMovie = () => {
       setAvatar(file);
     }
   };
+  useEffect(() => {
+    getMovieById(movieId)
+      .then((response) => {
+        const movieData = response.data;
+        setMovie(movieData);
+        setImageSrc(movieData.avatarMovie);
+        setFormData({
+          name: movieData.name,
+          totalChapters: movieData.totalChapters,
+          vietnameseDescriptions: movieData.vietnameseDescriptions,
+          englishDescriptions: movieData.englishDescriptions,
+          producer: movieData.producer,
+          seriesDescriptions: movieData.seriesDescriptions
+            ? movieData.seriesDescriptions
+            : "",
+          series: movieData.serie.id,
+          trailer: movieData.trailer,
+          genres: movieData.genres
+            ? movieData.genres.map((genre) => genre.id)
+            : [],
+        });
+        getGenreList()
+          .then((response) => {
+            setGenres(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        getAllSerie()
+          .then((response) => {
+            setSeries(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [movieId]);
   const submidAdd = () => {
     const formDt = new FormData();
     const {
@@ -74,6 +88,7 @@ export const AddMovie = () => {
       seriesDescriptions,
       series,
       trailer,
+      genres,
     } = formData;
     if (
       !name ||
@@ -100,7 +115,7 @@ export const AddMovie = () => {
     formDt.append("series", series);
     formDt.append("trailer", trailer);
     formDt.append("seriesDescriptions", seriesDescriptions);
-    formDt.append("genres", selectedGenres);
+    formDt.append("genres", genres);
     if (avatar == null) {
       Swal.fire({
         title: "Thông báo",
@@ -113,7 +128,7 @@ export const AddMovie = () => {
     }
     formDt.append("file", avatar);
     setIsUploading(true);
-    addMovie(formDt)
+    editMovie(movieId, formDt)
       .then((response) => {
         setIsUploading(false);
         Swal.fire({
@@ -122,10 +137,9 @@ export const AddMovie = () => {
           icon: "success",
           timer: 2000,
           showConfirmButton: false,
-        }).then(()=>{
+        }).then(() => {
           navigate("/admin/listMovie");
-        })
-        
+        });
       })
       .catch((error) => {
         setIsUploading(false);
@@ -138,21 +152,24 @@ export const AddMovie = () => {
         });
       });
   };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleGenreSelect = (genreId) => {
+    setFormData((prevState) => {
+      const updatedGenres = prevState.genres.includes(genreId)
+        ? prevState.genres.filter((id) => id !== genreId)
+        : [...prevState.genres, genreId];
+      return {
+        ...prevState,
+        genres: updatedGenres,
+      };
+    });
   };
-
   const columns = [
     {
       name: "Thêm",
       cell: (row) => (
         <input
           type="checkbox"
-          checked={selectedGenres.includes(row.id)}
+          checked={formData.genres.includes(row.id)}
           onChange={() => handleGenreSelect(row.id)}
         />
       ),
@@ -162,11 +179,10 @@ export const AddMovie = () => {
       selector: (row) => row.description,
     },
   ];
-
   return (
     <div>
       <Loading open={isUploading} />
-      <h1>Nhập phim mới</h1>
+      <h1>Chỉnh sửa phim</h1>
       <form className="needs-validation">
         <div className="row">
           <div className="col-lg-3">
@@ -326,6 +342,7 @@ export const AddMovie = () => {
                         className="form-control"
                         id="series"
                         name="series"
+                        value={formData.series}
                         onChange={handleChange}
                       >
                         <option value="">Chọn serie (nếu có)</option>

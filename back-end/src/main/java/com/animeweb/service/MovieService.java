@@ -22,4 +22,5 @@ public interface MovieService {
     boolean findByName(String name);
     boolean existById(Long id);
     Movie findById(Long id);
+    boolean findByNameNotThis(Long idMovie, String name);
 }

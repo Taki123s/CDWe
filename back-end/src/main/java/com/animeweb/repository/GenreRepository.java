@@ -13,4 +13,6 @@ public interface GenreRepository extends JpaRepository<Genre,Long> {
     List<Genre> findAllByStatus(boolean status);
     @Query(value = "SELECT g FROM Genre g WHERE g.id IN (:genList) and g.status=true")
     List<Genre> findGenresByIds(List<Long> genList);
+    Genre findGenresByIdAndStatusTrue(Long id);
+    Boolean existsByDescriptionAndStatusTrue(String description);
 }

@@ -330,14 +330,16 @@ export const ListMovie = () => {
       style: "word-wrap:unset;word-break:unset;",
       cell: (row) => (
         <div style={{ display: "flex" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ width: "50%" }}
-            onClick={() => handleEdit(row)}
-          >
-            Edit
-          </Button>
+          <Link to={`/admin/editMovie/${row.id}`}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ width: "50%" }}
+              onClick={() => handleEdit(row)}
+            >
+              Edit
+            </Button>
+          </Link>
           <Button
             variant="contained"
             style={{ marginLeft: "20px", width: "50%" }}
@@ -350,7 +352,6 @@ export const ListMovie = () => {
       ),
     },
   ];
-
 
   return (
     <div>

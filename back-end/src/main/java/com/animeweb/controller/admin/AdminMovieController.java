@@ -4,6 +4,7 @@ import com.animeweb.dto.chapter.ChapterDTO;
 import com.animeweb.dto.chapter.ChapterRequest;
 import com.animeweb.dto.movie.MovieAdd;
 import com.animeweb.dto.movie.MovieAdmin;
+import com.animeweb.dto.movie.MovieDTO;
 import com.animeweb.entities.Chapter;
 import com.animeweb.entities.Genre;
 import com.animeweb.entities.Movie;
@@ -166,6 +167,28 @@ public class AdminMovieController {
         uploadService.deleteChapter(idMovie,chapter.getOrdinal());
         chapterService.save(chapter);
         return new ResponseEntity<>("Xóa thành công",HttpStatus.CREATED);
+    }
+    @PutMapping("/{idMovie}")
+    public ResponseEntity<String> editMovie(@PathVariable Long idMovie,@ModelAttribute MovieAdd movieAdd) throws IOException {
+        boolean existName = movieService.findByNameNotThis(idMovie,movieAdd.getName());
+        if(existName) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tên phim đã tồn tại");
+        Movie movie = movieService.findById(idMovie);
+        Serie serie = serieService.findById(movieAdd.getSeries());
+        List<Genre> genres = genreService.findGenresByList(movieAdd.getGenres());
+        movie.setName(movieAdd.getName());
+        movie.setTotalChapters(movieAdd.getTotalChapters());
+        movie.setVietnameseDescriptions(movieAdd.getVietnameseDescriptions());
+        movie.setEnglishDescriptions(movieAdd.getEnglishDescriptions());
+        movie.setProducer(movieAdd.getProducer());
+        movie.setSerie(serie);
+        movie.setTrailer(movieAdd.getTrailer());
+        movie.setGenres(genres);
+        movie.setSeriesDescriptions(movieAdd.getSeriesDescriptions());
+        movie.setUpdateAt(new Date());
+        String avatar = uploadService.uploadMovieAvt(movieAdd.getFile(),movie.getId());
+        movie.setAvatarMovie(avatar);
+        movieService.save(movie);
+        return new ResponseEntity<>("Sửa thành công",HttpStatus.CREATED);
     }
 }
 

@@ -25,6 +25,10 @@ export const getMovieList = () => {
 export const findMovie = (id) => {
   return axios.get(MOVIE_API_BASE_URL + `/${id}`);
 };
+export const searchMovie=(term)=>{
+  return axios.get(MOVIE_API_BASE_URL+"/search?term="+`${term}`);
+}
+
 export const findMovieWatching = (movieId, token) => {
   return axiosInstance.get(MOVIE_API_BASE_URL + "/watching", {
     params: { movieId: movieId, token: token },

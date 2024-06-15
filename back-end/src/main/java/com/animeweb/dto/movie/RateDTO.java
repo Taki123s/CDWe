@@ -15,8 +15,14 @@ public class RateDTO {
     private Date createAt;
     private Date updateAt;
     private Date deleteAt;
-    private User userId;
-    private Movie movie;
+    private Long userId;
+    private Long movieId;
 
 
+    public RateDTO(Long userId, Double score, Long movie, Date createAt) {
+        this.userId = userId;
+        this.score = score;
+        this.movieId = movie;
+        this.createAt = createAt;
+    }
 }

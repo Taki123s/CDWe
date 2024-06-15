@@ -23,8 +23,12 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     List<Movie> findTopMoviesMonth();
     @Query("SELECT m FROM Movie m JOIN View v ON m.id = v.movie.id  WHERE YEAR(v.watchAt) = YEAR(CURDATE()) AND m.status = true ORDER BY SIZE(m.views) DESC")
     List<Movie> findTopMoviesYear();
+    @Query("select m from Movie m  join Serie s on m.serie.id=s.id")
+    List<Movie> findAllSeries(Long movieId);
     @Query("select m from Movie m  where m.status = true")
     List<Movie>findAll();
+    @Query("select m from Movie m  where m.id=:id and m.status = true")
+    Movie findMovieById(Long id);
     @Query("select m from Movie m  where m.status = true")
     Page<Movie> findAll(Pageable pageable);
     @Query("select m from Movie m where m.name like :term% and m.status = true")
@@ -38,5 +42,8 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     Boolean existsByNameAndStatus(String name,boolean status);
     Boolean existsByNameAndStatusTrueAndIdNot(String name,Long id);
     Movie findMovieByIdAndStatusTrue(Long id);
+    @Query("select  m from Follow  f join Movie  m on f.movie.id=m.id where  f.status=true and f.userId.id= :user_id  ")
+    List<Movie> findAllMovieFollowedByUserId(@Param("user_id") Long userId);
+
 }
 

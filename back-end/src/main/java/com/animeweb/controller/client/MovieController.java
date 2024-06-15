@@ -87,7 +87,7 @@ public class MovieController {
         } else if ("year".equals(type)) {
             List<MovieDTO> topMovies = movieService.getTopViewYear();
             response.put("topMovies", topMovies);
-        }        // Thêm thông tin khác vào map nếu cần
+        }
 
         return ResponseEntity.ok(response);
     }
@@ -96,5 +96,14 @@ public class MovieController {
     public ResponseEntity<List<MovieDTO>> getSeries(@PathVariable Long movieId) {
         return ResponseEntity.ok(movieService.findAllMovieSameSeries(movieId));
     }
+    @GetMapping("findAll")
+    public ResponseEntity<List<MovieDTO>> FindAllMovieFollowed(@RequestParam Long userId) {
+        List<MovieDTO> listMovies;
+        listMovies=movieService.findAllMovieFollowedByUserId(userId);
+        if(listMovies==null){
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(listMovies,HttpStatus.FOUND);
 
+    }
 }

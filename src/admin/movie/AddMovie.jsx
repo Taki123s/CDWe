@@ -113,6 +113,7 @@ export const AddMovie = () => {
     }
     formDt.append("file", avatar);
     setIsUploading(true);
+    console.log(formData)
     addMovie(formDt)
       .then((response) => {
         setIsUploading(false);

@@ -15,6 +15,7 @@ import com.animeweb.service.ChapterService;
 import com.animeweb.service.GenreService;
 import com.animeweb.service.MovieService;
 import com.animeweb.service.SerieService;
+import com.animeweb.service.ViewService;
 import com.animeweb.service.impl.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,7 @@ public class AdminMovieController {
     GenreService genreService;
     @Autowired
     ChapterService chapterService;
+    ViewService viewService;
     @GetMapping()
     @PreAuthorize("hasAuthority('view_movies') or hasRole('ADMIN')")
     public ResponseEntity<List<MovieAdmin>> getListMovie(){
@@ -76,6 +78,7 @@ public class AdminMovieController {
         uploadService.deleteFolderMovie(uploadService.getMovieFolderById(movie.getId()));
         return new ResponseEntity<>("Xóa thành công!",HttpStatus.CREATED);
     }
+
     @PreAuthorize("hasAuthority('view_chapters') or hasRole('ADMIN')")
     @GetMapping("/{idMovie}/chapters")
     public ResponseEntity<List<ChapterDTO>> getMovieChapters(@PathVariable Long idMovie){
@@ -189,6 +192,14 @@ public class AdminMovieController {
         movie.setAvatarMovie(avatar);
         movieService.save(movie);
         return new ResponseEntity<>("Sửa thành công",HttpStatus.CREATED);
+
+    @GetMapping("/viewed/month/top5")
+    public  ResponseEntity<List<Movie>>getTop5MovieViewedByMonth(){
+        return  ResponseEntity.ok(viewService.GetTop5MovieViewedByMonth());
+    }
+    @GetMapping("/viewed/year/top5")
+    public  ResponseEntity<List<Movie>>getTop5MovieViewedByYear(){
+        return  ResponseEntity.ok(viewService.GetTop5MovieViewedByYear());
     }
 }
 

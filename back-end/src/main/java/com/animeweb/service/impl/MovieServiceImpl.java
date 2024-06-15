@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 public class MovieServiceImpl implements MovieService {
-  @Autowired
+    @Autowired
     private MovieRepository movieRepository;
     @Autowired
     private GenreRepository genreRepository;
@@ -36,8 +36,8 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieAdmin> getAdminMovie() {
         List<Movie> movieList = movieRepository.findAll();
-        List<MovieAdmin> movieDTOList  = new ArrayList<>();
-        for(Movie movie : movieList){
+        List<MovieAdmin> movieDTOList = new ArrayList<>();
+        for (Movie movie : movieList) {
             movieDTOList.add(MovieMapper.mapToMovieAdmin(movie));
         }
         return movieDTOList;
@@ -46,12 +46,13 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieDTO> getAllMovie() {
         List<Movie> movieList = movieRepository.findAll();
-        List<MovieDTO> movieDTOList  = new ArrayList<>();
-        for(Movie movie : movieList){
+        List<MovieDTO> movieDTOList = new ArrayList<>();
+        for (Movie movie : movieList) {
             movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
         }
         return movieDTOList;
     }
+
     @Override
     public List<MovieDTO> index(int page, int size, String sortBy, boolean ascending) {
         if (sortBy == null || sortBy.isEmpty()) {
@@ -85,7 +86,6 @@ public class MovieServiceImpl implements MovieService {
     }
 
 
-
     @Override
     public MovieDTO findMovieById(Long movieId) {
         Movie movie = movieRepository.findById(movieId).orElse(null);
@@ -100,9 +100,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDTO> searchMovie(String name) {
-        List<Movie> movieList=movieRepository.findByNameContainingIgnoreCase(name,PageRequest.of(0, 5));
-        List<MovieDTO> movieDTOList  = new ArrayList<>();
-        for(Movie movie : movieList){
+        List<Movie> movieList = movieRepository.findByNameContainingIgnoreCase(name, PageRequest.of(0, 5));
+        List<MovieDTO> movieDTOList = new ArrayList<>();
+        for (Movie movie : movieList) {
             movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
         }
         return movieDTOList;
@@ -114,7 +114,7 @@ public class MovieServiceImpl implements MovieService {
         List<MovieDTO> movieDTOS = new ArrayList<>();
         if (topMovies.size() > 5) {
             topMovies = topMovies.subList(0, 5);
-            for (Movie m :topMovies
+            for (Movie m : topMovies
             ) {
                 movieDTOS.add(MovieMapper.mapToMovieDTO(m));
             }
@@ -128,7 +128,7 @@ public class MovieServiceImpl implements MovieService {
         List<MovieDTO> movieDTOS = new ArrayList<>();
         if (topMovies.size() > 5) {
             topMovies = topMovies.subList(0, 5);
-            for (Movie m :topMovies
+            for (Movie m : topMovies
             ) {
                 movieDTOS.add(MovieMapper.mapToMovieDTO(m));
             }
@@ -142,7 +142,7 @@ public class MovieServiceImpl implements MovieService {
         List<MovieDTO> movieDTOS = new ArrayList<>();
         if (topMovies.size() > 5) {
             topMovies = topMovies.subList(0, 5);
-            for (Movie m :topMovies
+            for (Movie m : topMovies
             ) {
                 movieDTOS.add(MovieMapper.mapToMovieDTO(m));
             }
@@ -152,7 +152,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public boolean findByName(String name) {
-        return movieRepository.existsByNameAndStatus(name,true);
+        return movieRepository.existsByNameAndStatus(name, true);
     }
     @Override
     public boolean findByNameNotThis(Long idMovie, String name) {
@@ -173,17 +173,26 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDTO> findAllMovieSameSeries(Long movieId) {
-        Movie movieS = movieRepository.findById(movieId).orElseThrow(()->new ResourceNotFoundException("Not found"));
-       if(movieS.getSerie()==null){
-           return new ArrayList<>() ;
-       }
-        List<Movie> movieList=movieRepository.findAllSeries(movieId,movieS.getSerie().getId());
-        List<MovieDTO> movieDTOList  = new ArrayList<>();
-        for(Movie movie : movieList){
+        Movie movieS = movieRepository.findById(movieId).orElseThrow(() -> new ResourceNotFoundException("Not found"));
+        if (movieS.getSerie() == null) {
+            return new ArrayList<>();
+        }
+        List<Movie> movieList = movieRepository.findAllSeries(movieId, movieS.getSerie().getId());
+        List<MovieDTO> movieDTOList = new ArrayList<>();
+        for (Movie movie : movieList) {
             movieDTOList.add(MovieMapper.mapToMovieSameSeries(movie));
         }
         return movieDTOList;
     }
 
+    @Override
+    public List<MovieDTO> findAllMovieFollowedByUserId(Long userId) {
+        List<MovieDTO> result = new ArrayList<>();
+        List<Movie> follows = movieRepository.findAllMovieFollowedByUserId(userId);
+        for (Movie f : follows) {
+            result.add(MovieMapper.mapToMovieDTO(f));
+        }
+        return result;
 
+    }
 }

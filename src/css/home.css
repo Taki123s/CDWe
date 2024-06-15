@@ -554,7 +554,7 @@ select {
     .container {
         max-width: 320px;
     }
-   
+
 }
 
 @media (min-width:360px) {
@@ -3304,20 +3304,20 @@ screen and (-ms-high-contrast:active) {
     background-color: #999
 }
 
-@font-face {
-    font-family: vuighe;
-    font-style: normal;
-    font-weight: 400;
-    src: url(/src/css/vuighe.eot);
-    src: url(/src/css/vuighe.eot) format("embedded-opentype"), url(/src/css/vuighe.ttf) format("truetype"), url(/src/css/vuighe.woff) format("woff"), url("https://vuighe3.com/fonts/vuighe.svg?3dd912a4b1fe9d4531feee14fb9d1744#vuighe") format("svg")
-}
+/*@font-face {*/
+/*    font-family: AnimeWeb;*/
+/*    font-style: normal;*/
+/*    font-weight: 400;*/
+/*    src: url(/src/css/AnimeWeb.eot);*/
+/*    src: url(/src/css/AnimeWeb.eot) format("embedded-opentype"), url(/src/css/AnimeWeb.ttf) format("truetype"), url(/src/css/AnimeWeb.woff) format("woff"), url("https://AnimeWeb3.com/fonts/AnimeWeb.svg?3dd912a4b1fe9d4531feee14fb9d1744#AnimeWeb") format("svg")*/
+/*}*/
 
 [class*=" icon-"],
 [class^=icon-] {
     speak: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: vuighe !important;
+    font-family: AnimeWeb !important;
     font-style: normal;
     font-variant: normal;
     font-weight: 400;
@@ -5908,7 +5908,7 @@ header a{
     text-decoration: none!important;
 }
 .navbar-user-body button{
-background: transparent!important;    
+background: transparent!important;
 }
 .categories-dropdown{
     display: flex;
@@ -5943,7 +5943,7 @@ background: transparent!important;
     align-items: center;
     z-index: 1000;
   }
-  
+
   .modal-content {
     background: #f9f9f9;
     padding: 20px;
@@ -5953,12 +5953,12 @@ background: transparent!important;
     width: 100%;
     text-align: center;
   }
-  
+
   .modal-content h2 {
     margin-bottom: 20px;
     color: #333; /* Màu cho tiêu đề */
   }
-  
+
   .modal-content input {
     width: calc(100% - 20px);
     padding: 10px;
@@ -5966,7 +5966,7 @@ background: transparent!important;
     border: 1px solid #ddd;
     border-radius: 4px;
   }
-  
+
   .modal-content button {
     padding: 10px 20px;
     margin: 5px;
@@ -5974,12 +5974,12 @@ background: transparent!important;
     border-radius: 4px;
     cursor: pointer;
   }
-  
+
   .swal2-confirm {
     background-color: #3085d6; /* Màu nút Gửi mã */
     color: white;
   }
-  
+
   .swal2-cancel {
     background-color: #aaa; /* Màu nút Đóng */
     color: white;

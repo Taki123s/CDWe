@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import '../css/bootstrap.min.css'; // Import Bootstrap CSS
+
 
 const Topview = () => {
 

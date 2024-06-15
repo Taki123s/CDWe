@@ -23,4 +23,5 @@ public interface MovieService {
     boolean existById(Long id);
     Movie findById(Long id);
     boolean findByNameNotThis(Long idMovie, String name);
+    List<MovieDTO> findAllMovieFollowedByUserId(Long userId);
 }

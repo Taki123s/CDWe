@@ -3,8 +3,8 @@
   background-color: white !important;
 }
 
-span {
-  color: black !important;
+.anime__details__widget span {
+  color: black!important;
 }
 
 .anime__details__widget ul li span {
@@ -77,7 +77,7 @@ span {
 
 .image-container {
   position: relative;
-  padding-bottom: 5%;
+
 }
 
 .movie-image {
@@ -130,4 +130,13 @@ button.setValue.btn.btn-outline-info.btn-reply {
 }
 .hoverWhite:hover{
   color: white!important;
+}
+h1, h2, h3, h4, h5, h6{
+  filter: none !important;
+}
+.anime__review__item__text {
+  background: #fff !important;
+}
+.movie_name_comment{
+  color: black !important;
 }

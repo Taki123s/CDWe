@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+
 import java.util.List;
 
 @Configuration
@@ -32,6 +33,8 @@ import java.util.List;
 public class SecurityConfig {
     @Autowired
     UserServiceImpl userService;
+    @Autowired
+    CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
     @Autowired
     JwtAuthEntryPoint authEntryPoint;
     @Autowired
@@ -52,6 +55,7 @@ public class SecurityConfig {
                 oauth2Login(oauth2 -> oauth2
                 .successHandler(customOAuth2SuccessHandler)
                 .permitAll());
+
         return http.build();
     }
     @Bean

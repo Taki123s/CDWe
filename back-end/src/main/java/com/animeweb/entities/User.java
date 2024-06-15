@@ -1,21 +1,21 @@
 package com.animeweb.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-@Data
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -57,7 +57,8 @@ public class User {
     private Boolean authenticated = false;
     @Column(name="externalId")
     private String externalId;
-
+    @Column(name = "isActive", nullable = false, columnDefinition = "TINYINT(1)")
+    private Boolean isActive = true;
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
     private List<View> views = new ArrayList<>();
     @OneToMany(mappedBy = "userId",cascade = CascadeType.ALL)
@@ -112,6 +113,10 @@ public class User {
         this.views = views;
         this.rates = rates;
         this.follows = follows;
+    }
+
+    public User(Long userId) {
+        this.id = userId;
     }
 
     public List<Role> getRoleDetails() {

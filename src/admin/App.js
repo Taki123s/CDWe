@@ -3,6 +3,19 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import AddUserForm from "./user/AddUser";
 import "boxicons";
+import HeaderAdmin from "./HeaderAdmin";
+import "./css/main.css";
+import "./images/favicon.ico";
+import "./css/typography.css";
+import "./css/responsive.css";
+import ServicePacks from "./component/packed-service";
+import Logs from "./component/log";
+import UserPacked from "./component/user-packed";
+import "../css/bootstrap.min.css";
+// import "line-awesome/dist/line-awesome/css/line-awesome.min.css";
+// import "remixicon/fonts/remixicon.css";
+import "./css/style.css";
+import "boxicons";
 import "./css/main.css";
 import "./images/favicon.ico";
 import "./css/typography.css";
@@ -16,11 +29,19 @@ import { ChapterMovie } from "./movie/ChapterMovie";
 import { ListSerie } from "./movie/ListSerie";
 import { ListMovie } from "./movie/ListMovie";
 import { AddMovie } from "./movie/AddMovie";
+
 import { EditRole } from "./role/EditRole";
 import { RoleManager } from "./role/RoleManager";
 import { ListGenre } from "./movie/ListGenre";
 import { EditMovie } from "./movie/EditMovie";
 import "../css/bootstrap.min.css";
+
+import UserAdd from "./user/AddUser";
+import UserList from "./user/ListUser";
+import EditUser from "./user/EditUser";
+import DashBoard from "./Dashboard";
+import "./css/bootstrap.min.css";
+
 import "./css/style.css";
 function App() {
   return (
@@ -35,14 +56,21 @@ function App() {
                 path="/admin/chapterList/:idMovie"
                 element={<ChapterMovie />}
               />
-              <Route path="/admin/listSerie" element={<ListSerie />} />
               <Route path="/admin/listMovie" element={<ListMovie />} />
               <Route path="/admin/addMovie" element={<AddMovie />} />
               <Route path="/admin/editMovie/:movieId" element={<EditMovie />} />
               <Route path="/admin/listGenre" element={<ListGenre />} />
-
               <Route path="/admin/editRole/:roleId" element={<EditRole />} />
               <Route path="/admin/roleManager" element={<RoleManager />} />
+              <Route path="/admin/user-packed" element={<UserPacked />} />
+              <Route path="/admin/upload" element={<AddChapter />} />
+              <Route path="/admin/listSerie" element={<ListSerie />} />
+              <Route path="/admin/packed-service" element={<ServicePacks />} />
+              <Route path="/admin/log" element={<Logs />} />
+              <Route path="/admin/adduser" element={<UserAdd />} />
+              <Route path="/admin/UserList" element={<UserList />} />
+              <Route path="/admin/EditUser/:id" element={<EditUser />} />
+              <Route path="/admin/DashBoard" element={<DashBoard />} />
             </Routes>
           </div>
         </div>

@@ -1,15 +1,16 @@
 package com.animeweb.controller.admin;
 
+import com.animeweb.dto.oauth.PermissionDTO;
 import com.animeweb.dto.oauth.RoleDTO;
-import com.animeweb.enums.Role;
+import com.animeweb.dto.oauth.RoleRequest;
+import com.animeweb.entities.Role;
+import com.animeweb.mapper.RoleMapper;
 import com.animeweb.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,4 +23,72 @@ public class AdminRoleController {
     public ResponseEntity<List<RoleDTO>> getAllRole(){
         return new ResponseEntity<>(roleService.getAllRole(), HttpStatus.OK);
     }
-}
+    @GetMapping("/{roleId}")
+    public ResponseEntity<RoleDTO> getRoleById(@PathVariable Long roleId){
+        RoleDTO role = roleService.findRoleDetailById(roleId);
+        if(role==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Role không tồn tại!");
+        return new ResponseEntity<>(role,HttpStatus.OK);
+    }
+    @GetMapping("/{roleId}/permissions")
+    public ResponseEntity<List<PermissionDTO>> getEnablePermission(@PathVariable Long roleId){
+        if(roleService.findRoleDetailById(roleId)==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Role không tồn tại!");
+        List<PermissionDTO> permissionDTOS = roleService.getEnablePermission(roleId);
+        return new ResponseEntity<>(permissionDTOS,HttpStatus.OK);
+    }
+    @PutMapping("/{roleId}/{permissionId}")
+    public ResponseEntity<String> addRolePermission(@PathVariable Long roleId, @PathVariable Long permissionId){
+        if(roleService.findRoleDetailById(roleId)==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Role không tồn tại!");
+        if(roleService.findPermissionById(permissionId)==null)throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Quyền hạn không tồn tại!");
+        if(roleService.addRolePermission(roleId,permissionId)){
+            return new ResponseEntity<>("Đã thêm thành công",HttpStatus.CREATED);
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Thêm thất bại, có vẻ như Role hoặc quyền hạn không tồn tại!");
+        }
+    }
+    @PutMapping("/{roleId}")
+    public ResponseEntity<String> editRole(@PathVariable Long roleId,@RequestBody RoleRequest roleRequest){
+        if(roleService.findRoleDetailById(roleId)==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Role không tồn tại!");
+        if(roleService.findContainsName(roleId,roleRequest.getName())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tên Role đã tồn tại!");
+        Role role = roleService.findRoleById(roleId);
+        role.setName(roleRequest.getName());
+        role.setDescription(roleRequest.getDescription());
+        roleService.save(role);
+        return new ResponseEntity<>("Chỉnh sửa thành công!",HttpStatus.CREATED);
+    }
+    @PostMapping()
+    public ResponseEntity<RoleDTO> addRole(@RequestBody RoleRequest roleRequest){
+        if(roleService.findContainsName(roleRequest.getName())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tên Role đã tồn tại!");
+        Role role = new Role();
+        role.setName(roleRequest.getName());
+        role.setDescription(role.getDescription());
+        roleService.save(role);
+
+        return new ResponseEntity<>(RoleMapper.mapToDTO(role),HttpStatus.CREATED);
+    }
+    @DeleteMapping("/{roleId}/{permissionId}")
+    public ResponseEntity<String> deleteRolePermission(@PathVariable Long roleId, @PathVariable Long permissionId){
+        if(roleService.findRoleDetailById(roleId)==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Role không tồn tại!");
+        if(roleService.findPermissionById(permissionId)==null)throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Quyền hạn không tồn tại!");
+        if(roleService.deleteRolePermission(roleId,permissionId)){
+            return new ResponseEntity<>("Đã xóa thành công",HttpStatus.CREATED);
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Không tìm thấy quyền hạn tương ứng trong Role!");
+        }
+    }
+
+    @DeleteMapping("/delete/userRole/{roleId}/{userId}")
+    public ResponseEntity<String> deleteUserRole(@PathVariable Long roleId,@PathVariable Long userId){
+            if(roleService.deteleUserRole(roleId,userId)) {
+                return new ResponseEntity<>("Đã xóa role " + roleId + " cho user " + userId + " thành công!", HttpStatus.CREATED);
+            }else{
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Role của user này không tồn tại!");
+            }
+    }
+    @DeleteMapping("/delete/{roleId}")
+    public ResponseEntity<String> deleteRole(@PathVariable Long roleId){
+            Role role = roleService.findRoleById(roleId);
+            if(role==null)  throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Role không tồn tại!");
+            role.setStatus(false);
+            roleService.save(role);
+            return new ResponseEntity<>("Đã xóa role "+roleId+" thành công!",HttpStatus.CREATED);
+    }}

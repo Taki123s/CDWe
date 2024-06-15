@@ -16,7 +16,6 @@ import { ChapterMovie } from "./movie/ChapterMovie";
 import { ListSerie } from "./movie/ListSerie";
 import { ListMovie } from "./movie/ListMovie";
 import { AddMovie } from "./movie/AddMovie";
-import { AddRole } from "./role/AddRole";
 import { EditRole } from "./role/EditRole";
 import { RoleManager } from "./role/RoleManager";
 import "../css/bootstrap.min.css";
@@ -38,8 +37,7 @@ function App() {
               <Route path="/admin/listMovie" element={<ListMovie />} />
               <Route path="/admin/addMovie" element={<AddMovie />} />
 
-              <Route path="/admin/addRole" element={<AddRole />} />
-              <Route path="/admin/editRole" element={<EditRole />} />
+              <Route path="/admin/editRole/:roleId" element={<EditRole />} />
               <Route path="/admin/roleManager" element={<RoleManager />} />
             </Routes>
           </div>

@@ -96,7 +96,7 @@ export const HeaderPage = () => {
       .catch((error) => {
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data.message,
+          text: error.response.data?.message||"Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -315,7 +315,7 @@ export const HeaderPage = () => {
       })
       .catch((error) => {
         setcorrectUserName(false);
-        errorUserName.innerText = error.response.data;
+        errorUserName.innerText = error.response?.data || "Unknown error occurred";
       });
   };
   const handleMouseEnter = () => {

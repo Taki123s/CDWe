@@ -19,8 +19,11 @@ import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
@@ -40,14 +43,14 @@ public class AuthController {
     @GetMapping("/username")
     public ResponseEntity<String> checkUserName(@RequestParam String userName){
         boolean isExist = userService.existUserName(userName);
-        if(isExist) return new ResponseEntity<>("Username exist!",HttpStatus.BAD_REQUEST);
+        if(isExist) return new ResponseEntity<>("Username đã tồn tại",HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/email")
     public ResponseEntity<String> sendEmail(@RequestBody RegisterDTO registerDto){
         boolean isExist = userService.existEmail(registerDto.getEmail());
-        if(isExist) return new ResponseEntity<>("Email exist!",HttpStatus.BAD_REQUEST);
-        if(userService.existUserName(registerDto.getUserName())) return new ResponseEntity<>("Username is exist", HttpStatus.BAD_REQUEST);
+        if(isExist) return new ResponseEntity<>("Email đã được đăng ký",HttpStatus.BAD_REQUEST);
+        if(userService.existUserName(registerDto.getUserName())) return new ResponseEntity<>("Username đã tồn tại",HttpStatus.BAD_REQUEST);
         User user = UserMapper.mapToRegisterUser(registerDto);
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         Role role = roleRepository.findByNameAndStatusTrue("USER");
@@ -66,13 +69,13 @@ public class AuthController {
     @PostMapping( "/register")
     public ResponseEntity<String> register(@RequestBody VerifyUser verifyUser){
         boolean isExist = userService.existEmail(verifyUser.getEmail());
-        if(isExist) return new ResponseEntity<>("Email exist!",HttpStatus.BAD_REQUEST);
-        if(userService.existUserName(verifyUser.getUserName())) return new ResponseEntity<>("Username is exist", HttpStatus.BAD_REQUEST);
+        if(isExist) return new ResponseEntity<>("Email đã được đăng ký!",HttpStatus.BAD_REQUEST);
+        if(userService.existUserName(verifyUser.getUserName()))  return new ResponseEntity<>("Username đã tồn tại",HttpStatus.BAD_REQUEST);
         boolean isSuccess = userService.verifyUser(verifyUser);
         if(isSuccess){
             return new ResponseEntity<>("User registered success!",HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("Verify code is not valid hoặc đã hết hạn",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Verify code is not valid hoặc đã hết hạn",HttpStatus.BAD_REQUEST);
         }
     }
     @PostMapping("/logout")
@@ -82,7 +85,12 @@ public class AuthController {
     }
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO){
-        String token = userService.authenticate(loginDTO);
+        User user = userService.findByUserName(loginDTO.getUserName());
+        if(user ==null) return new ResponseEntity<>(new AuthResponseDTO("Username không tồn tại"),HttpStatus.NOT_FOUND);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        boolean authenticated = passwordEncoder.matches(loginDTO.getPassword(),user.getPassword());
+        if(!authenticated) return new ResponseEntity<>(new AuthResponseDTO("Sai mật khẩu"),HttpStatus.NOT_FOUND);
+        String token = userService.authenticate(user);
         return new ResponseEntity<>(new AuthResponseDTO(token,true),HttpStatus.OK);
     }
     @PostMapping("/introspect")

@@ -23,7 +23,7 @@ export const ListMovie = () => {
       .catch((error) => {
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data.message,
+          text: error.response?.data.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -70,7 +70,7 @@ export const ListMovie = () => {
             setIsUploading(false);
             Swal.fire({
               title: "Lỗi",
-              text: error.response.data || "Lỗi kết nối",
+              text: error.response?.data.message || "Unknown error occurred",
               icon: "error",
               timer: 2000,
               showConfirmButton: false,
@@ -351,10 +351,6 @@ export const ListMovie = () => {
     },
   ];
 
-  const paginationComponentOptions = {
-    selectAllRowsItem: true,
-    selectAllRowsItemText: "ALL",
-  };
 
   return (
     <div>
@@ -366,7 +362,6 @@ export const ListMovie = () => {
         defaultSortFieldId={1}
         sortIcon={<ArrowDownward />}
         pagination
-        paginationComponentOptions={paginationComponentOptions}
       />
       <Modal
         isOpen={isOpen}

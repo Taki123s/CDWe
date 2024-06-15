@@ -126,7 +126,7 @@ export const AddMovie = () => {
         setIsUploading(false);
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data,
+          text: error.response?.data.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,

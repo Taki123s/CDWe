@@ -14,6 +14,7 @@ import com.animeweb.security.LogOutRequest;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.util.Collection;
@@ -75,11 +77,10 @@ public class UserServiceImpl implements UserDetailsService {
         Date expiredDate = verified.getJWTClaimsSet().getExpirationTime();
         expiredTokenRepository.save(new ExpiredToken(jit,expiredDate));
     }
-    public String authenticate(LoginDTO loginDTO){
-        User user = userRepository.findByUserName(loginDTO.getUserName()).orElseThrow(()-> new RuntimeException("User not exits"));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean authenticated = passwordEncoder.matches(loginDTO.getPassword(),user.getPassword());
-        if(!authenticated) throw new RuntimeException("Wrong password!");
+    public User findByUserName(String userName){
+        return userRepository.findByUserName(userName).orElse(null);
+    }
+    public String authenticate(User user){
         return jwtGenerator.generateToken(user);
     }
     public boolean verifyUser(VerifyUser verifyUser) {

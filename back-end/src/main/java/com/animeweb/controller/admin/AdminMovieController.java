@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class AdminMovieController {
     @PreAuthorize("hasAuthority('add_movie') or hasRole('ADMIN')")
     public ResponseEntity<String> addMovie(@ModelAttribute MovieAdd movieAdd) throws IOException {
         boolean existName = movieService.findByName(movieAdd.getName());
-        if(existName) return new ResponseEntity<>("Tên phim đã tồn tại",HttpStatus.NOT_FOUND);
+        if(existName) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tên phim đã tồn tại");
         Movie movie = MovieMapper.mapToMovie(movieAdd);
         Serie serie = serieService.findById(movieAdd.getSeries());
         List<Genre> genres = genreService.findGenresByList(movieAdd.getGenres());
@@ -68,7 +69,7 @@ public class AdminMovieController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteMovie(@PathVariable Long id) throws Exception {
         Movie movie = movieService.findById(id);
-        if(movie == null) return new ResponseEntity<>("Phim không tồn tại! Vui lòng thử lại!",HttpStatus.NOT_FOUND);
+        if(movie == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Phim không tồn tại, vui lòng thử lại!");
         movie.setStatus(false);
         movieService.save(movie);
         uploadService.deleteFolderMovie(uploadService.getMovieFolderById(movie.getId()));
@@ -84,17 +85,18 @@ public class AdminMovieController {
     @PostMapping("/{idMovie}/chapters")
     public ResponseEntity<List<ChapterDTO>> addChapter(@PathVariable Long idMovie, @ModelAttribute ChapterRequest chapterAdd, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
-            throw new RuntimeException("Dữ liệu không hợp lệ [ordinal] kiểu số, [link] kiểu ký tự ");
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Dữ liệu không hợp lệ [ordinal] kiểu số, [link] kiểu ký tự ");
         }
         Movie movie = movieService.findById(idMovie);
-        if(movie==null) throw new RuntimeException("Phim không tồn tại");
+        if(movie==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Phim không tồn tại");
+
         boolean isExistOrdinal = false;
         int type = chapterAdd.getType();
         Chapter newChapter;
         List<ChapterDTO> response = new ArrayList<>();
         if(type==ChapterRequest.URL || type == ChapterRequest.VIDEO){
             isExistOrdinal =  chapterService.isExistOrdinal(idMovie,chapterAdd.getOrdinal());
-            if(isExistOrdinal) throw new RuntimeException("Tập phim số "+chapterAdd.getOrdinal()+" này đã có");
+            if(isExistOrdinal) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tập phim số "+chapterAdd.getOrdinal()+" này đã có");
             newChapter = new Chapter();
             newChapter.setOrdinal(chapterAdd.getOrdinal());
             newChapter.setMovie(movie);
@@ -113,7 +115,7 @@ public class AdminMovieController {
                 String link = entry.getValue();
                 isExistOrdinal =  chapterService.isExistOrdinal(idMovie,ordinal);
                 if(isExistOrdinal){
-                    throw new RuntimeException("Tập phim số "+ordinal+" này đã có");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tập phim số "+ordinal+" này đã có");
                 }
                 newChapter = new Chapter();
                 newChapter.setMovie(movie);
@@ -130,10 +132,10 @@ public class AdminMovieController {
     @PutMapping("/{idMovie}/chapter/{idChapter}/edit")
     public ResponseEntity<ChapterDTO> editChapter(@PathVariable Long idMovie,@PathVariable Long idChapter,@RequestBody ChapterRequest chapterEdit){
         Chapter chapter = chapterService.findById(idChapter);
-        if(chapter==null) throw new RuntimeException("Tập không tồn tại");
+        if(chapter==null)  throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Tập không tồn tại!");
         if(chapterEdit.getOrdinal()!=chapter.getOrdinal()){
           boolean isExistOrdinal =  chapterService.isExistOrdinal(idMovie,idChapter,chapterEdit.getOrdinal());
-          if(isExistOrdinal) throw new RuntimeException("Index này đã có");
+          if(isExistOrdinal) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tập này đã tồn tại!");
         }
         chapter.setOrdinal(chapterEdit.getOrdinal());
         chapter.setLink(chapterEdit.getLink());
@@ -145,10 +147,10 @@ public class AdminMovieController {
     @PutMapping("/{idMovie}/chapter/{idChapter}/editFile")
     public ResponseEntity<ChapterDTO> editChapterFile(@PathVariable Long idMovie, @PathVariable Long idChapter, @ModelAttribute ChapterRequest chapterEdit) throws Exception {
         Chapter chapter = chapterService.findById(idChapter);
-        if(chapter==null) throw new RuntimeException("Tập không tồn tại");
+        if(chapter==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Tập không tồn tại!");
         if(chapterEdit.getOrdinal()!=chapter.getOrdinal()){
             boolean isExistOrdinal =  chapterService.isExistOrdinal(idMovie,idChapter,chapterEdit.getOrdinal());
-            if(isExistOrdinal) throw new RuntimeException("Index này đã có");
+            if(isExistOrdinal) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tập này đã tồn tại!");
         }
         String newLink = uploadService.uploadChapter(chapterEdit.getVideo(),idMovie,chapter.getOrdinal());
         chapter.setUpdateAt(new Date());

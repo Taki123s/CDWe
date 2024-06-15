@@ -61,7 +61,7 @@ export const ChapterMovie = () => {
       .catch((error) => {
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data.message,
+          text: error.response?.data.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -153,7 +153,7 @@ export const ChapterMovie = () => {
         .catch((error) => {
           Swal.fire({
             title: "Lỗi",
-            text: error.response.data.message,
+            text: error.response?.data.message || "Unknown error occurred",
             icon: "error",
             timer: 2000,
             showConfirmButton: false,
@@ -206,7 +206,7 @@ export const ChapterMovie = () => {
           }));
           Swal.fire({
             title: "Lỗi",
-            text: error.response.data.message,
+            text: error.response?.data.message || "Unknown error occurred",
             icon: "error",
             timer: 2000,
             showConfirmButton: false,
@@ -267,7 +267,7 @@ export const ChapterMovie = () => {
           setIsUploading(false);
           Swal.fire({
             title: "Lỗi",
-            text: error.response.data.message,
+            text: error.response?.data.message || "Unknown error occurred",
             icon: "error",
             timer: 2000,
             showConfirmButton: false,
@@ -308,7 +308,7 @@ export const ChapterMovie = () => {
           setIsUploading(false);
           Swal.fire({
             title: "Lỗi",
-            text: error.response.data.message,
+            text: error.response?.data.message || "Unknown error occurred",
             icon: "error",
             timer: 2000,
             showConfirmButton: false,
@@ -581,7 +581,7 @@ export const ChapterMovie = () => {
             setIsUploading(false);
             Swal.fire({
               title: "Lỗi",
-              text: error.response.data,
+              text: error.response?.data.message || "Unknown error occurred",
               icon: "error",
               timer: 2000,
               showConfirmButton: false,

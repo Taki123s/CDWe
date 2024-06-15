@@ -5,7 +5,6 @@ const AUTH_API_BASE_URL = "http://localhost:8080/auth";
 
 const axiosInstance = axios.create({
 });
-
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get('jwt_token');
@@ -18,7 +17,7 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-export const login = (user)=>axiosInstance.post(AUTH_API_BASE_URL+"/login",user)
+export const login = (user)=>axios.post(AUTH_API_BASE_URL+"/login",user)
 export const logout = (token) => axiosInstance.post(AUTH_API_BASE_URL+"/logout",token)
 export const register = (verifyUser) =>axios.post(AUTH_API_BASE_URL+"/register",verifyUser)
 export const checkUsername = (username) => axios.get(AUTH_API_BASE_URL+"/username",{params:{userName:username}})

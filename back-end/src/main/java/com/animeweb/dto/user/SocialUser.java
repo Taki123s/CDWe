@@ -31,6 +31,4 @@ public class SocialUser {
     private List<Rate> rates;
     private List<Follow> follows;
 
-    public SocialUser(String userName, String avatarPicture, String password, String email, String fullName, String phone, Integer userType, Date createdAt, Date updatedAt, Date deletedAt, Boolean status, String externalId, List<View> views, List<Rate> rates, List<Follow> follows) {
-    }
 }

@@ -29,10 +29,14 @@ const EditServiceModal = ({ open, handleClose, service, handleSave }) => {
         const reader = new FileReader();
         reader.onloadend = () => {
             setImagePreview(reader.result);
-
         };
-        setEditedService((prev) => ({ ...prev, service_img: file }));
         reader.readAsDataURL(file);
+    };
+
+    const handleSaveClick = () => {
+        const newService = {id: editedService.id , service_type:  editedService.service_type, price: editedService.price,file:selectedImage , createdAt: editedService.createdAt};
+
+        handleSave(newService);
     };
 
     return (
@@ -98,7 +102,7 @@ const EditServiceModal = ({ open, handleClose, service, handleSave }) => {
                         onChange={handleImageChange}
                     />
                 </Button>
-                <Button onClick={() => handleSave(editedService)} variant="contained" color="primary" sx={{ mt: 2 }}>
+                <Button onClick={handleSaveClick} variant="contained" color="primary" sx={{ mt: 2 }}>
                     Save
                 </Button>
             </Box>

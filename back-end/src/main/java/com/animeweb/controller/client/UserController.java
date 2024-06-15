@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
     private UserRepository userRepository;
 
     @GetMapping("/view/{id}")

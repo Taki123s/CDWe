@@ -25,7 +25,7 @@ const NewServiceModal = ({ open, handleClose, handleSave }) => {
     const [selectedImage, setSelectedImage] = useState('');
     const [imagePreview, setImagePreview] = useState( '');
     const handleSubmit = () => {
-        const newService = { service_type: serviceType, price: parseFloat(price),file:selectedImage};
+        const newService = {service_type: serviceType, price: parseFloat(price),file:selectedImage};
         handleSave(newService);
     };
     const handleImageChange = (e) => {

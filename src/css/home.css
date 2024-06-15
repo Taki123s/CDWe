@@ -3304,20 +3304,20 @@ screen and (-ms-high-contrast:active) {
     background-color: #999
 }
 
-@font-face {
-    font-family: vuighe;
-    font-style: normal;
-    font-weight: 400;
-    src: url(/src/css/vuighe.eot);
-    src: url(/src/css/vuighe.eot) format("embedded-opentype"), url(/src/css/vuighe.ttf) format("truetype"), url(/src/css/vuighe.woff) format("woff"), url("https://vuighe3.com/fonts/vuighe.svg?3dd912a4b1fe9d4531feee14fb9d1744#vuighe") format("svg")
-}
+/*@font-face {*/
+/*    font-family: AnimeWeb;*/
+/*    font-style: normal;*/
+/*    font-weight: 400;*/
+/*    src: url(/src/css/AnimeWeb.eot);*/
+/*    src: url(/src/css/AnimeWeb.eot) format("embedded-opentype"), url(/src/css/AnimeWeb.ttf) format("truetype"), url(/src/css/AnimeWeb.woff) format("woff"), url("https://AnimeWeb3.com/fonts/AnimeWeb.svg?3dd912a4b1fe9d4531feee14fb9d1744#AnimeWeb") format("svg")*/
+/*}*/
 
 [class*=" icon-"],
 [class^=icon-] {
     speak: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: vuighe !important;
+    font-family: AnimeWeb !important;
     font-style: normal;
     font-variant: normal;
     font-weight: 400;

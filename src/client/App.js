@@ -24,7 +24,10 @@ import ExecutePaymentComponent from "../component/ExecutePaymentComponent";
 import Follow from "../page/Follow";
 import History from "../component/history-packed";
 import Profile from "../page/ProfilePage"
-
+import AboutUs from "../component/about_us"
+import AboutPayment from "../component/payment_information"
+import ForgotPassword from '../component/forgotPassword';
+import ResetPassword from '../component/resetPassword';
 function IndexApp() {
   return (
     <Router>
@@ -34,6 +37,10 @@ function IndexApp() {
         <Route path="/movie/:id" element={<MovieDetail />} />
         <Route path="/item" element={<ProductItem />} />
         <Route path="/history-packed" element={<History />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/about-payment" element={<AboutPayment />} />
+        <Route path="/forgot-password" element={<ForgotPassword/>} />
+        <Route path="/reset-password/:token" element={<ResetPassword/>} />
         <Route
           path="/categories/:idGenre/:nameGenre"
           element={<CategoriesPage />}

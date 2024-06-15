@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
-const MOVIE_API_BASE_URL = "http://localhost:8080/servicePack";
+const MOVIE_API_BASE_URL = "http://localhost:8080/admin/servicePack";
 
 const axiosInstance = axios.create({
     baseURL: MOVIE_API_BASE_URL

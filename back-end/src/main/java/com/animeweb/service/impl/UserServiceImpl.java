@@ -55,6 +55,11 @@ public class UserServiceImpl implements UserDetailsService {
     public boolean existEmail(String email) {
         return userRepository.existByEmail(email);
     }
+    public User findUserByEmail(String email){
+        int userType = 1;
+        boolean status = true;
+        return userRepository.findByEmailAndUserTypeAndStatus(email, userType, status);
+    }
     public void saveUser(User user){
         userRepository.save(user);
     }

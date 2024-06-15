@@ -22,6 +22,7 @@ import java.util.UUID;
 
 @Component
 public class JwtGenerator {
+
     @Autowired
     ExpiredTokenRepository expiredTokenRepository;
     public String generateToken(User user) {
@@ -47,6 +48,8 @@ public class JwtGenerator {
             throw new RuntimeException(e);
         }
     }
+
+
     private String buildScopeUser(List<Role> roles){
         StringJoiner stringJoiner = new StringJoiner(" ");
         if (!CollectionUtils.isEmpty(roles)){

@@ -10,7 +10,7 @@ import java.util.List;
 public interface ServicePackService {
     List<ServicePackDTO> getListServicePack();
     ServicePackDTO getById(long id);
-    void save(long id,ServicePack servicePack);
+    void save(ServicePack servicePack);
     ServicePackAdmin createServicePack(ServicePack servicePack);
     void updateServicePack(Long id) throws Exception;
 

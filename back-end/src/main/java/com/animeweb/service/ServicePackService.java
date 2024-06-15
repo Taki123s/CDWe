@@ -1,5 +1,6 @@
 package com.animeweb.service;
 
+import com.animeweb.dto.payment.DashboardView;
 import com.animeweb.dto.payment.ServicePackAdmin;
 import com.animeweb.dto.payment.ServicePackDTO;
 
@@ -14,8 +15,8 @@ public interface ServicePackService {
     ServicePackAdmin createServicePack(ServicePack servicePack);
     void updateServicePack(Long id) throws Exception;
     boolean existType(String serviceType);
-    ServicePackDTO getUserPackedBoughtMostByMonth();
-    ServicePackDTO getUserPackedBoughtMostByYear();
+    List<DashboardView> getUserPackedBoughtMostByMonth();
+    List<DashboardView> getUserPackedBoughtMostByYear();
 
 
 

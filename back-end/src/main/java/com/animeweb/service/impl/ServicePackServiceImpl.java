@@ -6,6 +6,7 @@ import com.animeweb.entities.ServicePack;
 import com.animeweb.mapper.ServicePackMapper;
 import com.animeweb.repository.ServicePackRepository;
 
+import com.animeweb.dto.payment.DashboardView;
 import com.animeweb.service.ServicePackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class ServicePackServiceImpl implements ServicePackService {
     private ServicePackRepository servicePackRepository;
     @Autowired
     CloudinaryService uploadService;
+    @Autowired
+    UserPackedCustomRepositoryImpl userPackedCustomRepository;
 
     @Override
     public List<ServicePackDTO> getListServicePack() {
@@ -76,13 +79,13 @@ public class ServicePackServiceImpl implements ServicePackService {
     }
 
     @Override
-    public ServicePackDTO getUserPackedBoughtMostByMonth() {
-        return ServicePackMapper.MaptoDto(servicePackRepository.getUserPackedBoughtMostByMonth());
+    public    List<DashboardView> getUserPackedBoughtMostByMonth() {
+        return userPackedCustomRepository.getUserPackedBoughtMostByMonth();
     }
 
     @Override
-    public ServicePackDTO getUserPackedBoughtMostByYear() {
-        return ServicePackMapper.MaptoDto(servicePackRepository.getUserPackedBoughtMostByYear());
+    public    List<DashboardView> getUserPackedBoughtMostByYear() {
+        return userPackedCustomRepository.getUserPackedBoughtMostByYear();
     }
 
 

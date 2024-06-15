@@ -20,8 +20,9 @@ import java.util.List;
 public class UserPackedServiceImpl implements UserPackedService {
     @Autowired
     UserPackedRepository userPackedRepository;
-@Autowired
+    @Autowired
     UserRepository userRepository;
+
     public void save(UserPacked userPacked) {
         userPackedRepository.save(userPacked);
     }
@@ -33,9 +34,9 @@ public class UserPackedServiceImpl implements UserPackedService {
             return false;
         } else {
             Date now = new Date();
-            if (isBuyed.getExpiredTime().compareTo(now)>0){
+            if (isBuyed.getExpiredTime().compareTo(now) > 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -68,9 +69,9 @@ public class UserPackedServiceImpl implements UserPackedService {
 
     @Override
     public List<UserServicePackedDTO> getServicePackActiveByUserId(Long userId) {
-        List<UserPacked> list= userPackedRepository.GetAllServicePackBoughtActive(userId);
-        List<UserServicePackedDTO> userPackedDTOList=new ArrayList<>();
-        for (UserPacked u:list
+        List<UserPacked> list = userPackedRepository.getAllServicePackBoughtActive(userId);
+        List<UserServicePackedDTO> userPackedDTOList = new ArrayList<>();
+        for (UserPacked u : list
         ) {
             userPackedDTOList.add(UserPackedMapper.mapToEntity(u));
         }
@@ -79,9 +80,9 @@ public class UserPackedServiceImpl implements UserPackedService {
 
     @Override
     public List<UserServicePackedDTO> getServicePackExpiredByUserId(Long userId) {
-        List<UserPacked> list= userPackedRepository.GetAllServicePackBoughtExpired(userId);
-        List<UserServicePackedDTO> userPackedDTOList=new ArrayList<>();
-        for (UserPacked u:list
+        List<UserPacked> list = userPackedRepository.getAllServicePackBoughtExpired(userId);
+        List<UserServicePackedDTO> userPackedDTOList = new ArrayList<>();
+        for (UserPacked u : list
         ) {
             userPackedDTOList.add(UserPackedMapper.mapToEntity(u));
         }
@@ -90,12 +91,22 @@ public class UserPackedServiceImpl implements UserPackedService {
 
     @Override
     public List<UserDTO> GetAllUserBought() {
-        List<User> userList=userPackedRepository.GetAllUserBought();
-        List<UserDTO> userDTO=new ArrayList<UserDTO>();
-        for (User u:userList
-             ) {
+        List<User> userList = userPackedRepository.getAllUserBought();
+        List<UserDTO> userDTO = new ArrayList<UserDTO>();
+        for (User u : userList
+        ) {
             userDTO.add(UserMapper.mapToDto(u));
         }
         return userDTO;
+    }
+
+    @Override
+    public Long GetRevenueByMonth(Long month) {
+        return userPackedRepository.getRevenueByMonth(month);
+    }
+
+    @Override
+    public Long getRevenue() {
+        return userPackedRepository.getRevenue();
     }
 }

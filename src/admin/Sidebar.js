@@ -25,7 +25,7 @@ const Sidebar = () => {
   return (
     <div className="iq-sidebar">
       <div className="iq-navbar-logo d-flex justify-content-between">
-        <a href="/dashboard" className="header-logo">
+        <a href="/Dashboard" className="header-logo">
           <img src="../img/logonweb.png" className="img-fluid rounded" alt="" />
           <span>AnimeWeb</span>
         </a>
@@ -50,9 +50,11 @@ const Sidebar = () => {
                 onClick={() => toggleMenu("dashboard")}
                 aria-expanded={menuState.dashboard}
               >
+
                 <i className="las la-home iq-arrow-left"></i>
                 <span>Bảng điều khiển</span>
                 <i className="ri-arrow-right-s-line iq-arrow-right"></i>
+                
               </a>
               <ul
                 id="dashboard"
@@ -62,7 +64,7 @@ const Sidebar = () => {
                 data-parent="#iq-sidebar-toggle"
               >
                 <li>
-                  <Link to="/dashboard">
+                  <Link to="/admin/Dashboard">
                     <i className="las la-laptop-code"></i>Thống kê
                   </Link>
                 </li>
@@ -70,7 +72,7 @@ const Sidebar = () => {
             </li>
 
             <li className={menuState.userinfo ? "parentActive" : ""}>
-              {/* <Link to="/admin/DashBoard"> */}
+              <Link to="/admin/DashBoard">
                 <a
                   href="#userinfo"
                   className="iq-waves-effect"
@@ -81,7 +83,7 @@ const Sidebar = () => {
                   <span>Quản lý người dùng</span>
                   <i className="ri-arrow-right-s-line iq-arrow-right"></i>
                 </a>
-              {/* </Link> */}
+              </Link>
 
               <ul
                 id="userinfo"

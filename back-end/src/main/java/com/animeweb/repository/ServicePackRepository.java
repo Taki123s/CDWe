@@ -1,7 +1,7 @@
 package com.animeweb.repository;
 
 import com.animeweb.entities.ServicePack;
-import com.animeweb.entities.UserPacked;
+import com.animeweb.dto.payment.DashboardView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,10 +18,6 @@ public interface ServicePackRepository extends JpaRepository<ServicePack,Long> {
     @Query("select count(s)>0 from ServicePack s where s.service_type=:type and s.status=true")
     Boolean existByType(String type);
 
-    @Query(value = "SELECT sp.id,sp.create_at,sp.delete_at,sp.price,sp.service_type,sp.status,sp.update_at,sp.service_img  FROM users_packed up JOIN service_packs sp ON up.service_pack_id = sp.id WHERE up.create_at >= DATE_SUB(CURRENT_DATE(),INTERVAL 1 MONTH) and sp.status=1 GROUP BY sp.service_type ORDER BY COUNT(up.service_pack_id) DESC LIMIT 1;", nativeQuery = true)
-    ServicePack getUserPackedBoughtMostByMonth();
 
-    @Query(value = "SELECT sp.id,sp.create_at,sp.delete_at,sp.price,sp.service_type,sp.status,sp.update_at,sp.service_img  FROM users_packed up JOIN service_packs sp ON up.service_pack_id = sp.id WHERE up.create_at >= DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR)and sp.status=1 GROUP BY sp.service_type ORDER BY COUNT(up.service_pack_id) DESC LIMIT 1;", nativeQuery = true)
-    ServicePack getUserPackedBoughtMostByYear();
 
 }

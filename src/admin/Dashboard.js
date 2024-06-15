@@ -3,11 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "boxicons/css/boxicons.min.css";
 import ChartMovie from "./ChartMovie";
 import CostChart from "./CostChart";
-import { API_GET_PATHS} from "./service/Constant";
+import { API_GET_PATHS } from "./service/Constant";
 import axios from "axios";
 
 const Dashboard = () => {
-  // const history = useHistory();
   const [data, setData] = useState({
     totalAccount: 0,
     totalMovie: 0,
@@ -18,7 +17,21 @@ const Dashboard = () => {
     topNotPurchasedList: [],
     profit: 0,
   });
-  const FetchCustomer=()=>{
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+
+  const formatDate = (date) => {
+    const days = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+    const day = days[date.getDay()];
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    const h = String(date.getHours()).padStart(2, '0');
+    const m = String(date.getMinutes()).padStart(2, '0');
+    const s = String(date.getSeconds()).padStart(2, '0');
+    return `${day}, ${dd}/${mm}/${yyyy} - ${h} giờ ${m} phút ${s} giây`;
+  };
+
+  const FetchCustomer = () => {
     axios
       .get(API_GET_PATHS.GET_LIST_USER_BOUGHT_SERVICEPACK)
       .then((response) => {
@@ -28,109 +41,110 @@ const Dashboard = () => {
         }));
       })
       .catch((error) => console.error("Error fetching user data:", error));
-}
-const FetchservicePack=()=>{
-  axios
-    .get(API_GET_PATHS.GET_ALL_SERVICEPACK)
-    .then((response) => {
-      setData((prevData) => ({
-        ...prevData,
-        totalMoviePurchase: response.data.length,
-      }));
-    })
-    .catch((error) => console.error("Error fetching user data:", error));
-}
-const FetchMovie=()=>{
-  axios
-    .get(API_GET_PATHS.GET_ALL_MOVIE)
-    .then((response) => {
-      setData((prevData) => ({
-        ...prevData,
-        totalMovie: response.data.totalMovies,
-      }));
-    })
-    .catch((error) => console.error("Error fetching user data:", error));
-}
+  };
+  const FetchservicePack = () => {
+    axios
+      .get(API_GET_PATHS.GET_ALL_SERVICEPACK)
+      .then((response) => {
+        setData((prevData) => ({
+          ...prevData,
+          totalMoviePurchase: response.data.length,
+        }));
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  };
+  const FetchMovie = () => {
+    axios
+      .get(API_GET_PATHS.GET_ALL_MOVIE)
+      .then((response) => {
+        setData((prevData) => ({
+          ...prevData,
+          totalMovie: response.data.totalMovies,
+        }));
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  };
 
-const FetchUserLocked=()=>{
-  axios
-    .get(API_GET_PATHS.GET_LIST_USER_LOCKED)
-    .then((response) => {
-      setData((prevData) => ({
-        ...prevData,
-        blockAccount: response.data.length,
-      }));
-    })
-    .catch((error) => console.error("Error fetching user data:", error));
-}
-  const timer = setInterval(() => {
-    const today = new Date();
-    const days = [
-      "Chủ Nhật",
-      "Thứ Hai",
-      "Thứ Ba",
-      "Thứ Tư",
-      "Thứ Năm",
-      "Thứ Sáu",
-      "Thứ Bảy",
-    ];
-    const day = days[today.getDay()];
-    const dd = String(today.getDate()).padStart(2, "0");
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const yyyy = today.getFullYear();
-    const h = String(today.getHours()).padStart(2, "0");
-    const m = String(today.getMinutes()).padStart(2, "0");
-    const s = String(today.getSeconds()).padStart(2, "0");
-    const nowTime = `${h} giờ ${m} phút ${s} giây`;
-    const fullDate = `${day}, ${dd}/${mm}/${yyyy}`;
-    const tmp = `<span class="date">${fullDate} - ${nowTime}</span>`;
-    document.getElementById("clock").innerHTML = tmp;
-  }, 1000);
+  const FetchUserLocked = () => {
+    axios
+      .get(API_GET_PATHS.GET_LIST_USER_LOCKED)
+      .then((response) => {
+        setData((prevData) => ({
+          ...prevData,
+          blockAccount: response.data.length,
+        }));
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  };
+  const FetchRevenue = () => {
+    axios
+      .get(API_GET_PATHS.GET_REVENUE)
+      .then((response) => {
+        setData((prevData) => ({
+          ...prevData,
+          profit: response.data,
+        }));
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  };
 
- 
+  const FetchTop2ServicePackBoughtByMonth = () => {
+    axios
+      .get(API_GET_PATHS.GET_TOP2_SERVICE_PACK_BOUGHT_MONTH)
+      .then((response) => {
+        setData((prevData) => ({
+          ...prevData,
+          topPurchasedList: response.data,
+        }));
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  };
+
+  const FetchTop2ServicePackBoughtByYear = () => {
+    axios
+      .get(API_GET_PATHS.GET_TOP2_SERVICE_PACK_BOUGHT_YEAR)
+      .then((response) => {
+        setData((prevData) => ({
+          ...prevData,
+          topPurchasedListYear: response.data,
+        }));
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
+  };
   useEffect(() => {
-    
     FetchCustomer();
     FetchservicePack();
     FetchMovie();
     FetchUserLocked();
-    return () => clearInterval(timer);
+    FetchTop2ServicePackBoughtByMonth();
+    FetchTop2ServicePackBoughtByYear();
+    FetchRevenue();
+    const interval = setInterval(() => {
+      setCurrentDateTime(new Date()); // Cập nhật thời gian hiện tại sau mỗi 1 giây
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
-
-  const handleRedirect = () => {
-    alert("Redirecting...");
-    // history.push('/new-path');  // Replace with the actual path
-  };
 
   return (
     <div className="app sidebar-mini rtl">
       <div className="wrapper">
-        <Sidebar />
-        <Header />
+     
         <div className="">
           <div className="row">
             <div className="col-md-12">
               <div className="app-title">
-                <div id="clock"></div>
+                <div id="clock">{formatDate(currentDateTime)}</div>
               </div>
             </div>
           </div>
           <div className="row">
             <LeftPanel data={data} />
-            <RightPanel />
+            <RightPanel data={data}/>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-const Sidebar = () => {
-  return <div> {/* Sidebar content here */} </div>;
-};
-
-const Header = () => {
-  return <div> {/* Header content here */} </div>;
 };
 
 const LeftPanel = ({ data }) => {
@@ -169,11 +183,6 @@ const LeftPanel = ({ data }) => {
           title="Các gói được mua nhiều nhất trong trong năm"
           data={data.topPurchasedListYear}
         />
-        <DataTable
-          title="Các gói được mua ít nhất trong tháng"
-          data={data.topNotPurchasedList}
-        />
-        <ProfitStatistics profit={data.profit} />
       </div>
     </div>
   );
@@ -187,9 +196,9 @@ const StatisticsCard = ({ icon, title, value, info }) => {
         <div className="info">
           <h4>{title}</h4>
           <p>
-            <b>{value}</b>
+            <b  className="text-dark">{value}</b>
           </p>
-          <p className="info-tong">{info}</p>
+          <p className="info-tong text-dark">{info}</p>
         </div>
       </div>
     </div>
@@ -205,9 +214,8 @@ const DataTable = ({ title, data }) => {
           <table className="table table-bordered">
             <thead>
               <tr>
-                <th>ID Phim</th>
-                <th>Tên Phim</th>
-                <th>Thể loại</th>
+                <th>ID Gói</th>
+                <th>Tên Gói</th>
                 <th>Số lượng</th>
                 <th>Giá</th>
               </tr>
@@ -216,15 +224,9 @@ const DataTable = ({ title, data }) => {
               {data.map((movie) => (
                 <tr key={movie.id}>
                   <td>{movie.id}</td>
-                  <td>{movie.name}</td>
-                  <td>
-                    {movie.genres.map((genre) => (
-                      <div key={genre.id}>{genre.description}</div>
-                    ))}
-                  </td>
-                  <td>
-                    {new Intl.NumberFormat().format(movie.totalPurchased)}
-                  </td>
+                  <td>{movie.service_type}</td>
+
+                  <td>{movie.amount}</td>
                   <td>{new Intl.NumberFormat().format(movie.price)} VND</td>
                 </tr>
               ))}
@@ -240,10 +242,10 @@ const ProfitStatistics = ({ profit }) => {
   return (
     <div className="col-md-9">
       <div className="tile">
-        <h3 className="tile-title">Thống kê thu chi của năm</h3>
+        <h3 className="tile-title">Thống kê doanh thu của năm</h3>
         <CostChart />
         <div>
-          Lợi nhuận thu được trong năm :
+        Tổng doanh thu thu được trong năm :
           <h5>{new Intl.NumberFormat().format(profit)} VND</h5>
         </div>
       </div>
@@ -251,9 +253,16 @@ const ProfitStatistics = ({ profit }) => {
   );
 };
 
-const RightPanel = () => {
+const RightPanel = ({ data }) => { 
   return (
     <div className="col-md-12 col-lg-6">
+     
+      <div className="row">
+      <div className="col-md-12">
+          <ProfitStatistics profit={data.profit} />
+
+          </div>
+      </div>
       <div className="row">
         <div className="col-md-9">
           <div className="tile">
@@ -263,14 +272,7 @@ const RightPanel = () => {
             {/* <iframe src="ChartMovie.js" width="100%" height="500" title="Chart Movie"></iframe> */}
             <ChartMovie />
           </div>
-          <div className="col-md-9">
-            <div className="tile">
-              <h4 className="tile-title">Thống kê doanh thu</h4>
-              <div className="embed-responsive embed-responsive-16by9">
-                {/* <iframe src="revenue.jsp" width="100%" height="600" title="Revenue"></iframe> */}
-              </div>
-            </div>
-          </div>
+       
         </div>
       </div>
     </div>

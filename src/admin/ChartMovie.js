@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { fontSize } from "@mui/system";
 
 const ChartMovie = () => {
   const [topViewMoviesMonth, setTopViewMoviesMonth] = useState([]);
@@ -12,14 +11,13 @@ const ChartMovie = () => {
     const fetchChartData = async () => {
       try {
         // Fetch data for the year chart
-        const yearResponse = await axios.get("/admin/chartMovie");
+        const yearResponse = await axios.get("http://localhost:8080/admin/movies/viewed/year/top5");
         setTopViewMoviesYear(yearResponse.data);
 
         // Fetch data for the month chart
-        const monthResponse = await axios.get("/admin/chartMovie", {
-          params: { action: "month" },
-        });
+        const monthResponse = await axios.get("http://localhost:8080/admin/movies/viewed/month/top5");
         setTopViewMoviesMonth(monthResponse.data);
+
       } catch (error) {
         console.error("Error fetching chart data:", error);
       }
@@ -28,6 +26,13 @@ const ChartMovie = () => {
     fetchChartData();
   }, []);
 
+  const prepareChartData = (data) => {
+    return data.map((movie) => ({
+      name: movie.name,
+      y: movie.views.length
+    }));
+  };
+
   const drawChart = (title, seriesData) => {
     return {
       chart: {
@@ -35,9 +40,6 @@ const ChartMovie = () => {
       },
       title: {
         text: title
-      },
-      topViewMoviesMonth: {
-        fontSize: '15px'
       },
       tooltip: {
         pointFormat: "{series.name}: <b>{point.y}</b>",
@@ -51,19 +53,12 @@ const ChartMovie = () => {
             format: "<b>{point.name}</b>: {point.y}",
             distance: 0,
           },
-        //   size: "40%", // Adjust the size of the pie chart here
-
         },
-
       },
-
       series: [
         {
           name: title,
-          data: seriesData.map((item) => ({
-            name: item.name,
-            y: item.views,
-          })),
+          data: seriesData,
           colors: [
             "rgba(255, 99, 132, 0.7)",
             "rgba(54, 162, 235, 0.7)",
@@ -78,21 +73,21 @@ const ChartMovie = () => {
 
   return (
     <div style={{ display: "flex", alignSelf: "auto"}}>
-      <div style={{width: '300px'}}>
+      <div style={{width: '300px', margin: '0 10px'}}>
         <HighchartsReact 
           highcharts={Highcharts}
           options={drawChart(
-            "Các bộ phim được xem nhiều nhất trong tháng",
-            topViewMoviesMonth
+            "Tháng/Lượt xem: ",
+            prepareChartData(topViewMoviesMonth)  
           )}
         />
       </div>
-      <div style={{width: '300px'}}>
+      <div style={{width: '300px', margin: '0 10px'}}>
         <HighchartsReact  
           highcharts={Highcharts}
           options={drawChart(
-            "Các bộ phim được xem nhiều nhất trong năm",
-            topViewMoviesYear
+            "Năm/Lượt xem: ",
+            prepareChartData(topViewMoviesYear)
           )}
         />
       </div>

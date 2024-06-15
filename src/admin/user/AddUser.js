@@ -10,7 +10,11 @@ const AddUserForm = () => {
   const [avatar, setAvatar] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
-
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -20,51 +24,69 @@ const AddUserForm = () => {
       };
       reader.readAsDataURL(file);
       setAvatar(file);
-
     }
   };
-  const handleClick = async () => {
+
+  const handleFullNameChange = (e) => {
+    setFullName(e.target.value);
+  };
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
+  };
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleUserNameChange = (e) => {
+    setUsername(e.target.value);
+  };
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+
     const user = {
-      name: document.getElementById("fullName").value,
-      phone: document.getElementById("phone").value,
-      email: document.getElementById("email").value,
-      username: document.getElementById("uname").value,
-      password: document.getElementById("pass").value,
+      name: fullName,
+      phone: phone,
+      email: email,
+      username: username,
+      password: password,
     };
     if (
-        !user.name ||
-        !user.phone ||
-        !user.email ||
-        !user.username ||
-        !user.password
-      ) {
-        Swal.fire({
-          title: "Thông báo",
-          text: "Vui lòng nhập đủ thông tin",
-          icon: "warning",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-        return;
+      !user.name ||
+      !user.phone ||
+      !user.email ||
+      !user.username ||
+      !user.password
+    ) {
+      Swal.fire({
+        title: "Thông báo",
+        text: "Vui lòng nhập đủ thông tin",
+        icon: "warning",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      return;
     }
     const formData = new FormData();
-    Object.keys(user).forEach(key => formData.append(key, user[key]));
-    
-    if (avatar==null) {
-        Swal.fire({
-            title: "Thông báo",
-            text: "Vui lòng chọn ảnh đại diện",
-            icon: "warning",
-            timer: 2000,
-            showConfirmButton: false,
-          });
-    }else{
-        formData.append('avatarPicture', avatar);
+    Object.keys(user).forEach((key) => formData.append(key, user[key]));
 
+    if (avatar == null) {
+      Swal.fire({
+        title: "Thông báo",
+        text: "Vui lòng chọn ảnh đại diện",
+        icon: "warning",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } else {
+      formData.append("avatarPicture", avatar);
     }
 
     setIsUploading(true);
-      addUser(formData).then((response)=>{
+    addUser(formData)
+      .then((response) => {
         setIsUploading(false);
         Swal.fire({
           title: "Thành công",
@@ -74,8 +96,8 @@ const AddUserForm = () => {
           showConfirmButton: false,
         });
         navigate(`/admin/UserList`);
-
-      }).catch((error) => {
+      })
+      .catch((error) => {
         setIsUploading(false);
         Swal.fire({
           title: "Lỗi",
@@ -85,7 +107,6 @@ const AddUserForm = () => {
           showConfirmButton: false,
         });
       });
-  
   };
   return (
     <div className="wrapper">
@@ -151,6 +172,7 @@ const AddUserForm = () => {
                         id="fullName"
                         name="fullName"
                         placeholder="Full Name"
+                        onChange={handleFullNameChange}
                       />
                     </div>
                     <div className="form-group col-md-6">
@@ -161,6 +183,7 @@ const AddUserForm = () => {
                         id="phone"
                         name="phone"
                         placeholder="Phone Number"
+                        onChange={handlePhoneChange}
                       />
                     </div>
                     <div className="form-group col-md-6">
@@ -171,6 +194,7 @@ const AddUserForm = () => {
                         id="email"
                         name="email"
                         placeholder="Email"
+                        onChange={handleEmailChange}
                       />
                     </div>
                   </div>
@@ -185,6 +209,7 @@ const AddUserForm = () => {
                         id="uname"
                         name="userName"
                         placeholder="Tên tài khoản"
+                        onChange={handleUserNameChange}
                       />
                     </div>
                     <div className="form-group col-md-6">
@@ -195,6 +220,7 @@ const AddUserForm = () => {
                         id="pass"
                         name="password"
                         placeholder="Mật khẩu"
+                        onChange={handlePasswordChange}
                       />
                     </div>
                   </div>
@@ -214,7 +240,5 @@ const AddUserForm = () => {
     </div>
   );
 };
-
-
 
 export default AddUserForm;

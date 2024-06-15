@@ -1,5 +1,6 @@
 package com.animeweb.controller.client;
 
+import com.animeweb.dto.payment.DashboardView;
 import com.animeweb.dto.payment.ServicePackAdmin;
 import com.animeweb.dto.payment.ServicePackDTO;
 import com.animeweb.dto.payment.UserPackedDTO;
@@ -131,13 +132,15 @@ public class ServicePackController {
     public ResponseEntity<List<UserDTO>> GetAllUserBought() {
         return ResponseEntity.ok(userPackedService.GetAllUserBought());
     }
+
     @GetMapping("/hot/month")
-    public  ResponseEntity<ServicePackDTO>getUserPackedBoughtMostByMonth(){
-        return  ResponseEntity.ok(servicePackService.getUserPackedBoughtMostByMonth());
+    public ResponseEntity<List<DashboardView>> getUserPackedBoughtMostByMonth() {
+        return ResponseEntity.ok(servicePackService.getUserPackedBoughtMostByMonth());
     }
+
     @GetMapping("/hot/year")
-    public  ResponseEntity<ServicePackDTO>getUserPackedBoughtMostByYear(){
-        return  ResponseEntity.ok(servicePackService.getUserPackedBoughtMostByYear());
+    public ResponseEntity<List<DashboardView>> getUserPackedBoughtMostByYear() {
+        return ResponseEntity.ok(servicePackService.getUserPackedBoughtMostByYear());
     }
 
 }

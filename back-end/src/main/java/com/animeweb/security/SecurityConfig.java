@@ -1,6 +1,7 @@
 package com.animeweb.security;
 
 
+import com.animeweb.config.CustomOAuth2SuccessHandler;
 import com.animeweb.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,12 +16,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     @Autowired
     UserServiceImpl userService;
+    @Autowired
+    CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
     @Autowired
     JwtAuthEntryPoint authEntryPoint;
     @Autowired
@@ -35,8 +44,24 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/**").permitAll().anyRequest().authenticated());
         http.oauth2ResourceServer(oauth2->oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder)
                 .jwtAuthenticationConverter(jwtAuthenticationConverter())));
-        http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) ;
+        http.oauth2Login(oauth2 -> oauth2
+                .successHandler(customOAuth2SuccessHandler).permitAll());
         return http.build();
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*"); // Cho phép truy cập từ tất cả các nguồn
+        configuration.addAllowedMethod("*"); // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE, v.v.)
+        configuration.addAllowedHeader("*"); // Cho phép tất cả các tiêu đề
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter(){

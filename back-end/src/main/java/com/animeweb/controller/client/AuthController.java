@@ -1,6 +1,7 @@
 package com.animeweb.controller.client;
 
 import com.animeweb.dto.oauth.AuthResponseDTO;
+import com.animeweb.dto.oauth.EmailRequest;
 import com.animeweb.dto.oauth.LoginDTO;
 import com.animeweb.dto.oauth.VerifyUser;
 import com.animeweb.dto.user.RegisterDTO;
@@ -13,6 +14,7 @@ import com.animeweb.security.IntrospectRequest;
 import com.animeweb.security.IntrospectResponse;
 import com.animeweb.security.LogOutRequest;
 import com.animeweb.security.SecurityConstants;
+import com.animeweb.service.impl.EmailServiceImpl;
 import com.animeweb.service.impl.UserServiceImpl;
 import com.animeweb.service.mail.EmailService;
 import com.nimbusds.jose.JOSEException;
@@ -37,6 +39,8 @@ public class AuthController {
     private RoleRepository roleRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private EmailServiceImpl emailServiceImpl;
     @GetMapping("/username")
     public ResponseEntity<String> checkUserName(@RequestParam String userName){
         boolean isExist = userService.existUserName(userName);
@@ -90,4 +94,32 @@ public class AuthController {
         return new ResponseEntity<>(userService.introspect(introspectRequest),HttpStatus.OK);
 
     }
+    @PostMapping("/forget-password")
+    public ResponseEntity<String > forgetPassword(@RequestBody EmailRequest email){
+        System.out.println(email);
+        String token = emailServiceImpl.generateTokenEmail(email.getEmail());
+        String resetUrl = "http://localhost:3000/reset-password/" + token;
+        EmailDetails details =new EmailDetails(email.getEmail(),  "Nhấp vào liên kết sau để đặt lại mật khẩu của bạn: " + resetUrl,"Đặt lại mật khẩu","");
+        emailService.sendSimpleMail(details);
+        return ResponseEntity.ok("Email đã được gửi.");
+
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<String > resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        String email = emailServiceImpl.validateTokenEmail(token);
+        if (email == null) {
+            return ResponseEntity.ok("Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.");
+        }
+        User user = userService.findUserByEmail(email);
+        if(user != null){
+          user.setPassword(passwordEncoder.encode(newPassword));
+          user.setUpdatedAt(new Date());
+          userService.saveUser(user);
+            return ResponseEntity.ok("Mật khẩu đã được cập nhật.");
+        }else{
+            return ResponseEntity.ok("Không tìm thấy user");
+        }
+
+    }
+
 }

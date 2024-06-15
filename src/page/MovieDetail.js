@@ -60,6 +60,7 @@ function MovieDetail() {
     const fetchData = async () => {
       try {
         const response = await axios.get(API_GET_PATHS.GET_MOVIE_SAME+`${id}`);
+        console.log(response.data)
         setMovieSameSeries(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -204,9 +205,9 @@ function MovieDetail() {
           <div className="container">
             <div className="row">
               <div className="col-lg-12">
-                <div className="breadcrumb__links">
+                <div className="breadcrumb__links"><i className="fas fa-home" style={{color: "#000000"}}></i>
                   <Link to="/">
-                    <Trans i18nKey={"menu.home"}>{t("menu.home")}</Trans>
+                <Trans i18nKey={"menu.home"}>{t("menu.home")}</Trans>
                   </Link>
                   <Link to="">
                     <Trans i18nKey={"content.moviedetail"}>{t("content.moviedetail")}</Trans>
@@ -264,9 +265,18 @@ function MovieDetail() {
                             </label>
                         );
                       })}
+
+                    </div>
+                    <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                      {movieSameSeries.map((sameMovie, index) => (
+                          <Link to={`/movie/${sameMovie.id}`}>   <button key={index} type="button" className="btn btn-secondary">
+                           {sameMovie.seriesDescriptions}
+                          </button></Link>
+                      ))}
                     </div>
                   </div>
                   <div className="row">
+
                     <div className="anime__details__btn">
                       <Link className="watch-btn" to={`/movie/watching/${movie.id}/${1}`}>
                         <div className="d-flex align-items-center">
@@ -289,13 +299,7 @@ function MovieDetail() {
 
                       </Link>
                     </div>
-                    <div className="mt-3">
-                      {movieSameSeries.map((sameMovie, index) => (
-                          <button key={index} type="button" className="btn btn-outline-dark ml-2">
-                            {sameMovie.seriesDescriptions}
-                          </button>
-                      ))}
-                    </div>
+
                   </div>
                 </div>
                 <div className="col-lg-9">
@@ -396,7 +400,7 @@ function MovieDetail() {
                               width="1236"
                               height="695"
                               src={movie.trailer}
-                              title="Avatar: Dòng Chảy Của Nước | Official Trailer"
+                              title=" Official Trailer"
                               frameBorder="0"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                               referrerPolicy="strict-origin-when-cross-origin"
@@ -408,8 +412,9 @@ function MovieDetail() {
                   </div>
                 </div>
               </div>
+              <Comment appId="583739630280650" url={currentUrl} />
             </div>
-            <Comment appId="583739630280650" url={currentUrl} />
+
           </div>
         </section>
       </div>

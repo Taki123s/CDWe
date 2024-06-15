@@ -23,11 +23,12 @@ public class ServicePackServiceImpl implements ServicePackService {
 
     @Override
     public List<ServicePackDTO> getListServicePack() {
-        List<ServicePack> servicePacks = servicePackRepository.findAll();
+        List<ServicePack> servicePacks = servicePackRepository.findAllByStatusIsTrue();
         List<ServicePackDTO> servicePackDTOS = new ArrayList<>();
         for (ServicePack servicePack : servicePacks) {
-            servicePackDTOS.add(ServicePackMapper.MaptoDto(servicePack));
-
+            ServicePackDTO servicePackDTO = ServicePackMapper.MaptoDto(servicePack);
+            servicePackDTO.setService_img(servicePack.getService_img());
+            servicePackDTOS.add(servicePackDTO);
         }
         return servicePackDTOS;
     }
@@ -39,16 +40,8 @@ public class ServicePackServiceImpl implements ServicePackService {
     }
 
     @Override
-    public void save(long id, ServicePack servicePack) {
-        ServicePack pack = servicePackRepository.findServicePackById(id);
-        Date now = new Date();
-        if (pack != null) {
-            servicePack.setUpdateAt(now);
+    public void save(ServicePack servicePack) {
             servicePackRepository.save(servicePack);
-
-        }else{
-            return;
-        }
     }
 
     @Override

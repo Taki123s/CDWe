@@ -41,82 +41,6 @@ public class ServicePackController {
     public ResponseEntity<List<ServicePackDTO>> getServiceList() {
         return ResponseEntity.ok(servicePackService.getListServicePack());
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<String> editServicePack(@PathVariable Long id, @RequestBody ServicePackAdmin updatedService) throws IOException {
-        String avatar = uploadService.uploadServiceAvt(updatedService.getFile(), id);
-        ServicePack servicePack = ServicePackMapper.mapToEntity(updatedService);
-        servicePack.setService_img(avatar);
-        servicePack.setUpdateAt(new Date());
-        servicePackService.save(id, servicePack);
-        System.out.println(avatar);
-        return ResponseEntity.ok("Success");
-    }
-
-    @PutMapping("/delete/{id}")
-    public ResponseEntity<String> updateServicePack(@PathVariable Long id) throws Exception {
-
-        servicePackService.updateServicePack(id);
-        return ResponseEntity.ok("Service Pack updated successfully");
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<ServicePackAdmin> createServicePack(@ModelAttribute ServicePackAdmin service) throws IOException {
-        ServicePack servicePack = ServicePackMapper.mapToEntity(service);
-
-        if (servicePackService.existType(service.getService_type())) {
-            return ResponseEntity.ok(null);
-        }
-        String avatar = uploadService.uploadServiceAvt(service.getFile(), service.getId());
-        servicePack.setService_img(avatar);
-        System.out.println(avatar);
-        Date now = new Date();
-        servicePack.setCreateAt(now);
-//        System.out.println(service.getService_type());
-
-
-        servicePackService.createServicePack(servicePack);
-
-        return ResponseEntity.ok(ServicePackMapper.Maptoadmin(servicePack));
-    }
-
-    @GetMapping("/getAll")
-    public ResponseEntity<List<UserPackedDTO>> getAll() {
-        List<UserPacked> userPackeds = userPackedService.findAllUserPacked();
-        List<UserPackedDTO> userPackedDTOS = new ArrayList<>();
-        for (UserPacked u : userPackeds
-        ) {
-            UserPackedDTO userPackedDTO = UserPackedMapper.mapToDTO(u);
-
-            userPackedDTO.setStatus(u.getStatus());
-            userPackedDTO.setId(u.getId());
-            userPackedDTO.setCreatedAt(u.getCreatedAt());
-            userPackedDTOS.add(userPackedDTO);
-        }
-        return ResponseEntity.ok(userPackedDTOS);
-    }
-
-    @GetMapping("/getAll/{idUser}")
-    public ResponseEntity<List<UserPackedDTO>> getAllByUser(@PathVariable("idUser") Long idUser) {
-        List<UserPacked> userPackeds = userPackedService.findAllUserPackedById(userService.findUserById(idUser));
-        List<UserPackedDTO> userPackedDTOS = new ArrayList<>();
-        for (UserPacked u : userPackeds) {
-            UserPackedDTO userPackedDTO = UserPackedMapper.mapToDTO(u);
-            userPackedDTO.setStatus(u.getStatus());
-            userPackedDTO.setId(u.getId());
-            userPackedDTO.setCreatedAt(u.getCreatedAt());
-            userPackedDTOS.add(userPackedDTO);
-        }
-        return ResponseEntity.ok(userPackedDTOS);
-    }
-
-    @PutMapping("/delete/user-packed/{id}")
-    public ResponseEntity<String> deleteServicePack(@PathVariable Long id) {
-
-        userPackedService.deleteUserPacked(id);
-        return ResponseEntity.ok("Service Pack updated successfully");
-    }
-
     @GetMapping("/findAll")
     public ResponseEntity<List<UserServicePackedDTO>> getAllServicePackByUserId(@RequestParam Long userID) {
         List<UserServicePackedDTO> list = userPackedServices.getServicePackActiveByUserId(userID);
@@ -125,4 +49,5 @@ public class ServicePackController {
         }
         return ResponseEntity.ok(list);
     }
+
 }

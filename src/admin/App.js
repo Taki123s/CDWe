@@ -9,6 +9,7 @@ import "./images/favicon.ico";
 import "./css/typography.css";
 import "./css/responsive.css";
 import ServicePacks from "./component/packed-service";
+import Logs from "./component/log";
 import UserPacked from "./component/user-packed";
 import "../css/bootstrap.min.css";
 // import "line-awesome/dist/line-awesome/css/line-awesome.min.css";
@@ -52,7 +53,7 @@ function App() {
               <Route path="/admin/listMovie" element={<ListMovie />} />
               <Route path="/admin/addMovie" element={<AddMovie />} />
               <Route path="/admin/packed-service" element={<ServicePacks />} />
-
+              <Route path="/admin/log" element={<Logs />} />
               <Route path="/admin/user-packed" element={<UserPacked />} />
               <Route path="/admin/adduser" element={<UserAdd />} />
               <Route path="/admin/UserList" element={<UserList />} />

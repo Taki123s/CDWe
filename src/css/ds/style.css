@@ -99,7 +99,19 @@ p {
 	line-height: 25px;
 	margin: 0 0 15px 0;
 }
+.btn-secondary {
+	color: #0b0b0b;
+	height: 70px;
+	width: 70px;
+	white-space: nowrap !important;
+	display: block !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
 
+}
+.btn-group-toggle{
+	margin-bottom: 10px;
+}
 img {
 	max-width: 100%;
 }
@@ -1202,6 +1214,7 @@ ol {
 }
 
 .anime__details__btn .follow-btn {
+
 	font-size: 13px;
 	color: #ffffff;
 	background: #e53637;
@@ -1234,6 +1247,7 @@ ol {
 #rateBtn,
 #vote,
 #buyMovie {
+margin-bottom: 25px;
 	font-size: 13px;
 	color: #ffffff;
 	background: #e53637;
@@ -1249,12 +1263,14 @@ ol {
 }
 
 .anime__details__btn .watch-btn i {
+	margin-bottom: 25px;
 	font-size: 20px;
 	display: inline-block;
 	background: #e53637;
 	padding: 14px 10px;
 	color: #ffffff;
 	border-radius: 0 4px 4px 0;
+
 }
 
 .anime__details__review {

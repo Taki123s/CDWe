@@ -2,9 +2,14 @@
 package com.animeweb.service.impl;
 
 import java.io.File;
+import java.util.Date;
 
 import com.animeweb.entities.EmailDetails;
 import com.animeweb.service.mail.EmailService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-
+    private final String SECRET_KEY = "your_secret_key";
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -57,6 +62,24 @@ public class EmailServiceImpl implements EmailService {
         } catch (Exception e) {
             e.printStackTrace();
             return "Error while sending mail!!!";
+        }
+    }
+    public String generateTokenEmail(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 giờ
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
+    }
+    public String validateTokenEmail(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (ExpiredJwtException | SignatureException e) {
+            return null;
         }
     }
 }

@@ -35,6 +35,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT a from User a where a.status = true " )
     List<User> findAllUser();
     Boolean existsByEmail(String email);
+    User findByEmailAndUserTypeAndStatus(String email, int userType, boolean status);
 
 }
 

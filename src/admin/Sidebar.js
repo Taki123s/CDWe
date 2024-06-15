@@ -95,6 +95,13 @@ const Sidebar = () => {
                   </li>
                 </ul>
               </li>
+              <li className="parentActive">
+                <a href="https://analytics.google.com/analytics/web/#/p380852987/reports/reportinghub?params=_u..nav%3Dmaui%26_r.14..selmet%3D%5B%22conversions%22%5D"
+                   target="_blank" className="iq-waves-effect"><span
+                    className="ripple rippleEffect"></span><i
+                    className="las la-user-tie iq-arrow-left"></i><span>Google Analytics</span></a>
+
+              </li>
 
               <li className={menuState.movie ? "parentActive" : ""}>
                 <a
@@ -229,7 +236,7 @@ const Sidebar = () => {
                     data-parent="#iq-sidebar-toggle"
                 >
                   <li>
-                    <Link to="/bonus/list">
+                    <Link to="/admin/log">
                       <i className="ri-table-line"></i>Danh sách khuyến mãi
                     </Link>
                   </li>
@@ -282,7 +289,7 @@ const Sidebar = () => {
                     data-parent="#iq-sidebar-toggle"
                 >
                   <li>
-                    <Link to="/log/list">
+                    <Link to="/admin/log">
                       <i className="ri-table-line"></i>Quản lý tổng
                     </Link>
                   </li>

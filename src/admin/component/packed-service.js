@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import DataTable from 'react-data-table-component';
 import ArrowDownward from '@mui/icons-material/ArrowDownward';
 import Button from '@mui/material/Button';
-import { parse } from 'date-fns';
-import { getServiceList, editServicePack, deleteServicePack, createServicePack } from '../../service/ServicePacksService';
+import {parse} from 'date-fns';
+import {getServiceList, editServicePack, deleteServicePack, createServicePack} from '../../service/ServicePacksService';
 import EditServiceModal from './packed-edit';
 import NewServiceModal from './create-packed';
 import Swal from "sweetalert2";
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 export const ListService = () => {
     const [services, setServices] = useState([]);
@@ -33,8 +33,15 @@ export const ListService = () => {
     };
 
     const handleSave = (editedService) => {
-        console.log(editedService)
-        editServicePack(editedService.id, editedService)
+        const formData = new FormData();
+        formData.append('id', editedService.id);
+        formData.append('service_type', editedService.service_type);
+        formData.append('price', editedService.price);
+        formData.append('file', editedService.file);
+        formData.append("createdAt", editedService.createdAt)
+        console.log(editedService);
+
+        editServicePack(editedService.id, formData)
             .then((response) => {
                 const updatedServices = services.map((service) =>
                     service.id === editedService.id ? editedService : service
@@ -46,7 +53,6 @@ export const ListService = () => {
                 console.log(error);
             });
     };
-
     const handleDelete = (editedService) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -75,9 +81,10 @@ export const ListService = () => {
     const handleNewService = (newService) => {
         if (newService.service_type === "WEEK" || newService.service_type === "MONTH" || newService.service_type === "YEAR") {
             const formData = new FormData();
-            formData.append("service_type",newService.service_type);
-            formData.append("price",newService.price);
-            formData.append("file",newService.file)
+            formData.append("service_type", newService.service_type);
+            formData.append("price", newService.price);
+
+            formData.append("file", newService.file)
             createServicePack(formData)
                 .then((response) => {
                     if (response.data === "") {
@@ -116,9 +123,9 @@ export const ListService = () => {
     };
 
     const columns = [
-        { id: 1, name: 'Id', selector: (row) => row.id, sortable: true, reorder: true },
-        { id: 2, name: 'Description', selector: (row) => row.service_type, sortable: true, reorder: true },
-        { id: 3, name: 'Price', selector: (row) => `${row.price} VND`, sortable: true, reorder: true },
+        {id: 1, name: 'Id', selector: (row) => row.id, sortable: true, reorder: true},
+        {id: 2, name: 'Description', selector: (row) => row.service_type, sortable: true, reorder: true},
+        {id: 3, name: 'Price', selector: (row) => `${row.price} VND`, sortable: true, reorder: true},
         {
             id: 4,
             name: 'Create At',
@@ -141,7 +148,7 @@ export const ListService = () => {
                     </Button>
                     <Button
                         variant="contained"
-                        style={{ marginLeft: '20px' }}
+                        style={{marginLeft: '20px'}}
                         color="error"
                         onClick={() => handleDelete(row)}
                     >
@@ -164,7 +171,7 @@ export const ListService = () => {
                 columns={columns}
                 data={services}
                 defaultSortFieldId={1}
-                sortIcon={<ArrowDownward />}
+                sortIcon={<ArrowDownward/>}
                 pagination
                 paginationComponentOptions={paginationComponentOptions}
                 selectableRows

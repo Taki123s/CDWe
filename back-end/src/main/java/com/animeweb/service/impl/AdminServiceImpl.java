@@ -63,19 +63,20 @@ public class AdminServiceImpl implements AdminService {
             throw new RuntimeException("User with the id does not exist");
         else {
             var newUser = user.get();
-            newUser.setPhone(request.phone()!=null?request.phone(): newUser.getPhone());
-            newUser.setFullName(request.name()!=null?request.name(): newUser.getFullName());
-            newUser.setEmail(request.email()!=null?request.email(): newUser.getEmail());
+            newUser.setPhone(request.phone() != null ? request.phone() : newUser.getPhone());
+            newUser.setFullName(request.name() != null ? request.name() : newUser.getFullName());
+            newUser.setEmail(request.email() != null ? request.email() : newUser.getEmail());
             newUser.setUpdatedAt(new Date());
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
-            newUser.setPassword(request.password()!=null?passwordEncoder.encode(request.password()): newUser.getPassword());
+            newUser.setPassword(request.password() != null ? passwordEncoder.encode(request.password()) : newUser.getPassword());
 
-            userRepository.save(newUser);
             if (request.avatarPicture() != null) {
                 String avatar = uploadService.uploadUserAvt(request.avatarPicture(), newUser.getId());
                 newUser.setAvatarPicture(avatar);
             }
+            userRepository.save(newUser);
+
             log.info("Update user successfully: {}", newUser.getId());
         }
     }
@@ -97,9 +98,10 @@ public class AdminServiceImpl implements AdminService {
         user.setRoles(List.of(roleRepository.findByName("USER").orElseThrow()));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.password()));
-        userRepository.save(user);
         String avatar = uploadService.uploadUserAvt(request.avatarPicture(), user.getId());
         user.setAvatarPicture(avatar);
+        userRepository.save(user);
+
         log.info("Insert user successfully: {}", user.getId());
     }
 
@@ -142,22 +144,24 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void changPassword(String newPassword, String oldPassword, Long id) {
+    public User changPassword(String oldPassword, String newPassword, String passwordConfirm, Long id) {
         Optional<User> user = userRepository.findById(id);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-
+        User existingUser=null;
         if (user.isPresent()) {
-            User existingUser = user.get();
-
-            if (passwordEncoder.matches(oldPassword, existingUser.getPassword())) {
+            existingUser = user.get();
+            boolean isMatch = newPassword.equals(passwordConfirm);
+            if (passwordEncoder.matches(oldPassword, existingUser.getPassword()) && isMatch) {
                 existingUser.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(existingUser);
-            } else {
-                throw new RuntimeException("Wrong password!");
             }
-        } else {
-            throw new RuntimeException("User not found!");
         }
+        return existingUser;
+    }
+
+    @Override
+    public List<User> GetAllUserLocked() {
+        return userRepository.GetAllUserLocked();
     }
 
 

@@ -56,46 +56,7 @@ const EditUser = () => {
   const removeRole = (roleId) => {
   };
 
-  const handlePasswordChange = async () => {
-    const password = {
-      oldPassword: document.getElementById("Password").value,
-      newPassword: document.getElementById("newpassword").value,
-    };
-    const formData = new FormData();
-    Object.keys(password).forEach((key) => formData.append(key, password[key]));
 
-    const response = await axios
-      .patch(
-        API_PATCH_PATHS.CHANGE_PASSWORD+`${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
-      .then((response) => {
-        Swal.fire({
-          title: "Đổi mật khẩu thành công",
-          text: response.data,
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-        
-        navigate(`/admin/UserList`);
-
-      })
-      .catch((error) => {
-        Swal.fire({
-          title: "Lỗi",
-          text: error.response.data,
-          icon: "error",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      });
-  };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -180,17 +141,7 @@ const EditUser = () => {
                         Thông tin người dùng
                       </a>
                     </li>
-                    <li className="col-md-3 p-0">
-                      <a
-                        className={`nav-link ${
-                          activeTab === "change-password" ? "active" : ""
-                        }`}
-                        onClick={() => setActiveTab("change-password")}
-                        href="#change-password"
-                      >
-                        Thay đổi mật khẩu
-                      </a>
-                    </li>
+                    
                     <li className="col-md-3 p-0">
                       <a
                         className={`nav-link ${
@@ -320,53 +271,7 @@ const EditUser = () => {
                     </div>
                   </div>
                 </div>
-                <div
-                  className={`tab-pane fade ${
-                    activeTab === "change-password" ? "active show" : ""
-                  }`}
-                  id="change-password"
-                  role="tabpanel"
-                >
-                  <div className="iq-card">
-                    <div className="iq-card-header d-flex justify-content-between">
-                      <div className="iq-header-title">
-                        <h4 className="card-title">Đổi mật khẩu</h4>
-                      </div>
-                    </div>
-                    <div className="iq-card-body">
-                      <form>
-                        <div className="form-group">
-                          <label htmlFor="Password">Mật khẩu cũ:</label>
-                          <input
-                            type="Password"
-                            className="form-control"
-                            id="Password"
-                            required
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="newpassword">Mật khẩu mới:</label>
-                          <input
-                            type="Password"
-                            className="form-control"
-                            id="newpassword"
-                            required
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          className="btn btn-primary mr-2"
-                          onClick={handlePasswordChange}
-                        >
-                          Xác nhận
-                        </button>
-                        <button type="reset" className="btn iq-bg-danger">
-                          Hủy
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
+              
                 <div
                   className={`tab-pane fade ${
                     activeTab === "change-roles" ? "active show" : ""

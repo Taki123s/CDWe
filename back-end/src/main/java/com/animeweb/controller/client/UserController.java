@@ -4,6 +4,8 @@ import com.animeweb.dto.user.UpdateUser;
 import com.animeweb.dto.user.UserDTOBuilder;
 import com.animeweb.entities.*;
 import com.animeweb.repository.UserRepository;
+import com.animeweb.request.PasswordChangeRequest;
+import com.animeweb.service.AdminService;
 import com.animeweb.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,8 +23,9 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
+
     @Autowired
-    private UserRepository userRepository;
+    private AdminService adminService;
 
     @GetMapping("/view/{id}")
     public ResponseEntity<UserDTOBuilder> viewProfile(@PathVariable Long id) {
@@ -36,43 +40,24 @@ public class UserController {
                 .map(Follow::getId)
                 .collect(Collectors.toList());
         UserDTOBuilder userDTO = new UserDTOBuilder(user.getId(), user.getRoles(), user.getUserName(), user.getAvatarPicture()
-                , user.getPassword(), user.getEmail(), user.getFullName(), user.getPhone(), user.getUserType(), user.getCreatedAt(), user.getUpdatedAt()
+                , "", user.getEmail(), user.getFullName(), user.getPhone(), user.getUserType(), user.getCreatedAt(), user.getUpdatedAt()
                 , user.getDeletedAt(), user.getStatus(), user.getExternalId(), user.getIsActive(), viewIdList, rateIDList, followIdList);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<User> updateProfile(@RequestBody UpdateUser user) {
-        User existingUser = userService.findUserById(user.getId());
-        if (existingUser != null) {
-
-
-            User updatedUser = userRepository.save(new User(
-                    user.getId(),
-                    existingUser.getRoles()
-                    , user.getUserName(),
-                    user.getAvatarPicture() != null ? user.getAvatarPicture() : existingUser.getAvatarPicture(),
-                    existingUser.getPassword()
-                    , user.getEmail(),
-                    user.getFullName(),
-                    user.getPhone(),
-                    existingUser.getUserType(),
-                    existingUser.getCreatedAt(),
-                    existingUser.getUpdatedAt(),
-                    existingUser.getDeletedAt()
-                    , existingUser.getStatus()
-                    , existingUser.getAuthCode()
-                    , existingUser.getExpiredAt()
-                    , existingUser.getAuthenticated()
-                    , existingUser.getExternalId(),
-                    existingUser.getIsActive()
-                    , existingUser.getViews(),
-                    existingUser.getRates(),
-                    existingUser.getFollows()));
-            return ResponseEntity.ok(updatedUser);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @PatchMapping("/update")
+    public ResponseEntity<User> updateProfile( @ModelAttribute UpdateUser user) throws IOException {
+        return ResponseEntity.ok(userService.updateProfile(user));
     }
 
+    @GetMapping("/deActive")
+    public ResponseEntity<List<User>> GetAllUserLocked() {
+        return ResponseEntity.ok(adminService.GetAllUserLocked());
+    }
+
+    @PatchMapping("/changePassword/{id}")
+    public ResponseEntity<User> updatePassword(@ModelAttribute PasswordChangeRequest password, @PathVariable Long id) {
+        User u = adminService.changPassword(password.oldPassword(), password.newPassword(), password.confirmPassword(), id);
+        return ResponseEntity.ok(u);
+    }
 }

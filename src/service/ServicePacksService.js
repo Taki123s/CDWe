@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { refreshToken } from "./AuthServices";
 import { jwtDecode } from "jwt-decode";
 const MOVIE_API_BASE_URL = "http://localhost:8080/admin/servicePack";
-
+const MOVIE_API_BASE_URL_CLIENT = "http://localhost:8080/servicePack";
 const axiosInstance = axios.create({});
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -24,7 +24,7 @@ export const getUserPackedList = () => {
   return axiosInstance.get(`${MOVIE_API_BASE_URL}/getAll`);
 };
 export const getUserPackedListByUser = (idUser) => {
-  return axiosInstance.get(`${MOVIE_API_BASE_URL}/getAll/${idUser}`);
+  return axiosInstance.get(`${MOVIE_API_BASE_URL_CLIENT}/getAll/${idUser}`);
 };
 export const editServicePack = (id, updatedService) => {
   return axiosInstance.put(`${MOVIE_API_BASE_URL}/${id}`, updatedService);

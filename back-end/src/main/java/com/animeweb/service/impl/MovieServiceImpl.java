@@ -11,6 +11,7 @@ import com.animeweb.repository.GenreRepository;
 import com.animeweb.repository.MovieRepository;
 import com.animeweb.repository.SerieRepository;
 import com.animeweb.repository.ViewRepository;
+import com.animeweb.service.ChapterService;
 import com.animeweb.service.GenreService;
 import com.animeweb.service.MovieService;
 import com.animeweb.service.SerieService;
@@ -38,7 +39,8 @@ public class MovieServiceImpl implements MovieService {
     private SerieRepository serieRepository;
     @Autowired
     private SerieService serieService;
-
+    @Autowired
+    private ChapterService chapterService;
     @Override
     public void save(Movie movie) {
         movieRepository.save(movie);
@@ -50,9 +52,8 @@ public class MovieServiceImpl implements MovieService {
         List<MovieAdmin> movieDTOList = new ArrayList<>();
         for (Movie movie : movieList) {
             movie.setGenres(genreRepository.getMovieGenre(movie.getId()));
-            if (movie.getSerie() != null) {
-                movie.setSerie(serieService.findById(movie.getSerie().getId()));
-            }
+            movie.setCurrentChapters(chapterService.getChapters(movie.getId()));
+           if(movie.getSerie()!=null) {movie.setSerie(serieService.findById(movie.getSerie().getId()));}
             movieDTOList.add(MovieMapper.mapToMovieAdmin(movie));
         }
         return movieDTOList;
@@ -64,9 +65,8 @@ public class MovieServiceImpl implements MovieService {
         List<MovieDTO> movieDTOList = new ArrayList<>();
         for (Movie movie : movieList) {
             movie.setGenres(genreRepository.getMovieGenre(movie.getId()));
-            if (movie.getSerie() != null) {
-                movie.setSerie(serieService.findById(movie.getSerie().getId()));
-            }
+            movie.setCurrentChapters(chapterService.getChapters(movie.getId()));
+            if(movie.getSerie()!=null) {movie.setSerie(serieService.findById(movie.getSerie().getId()));}
             movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
         }
         return movieDTOList;
@@ -89,6 +89,11 @@ public class MovieServiceImpl implements MovieService {
 
         List<MovieDTO> movieDTOS = new ArrayList<>();
         for (Movie m : moviePage.getContent()) {
+                m.setGenres(genreRepository.getMovieGenre(m.getId()));
+                m.setCurrentChapters(chapterService.getChapters(m.getId()));
+                if (m.getSerie() != null) {
+                    m.setSerie(serieService.findById(m.getSerie().getId()));
+                }
             movieDTOS.add(MovieMapper.mapToMovieDTO(m));
         }
         return movieDTOS;
@@ -99,6 +104,11 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> list = movieRepository.findAll();
         List<MovieDTO> movieDTOS = new ArrayList<>();
         for (Movie m : list) {
+                m.setGenres(genreRepository.getMovieGenre(m.getId()));
+                m.setCurrentChapters(chapterService.getChapters(m.getId()));
+                if (m.getSerie() != null) {
+                    m.setSerie(serieService.findById(m.getSerie().getId()));
+                }
             movieDTOS.add(MovieMapper.mapToMovieDTO(m));
         }
         return movieDTOS;
@@ -108,13 +118,12 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDTO findMovieById(Long movieId) {
         Movie movie = movieRepository.findById(movieId).orElse(null);
-        if (movie != null) {
-            movie.setGenres(genreRepository.getMovieGenre(movie.getId()));
-            if (movie.getSerie() != null) {
-                movie.setSerie(serieService.findById(movie.getSerie().getId()));
-            }
-            return MovieMapper.mapToMovieDTO(movie);
-        } else {
+        if(movie!=null){
+        movie.setGenres(genreRepository.getMovieGenre(movie.getId()));
+        movie.setCurrentChapters(chapterService.getChapters(movie.getId()));
+        if(movie.getSerie()!=null) {movie.setSerie(serieService.findById(movie.getSerie().getId()));}
+        return MovieMapper.mapToMovieDTO(movie);
+        }else{
             return null;
         }
 
@@ -123,6 +132,13 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDTO findMovieWatching(Long movieId) {
         Movie movie = movieRepository.findMovieWatching(movieId);
+        if(movie!=null) {
+            movie.setGenres(genreRepository.getMovieGenre(movie.getId()));
+            movie.setCurrentChapters(chapterService.getChapters(movie.getId()));
+            if (movie.getSerie() != null) {
+                movie.setSerie(serieService.findById(movie.getSerie().getId()));
+            }
+        }
         return MovieMapper.mapToMovieWatching(movie);
     }
 
@@ -157,7 +173,6 @@ public class MovieServiceImpl implements MovieService {
         ) {
             movieDTOS.add(MovieMapper.mapToMovieDTO(m));
         }
-
         return movieDTOS;
     }
 
@@ -170,7 +185,6 @@ public class MovieServiceImpl implements MovieService {
         ) {
             movieDTOS.add(MovieMapper.mapToMovieDTO(m));
         }
-
         return movieDTOS;
     }
 
@@ -178,7 +192,6 @@ public class MovieServiceImpl implements MovieService {
     public boolean findByName(String name) {
         return movieRepository.existsByNameAndStatus(name, true);
     }
-
     @Override
     public boolean findByNameNotThis(Long idMovie, String name) {
         return movieRepository.existsByNameAndStatusTrueAndIdNot(name, idMovie);
@@ -193,6 +206,7 @@ public class MovieServiceImpl implements MovieService {
     public Movie findById(Long id) {
         return movieRepository.findMovieByIdAndStatusTrue(id);
     }
+
 
 
     @Override

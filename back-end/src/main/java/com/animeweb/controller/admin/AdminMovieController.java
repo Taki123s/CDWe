@@ -4,7 +4,6 @@ import com.animeweb.dto.chapter.ChapterDTO;
 import com.animeweb.dto.chapter.ChapterRequest;
 import com.animeweb.dto.movie.MovieAdd;
 import com.animeweb.dto.movie.MovieAdmin;
-import com.animeweb.dto.movie.MovieDTO;
 import com.animeweb.entities.Chapter;
 import com.animeweb.entities.Genre;
 import com.animeweb.entities.Movie;

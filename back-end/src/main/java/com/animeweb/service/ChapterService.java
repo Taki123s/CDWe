@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ChapterService {
     List<ChapterDTO> getMovieChapters(Long idMovie);
+    List<Chapter> getChapters(Long idMovie);
     Chapter findById(Long id);
     boolean isExistOrdinal(Long idMovie, Long id, Integer ordinal);
     boolean isExistOrdinal(Long idMovie, Integer ordinal);

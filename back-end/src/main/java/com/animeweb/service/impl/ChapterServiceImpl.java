@@ -26,6 +26,11 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
+    public List<Chapter> getChapters(Long idMovie) {
+        return chapterRepository.findByMovieIdAndStatus(idMovie,true);
+    }
+
+    @Override
     public Chapter findById(Long id) {
         return chapterRepository.findByIdAndStatus(id,true);
     }

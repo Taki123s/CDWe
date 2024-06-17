@@ -42,15 +42,12 @@ public class SocialLoginController {
         String id = (String) oAuth2User.getAttribute("sub");
         String pictureUrl = (String) oAuth2User.getAttribute("picture");
         User socialUser = accountOAuth2UserService.findByEmailGoogle(email);
-        System.out.println(oAuth2User.getAttributes());
         SocialUser socialUser1 =null;
         String token = "";
         Date now = java.sql.Date.valueOf(LocalDate.now());
         if (socialUser == null) {
-            System.out.println(name);
             String pass= HashAlgorithm.hashText(id,HashAlgorithm.SHA256);
-
-            Role roles = roleRepository.findByName("USER").get();
+            Role roles = roleRepository.findByNameAndStatusTrue("USER");
             socialUser1 = new SocialUser(null, name, pictureUrl, pass, email, name, null, 2, now, null, null, true, id, null, null, null);
             socialUser1.setRole(roles);
             User  socialUser2 = SocialUserMapper.mapToEntity(socialUser1);
@@ -82,9 +79,7 @@ public class SocialLoginController {
         }
 
         // Retrieve roles safely
-        Role roles = roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("Role 'USER' not found"));
-
+        Role roles = roleRepository.findByNameAndStatusTrue("USER");
         User socialUser = accountOAuth2UserService.findByEmailFacebook(email);
         Date now = java.sql.Date.valueOf(LocalDate.now());
         String token;

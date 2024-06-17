@@ -19,6 +19,10 @@ public class UserMapper {
                 user.getExternalId(),
                 user.getAuthenticated());
     }
+    public static UserDTO mapToUserNotRole(User user){
+        return new UserDTO(user.getId(),
+                user.getUserName());
+    }
     public static User mapToRegisterUser(RegisterDTO userDTO){
         return new User(
                 userDTO.getUserName(),

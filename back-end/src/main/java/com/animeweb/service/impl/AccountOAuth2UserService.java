@@ -20,7 +20,6 @@ public class AccountOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     public void createAccount(User socialUser) {
-
         userRepository.save(socialUser);
     }
 }

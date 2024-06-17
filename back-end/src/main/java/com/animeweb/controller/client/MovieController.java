@@ -2,8 +2,13 @@ package com.animeweb.controller.client;
 
 
 import com.animeweb.dto.movie.MovieDTO;
+import com.animeweb.dto.movie.ViewDTO;
+import com.animeweb.entities.Movie;
 import com.animeweb.entities.User;
+import com.animeweb.entities.View;
+import com.animeweb.security.IntrospectRequest;
 import com.animeweb.security.JwtGenerator;
+import com.animeweb.security.LogOutRequest;
 import com.animeweb.service.MovieService;
 import com.animeweb.service.impl.CloudinaryService;
 import com.animeweb.service.impl.UserPackedServiceImpl;
@@ -43,7 +48,6 @@ public class MovieController {
 
         List<MovieDTO> movies = movieService.index(page, size, sortBy, ascending);
         int totalMovies = movieService.findAll().size();
-
         Map<String, Object> response = new HashMap<>();
         response.put("movies", movies);
         response.put("totalMovies", totalMovies);
@@ -54,12 +58,22 @@ public class MovieController {
     public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId) {
         return ResponseEntity.ok(movieService.findMovieById(movieId));
     }
-
+    @PostMapping("/{movieId}")
+    public void updateView(@RequestBody IntrospectRequest introspectRequest, @PathVariable Long movieId) throws ParseException {
+        SignedJWT verified = jwtGenerator.verifyToken(introspectRequest.getToken(),false);
+        Long idUser = verified.getJWTClaimsSet().getLongClaim("idUser");
+        View view = new View();
+        User user = userService.findUserById(idUser);
+        Movie movie = movieService.findById(movieId);
+        view.setUserId(user);
+        view.setMovie(movie);
+        movieService.updateView(view);
+    }
     @GetMapping("/watching")
     public ResponseEntity<MovieDTO> findMovieWatching(@RequestParam Long movieId, @RequestParam String token) throws ParseException {
-        SignedJWT signedJWT = jwtGenerator.verifyToken(token);
+        SignedJWT signedJWT = jwtGenerator.verifyToken(token,false);
         Long idUser = (Long) signedJWT.getJWTClaimsSet().getClaim("idUser");
-        User user = userService.getUserById(String.valueOf(idUser));
+        User user = userService.findUserById(idUser);
         boolean isBought = userPackedService.checkUserBuyedService(user);
         if (isBought) {
             return ResponseEntity.ok(movieService.findMovieWatching(movieId));

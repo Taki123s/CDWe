@@ -1,5 +1,6 @@
 package com.animeweb.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +21,13 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @JsonBackReference
     private List<Role> roles = new ArrayList<>();
     @Column(name = "user_name", length = 500)
     private String userName;
@@ -30,7 +37,7 @@ public class User implements Serializable {
     private String password;
     @Column(name = "email", length = 500)
     private String email;
-    @Column(name = "full_name", length = 500)
+    @Column(name = "full_name", columnDefinition = "MEDIUMTEXT")
     private String fullName;
     @Column(name = "phone", length = 45)
     private String phone;
@@ -38,15 +45,15 @@ public class User implements Serializable {
     private Integer userType = 1;
     @Column(name = "create_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt = new Date();
-    @Column(name = "update_at")
+    @Column(name = "update_at", columnDefinition = "datetime")
     private Date updatedAt;
-    @Column(name = "delete_at")
+    @Column(name = "delete_at", columnDefinition = "datetime")
     private Date deletedAt;
     @Column(name = "status", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean status = true;
     @Column(name = "authCode")
     private String authCode;
-    @Column(name = "expired_at")
+    @Column(name = "expired_at", columnDefinition = "datetime")
     private Date expiredAt;
     @Column(name = "authenticated", columnDefinition = "TINYINT(0)")
     private Boolean authenticated = false;

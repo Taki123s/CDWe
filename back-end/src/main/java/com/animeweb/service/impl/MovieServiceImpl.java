@@ -2,12 +2,18 @@ package com.animeweb.service.impl;
 
 import com.animeweb.dto.movie.MovieAdmin;
 import com.animeweb.dto.movie.MovieDTO;
+import com.animeweb.entities.Genre;
 import com.animeweb.entities.Movie;
+import com.animeweb.entities.View;
 import com.animeweb.exception.ResourceNotFoundException;
 import com.animeweb.mapper.MovieMapper;
 import com.animeweb.repository.GenreRepository;
 import com.animeweb.repository.MovieRepository;
+import com.animeweb.repository.SerieRepository;
+import com.animeweb.repository.ViewRepository;
+import com.animeweb.service.GenreService;
 import com.animeweb.service.MovieService;
+import com.animeweb.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
@@ -25,9 +31,13 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieRepository movieRepository;
     @Autowired
+    ViewRepository viewRepository;
+    @Autowired
     private GenreRepository genreRepository;
-
-
+    @Autowired
+    private SerieRepository serieRepository;
+    @Autowired
+    private SerieService serieService;
     @Override
     public void save(Movie movie) {
         movieRepository.save(movie);
@@ -38,6 +48,8 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movieList = movieRepository.findAll();
         List<MovieAdmin> movieDTOList = new ArrayList<>();
         for (Movie movie : movieList) {
+            movie.setGenres(genreRepository.getMovieGenre(movie.getId()));
+           if(movie.getSerie()!=null) {movie.setSerie(serieService.findById(movie.getSerie().getId()));}
             movieDTOList.add(MovieMapper.mapToMovieAdmin(movie));
         }
         return movieDTOList;
@@ -48,6 +60,8 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movieList = movieRepository.findAll();
         List<MovieDTO> movieDTOList = new ArrayList<>();
         for (Movie movie : movieList) {
+            movie.setGenres(genreRepository.getMovieGenre(movie.getId()));
+            if(movie.getSerie()!=null) {movie.setSerie(serieService.findById(movie.getSerie().getId()));}
             movieDTOList.add(MovieMapper.mapToMovieDTO(movie));
         }
         return movieDTOList;
@@ -88,8 +102,15 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDTO findMovieById(Long movieId) {
-        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+        Movie movie = movieRepository.findById(movieId).orElse(null);
+        if(movie!=null){
+        movie.setGenres(genreRepository.getMovieGenre(movie.getId()));
+        if(movie.getSerie()!=null) {movie.setSerie(serieService.findById(movie.getSerie().getId()));}
         return MovieMapper.mapToMovieDTO(movie);
+        }else{
+            return null;
+        }
+
     }
 
     @Override
@@ -154,6 +175,10 @@ public class MovieServiceImpl implements MovieService {
     public boolean findByName(String name) {
         return movieRepository.existsByNameAndStatus(name, true);
     }
+    @Override
+    public boolean findByNameNotThis(Long idMovie, String name) {
+        return movieRepository.existsByNameAndStatusTrueAndIdNot(name,idMovie);
+    }
 
     @Override
     public boolean existById(Long id) {
@@ -162,8 +187,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie findById(Long id) {
-        return movieRepository.findById(id).orElse(null);
+        return movieRepository.findMovieByIdAndStatusTrue(id);
     }
+
+
 
     @Override
     public List<MovieDTO> findAllMovieSameSeries(Long movieId) {
@@ -188,5 +215,10 @@ public class MovieServiceImpl implements MovieService {
         }
         return result;
 
+    }
+
+    @Override
+    public void updateView(View view) {
+        viewRepository.save(view);
     }
 }

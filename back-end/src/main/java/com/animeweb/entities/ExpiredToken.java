@@ -16,6 +16,6 @@ public class ExpiredToken {
     @Id
     @Column(name = "id")
     private String id;
-    @Column(name="expiryDate")
+    @Column(name="expiryDate", columnDefinition = "datetime")
     Date expiryDate;
 }

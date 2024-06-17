@@ -1,7 +1,7 @@
 package com.animeweb.dto.chapter;
 
-import com.animeweb.entities.Movie;
 import lombok.*;
+
 
 @Data
 @NoArgsConstructor
@@ -11,7 +11,7 @@ public class ChapterDTO {
     private Integer ordinal;
     private String link;
     private Boolean status;
-    private Integer type;
-    private Movie movie;
+    private String createAt;
+    private String updateAt;
 
 }

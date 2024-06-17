@@ -64,11 +64,11 @@ public class JwtGenerator {
         }
         return stringJoiner.toString();
     }
-    public SignedJWT verifyToken(String token){
+    public SignedJWT verifyToken(String token,boolean isRefresh){
         try{
         JWSVerifier verifier = new MACVerifier(SecurityConstants.JWT_SECRET.getBytes());
         SignedJWT signedJWT = SignedJWT.parse(token);
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        Date expiryTime = isRefresh ? new Date(signedJWT.getJWTClaimsSet().getIssueTime().getTime()+SecurityConstants.JWT_REFRESH):signedJWT.getJWTClaimsSet().getExpirationTime();
         boolean verified = signedJWT.verify(verifier);
         if (!(verified && expiryTime.after(new Date())))  throw new AuthenticationCredentialsNotFoundException("Invalid JWT token");
         if(expiredTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))  throw new AuthenticationCredentialsNotFoundException("JWT expired");

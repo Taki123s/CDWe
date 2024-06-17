@@ -21,7 +21,13 @@ export const ListUserPacked = () => {
                 setServices(response.data);
             })
             .catch((error) => {
-                console.log(error);
+                Swal.fire({
+                    title: "Lỗi",
+                    text: error.response?.data.message || "Unknown error occurred",
+                    icon: "error",
+                    timer: 2000,
+                    showConfirmButton: false,
+                  });
             });
     }, []);
 
@@ -42,11 +48,23 @@ export const ListUserPacked = () => {
                             setServices(response.data);
                         })
                         .catch((error) => {
-                            console.log(error);
+                            Swal.fire({
+                                title: "Lỗi",
+                                text: error.response?.data.message || "Unknown error occurred",
+                                icon: "error",
+                                timer: 2000,
+                                showConfirmButton: false,
+                              });
                         });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    Swal.fire({
+                        title: "Lỗi",
+                        text: error.response?.data.message || "Unknown error occurred",
+                        icon: "error",
+                        timer: 2000,
+                        showConfirmButton: false,
+                      });
                 });
             }
         });

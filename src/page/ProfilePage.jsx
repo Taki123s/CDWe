@@ -32,8 +32,9 @@ function ProfilePage() {
           API_GET_PATHS.GET_PROFILE + `${user.idUser}`
         );
         const data = response.data;
-
+        console.log(response.data)
         setAccount(data);
+        console.log(data.avatarPicture)
         setImageSrc(data.avatarPicture);
         setUsername(data.userName);
         setFullName(data.fullName);
@@ -151,7 +152,7 @@ function ProfilePage() {
         setIsUploading(false);
         Swal.fire({
           title: "Thành công",
-          text: response.data,
+          text: "Chỉnh sửa thành công!",
           icon: "success",
           timer: 2000,
           showConfirmButton: false,

@@ -4,28 +4,50 @@ import Carousel from "../../src/component/Carousel";
 import Topview from "../component/Topview";
 import { useParams } from "react-router-dom";
 import { getMoviesByGenre } from "../service/CategoryServices";
+import axios from "axios";
 
 export const CategoriesPage = () => {
   const [movies, setMovies] = useState([]);
-  const { idGenre, nameGenre} = useParams();
+  const { idGenre, nameGenre } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(9);
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState("createAt");
   const [ascending, setAscending] = useState(false);
-  useEffect(() => { 
-      getMoviesByGenre(idGenre, currentPage-1, sortBy, ascending).then((response) => {
-          setMovies(response.data.movies);
-          setTotalPages(Math.ceil(response.data.totalMovies / pageSize))
-        }
-      );
-    },[
-    idGenre,
-    currentPage,
-    sortBy,
-    ascending]
-  );
-
+  const [ratings, setRatings] = useState({});
+  useEffect(() => {
+    getMoviesByGenre(idGenre, currentPage - 1, sortBy, ascending).then(
+      (response) => {
+        setMovies(response.data.movies);
+        setTotalPages(Math.ceil(response.data.totalMovies / pageSize));
+        const ratingPromises = response.data.movies.map((movie) =>
+          fetchRating(movie.id)
+        );
+        Promise.all(ratingPromises)
+          .then((ratingsArray) => {
+            const ratingsObject = ratingsArray.reduce((acc, rating, index) => {
+              acc[response.data.movies[index].id] = rating;
+              return acc;
+            }, {});
+            setRatings(ratingsObject);
+          })
+          .catch((error) => {
+            console.error("Error fetching ratings:", error);
+          });
+      }
+    );
+  }, [idGenre, currentPage, sortBy, ascending]);
+  const fetchRating = (movieId) => {
+    return axios
+      .get(`http://localhost:8080/rates/average/${movieId}`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(`Error fetching rating for movie ${movieId}:`, error);
+        return null;
+      });
+  };
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -61,7 +83,7 @@ export const CategoriesPage = () => {
                   <div className="col-lg-8 col-md-8 col-sm-8">
                     <div className="section-title">
                       <h4>Thể loại: {nameGenre}</h4>
-                      
+
                       <div className="sort">
                         <select
                           className="filter"
@@ -106,16 +128,23 @@ export const CategoriesPage = () => {
                           }}
                         >
                           <div className="ep">
-                            {movie.currentChapters.length} /{" "}
+                            {movie.currentChapters?.length} /{" "}
                             {movie.totalChapters}
                           </div>
                           <div className="view">
-                            <i className="fa fa-eye"></i> {movie.views.length}
+                            <i className="fa fa-eye"></i> {movie.views?.length}
+                          </div>
+                          <div className="rate">
+                            {ratings[movie.id]}
+                            <i
+                              className="fa fa-star"
+                              style={{ color: "#f3da35" }}
+                            ></i>
                           </div>
                         </div>
                         <div className="product__item__text">
                           <h5>
-                          <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
+                            <Link to={`/movie/${movie.id}`}>{movie.name}</Link>
                           </h5>
                         </div>
                       </div>

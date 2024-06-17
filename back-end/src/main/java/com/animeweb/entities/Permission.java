@@ -15,8 +15,8 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id ;
-    @Column(name= "name")
+    @Column(name= "name", columnDefinition = "MEDIUMTEXT")
     private String name;
-    @Column(name="description")
+    @Column(name="description", columnDefinition = "MEDIUMTEXT")
     private String description;
 }

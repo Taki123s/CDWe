@@ -8,21 +8,16 @@ import {
   faEdit,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"; // Import Font Awesome icons
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-import { getAllUser ,deleteUser,lockUser} from "../../service/UserAdmin";
+import { getAllUser, deleteUser, lockUser } from "../../service/UserAdmin";
 
 const UserList = () => {
   // State for list of accounts
   const [listAccount, setListAccount] = useState([]);
-  var token = Cookies.get("jwt_token");
-  const user = typeof token === "undefined" ? null : jwtDecode(token);
   const navigate = useNavigate();
 
   const data = async () => {
-    const response = await getAllUser().catch((err)=>console.log(err));
-           setListAccount(response.data);
-    
+    const response = await getAllUser().catch((err) => console.log(err));
+    setListAccount(response.data);
   };
   // Simulated data for demonstration
   useEffect(() => {
@@ -30,19 +25,17 @@ const UserList = () => {
   }, []);
 
   // Event handlers
-  const handleRemove = async(id) => {
-
-    const response = await deleteUser(id).catch((err)=>console.log(err));
+  const handleRemove = async (id) => {
+    const response = await deleteUser(id).catch((err) => console.log(err));
 
     data();
   };
 
-  const handleLock =async (id) => {
+  const handleLock = async (id) => {
     // Handle lock action
-    const response = await lockUser(id).catch((err)=>console.log(err));
+    const response = await lockUser(id).catch((err) => console.log(err));
 
     data();
-
   };
 
   const handleEdit = (id) => {
@@ -81,7 +74,7 @@ const UserList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {listAccount.map((item) => (
+                    {listAccount?.map((item) => (
                       <tr key={item}>
                         <td className="text-center">
                           <img
@@ -96,7 +89,7 @@ const UserList = () => {
                         <td>{item.email}</td>
                         <td>{item.userType}</td>
                         <td>
-                          {item.roles.map((role, index) => (
+                          {item.roles?.map((role, index) => (
                             <div key={index}>
                               <p>{role.description}</p>
                             </div>

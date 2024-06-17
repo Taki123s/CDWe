@@ -13,4 +13,5 @@ public interface EmailService {
 
 
 	String sendMailWithAttachment(EmailDetails details);
+	String sendLossPassMail (EmailDetails details);
 }

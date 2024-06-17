@@ -22,7 +22,7 @@ const MovieWatching = () => {
   const currentUrl = `http://animeweb.site/movies/${movieId}&${ordinal}`;
   const PlyrPlayer = React.forwardRef((props, ref) => {
     const { source, options = null, ...rest } = props;
-    const playerRef = React.useRef(null);
+    const playerRef = React.useRef(videoSrc);
     const timeoutId = React.useRef(null);
     const [hasUpdatedView, setHasUpdatedView] = useState(false);
     const raptorRef = usePlyr(playerRef, {
@@ -38,7 +38,6 @@ const MovieWatching = () => {
             return;
           }
 
-   
           if (timeoutId.current) {
             clearTimeout(timeoutId.current);
           }
@@ -47,12 +46,12 @@ const MovieWatching = () => {
             updateView(movieId, { token })
               .then((response) => {
                 console.log("View updated");
-                setHasUpdatedView(true); // Đặt trạng thái đã cập nhật view
+                setHasUpdatedView(true);
               })
               .catch((error) => {
                 console.error("Error updating view:", error);
               });
-          }, (videoElement.duration / 2) * 1000); // Chuyển đổi duration từ giây sang mili giây
+          }, (videoElement.duration / 2) * 1000);
         };
 
         videoElement.addEventListener("play", handlePlay);
@@ -126,7 +125,6 @@ const MovieWatching = () => {
       chapters.filter((chapter) => chapter.ordinal == ordinal)[0]?.link
     );
   }, [chapters, ordinal]);
-
 
   return (
     <div className="breadcrumb-option">

@@ -1372,6 +1372,7 @@ margin-bottom: 25px;
 .anime__video__player .plyr iframe,
 .anime__video__player .plyr video {
 	width: 102%;
+	height: 700px!important;
 }
 
 .anime__video__player .plyr--full-ui.plyr--video .plyr__control--overlaid {
@@ -1395,7 +1396,7 @@ margin-bottom: 25px;
 .anime__video__player .plyr--full-ui input[type="range"] {
 	color: #ffffff;
 }
-/* 
+/*
 .anime__video__player .plyr__controls .plyr__controls__item.plyr__progress__container {
 	position: absolute;
 	left: 26px;

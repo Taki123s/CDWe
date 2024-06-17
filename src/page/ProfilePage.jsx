@@ -313,7 +313,7 @@ function ProfilePage() {
           </div>
         </div>
         <div className="row">
-          {service == null ? (
+          {service != null ? (
             <>
               {service.map((s) => (
                 <>

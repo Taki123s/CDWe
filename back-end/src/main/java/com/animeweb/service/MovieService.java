@@ -26,4 +26,5 @@ public interface MovieService {
     boolean findByNameNotThis(Long idMovie, String name);
     List<MovieDTO> findAllMovieFollowedByUserId(Long userId);
     void updateView(View view);
+    List<MovieDTO> findAllMovieViewedByUserId(Long userId);
 }

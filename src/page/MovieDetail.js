@@ -20,7 +20,6 @@ function MovieDetail() {
   const user = token ? jwtDecode(token) : null;
   const { id } = useParams();
   const [movie, setMovies] = useState({});
-  const [genres, setGenres] = useState([]);
   const [movieSameSeries, setMovieSameSeries] = useState([]);
   const [flag, setFlag] = useState(false);
   const [follow, setFollow] = useState("");
@@ -68,29 +67,12 @@ function MovieDetail() {
     };
     fetchData();
   }, [id]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(API_GET_PATHS.GET_ALL_GENRE);
-        console.log(response.data)
-
-
-        setGenres(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
   useEffect(() => {
     if (user) {
       const fetchFollowData = async () => {
         try {
-          const response = await axios.get(API_GET_PATHS.GET_FOLLOW`?movieId=${id}&userId=${user.idUser}`);
+          const response = await axios.get(API_GET_PATHS.GET_FOLLOW+`?movieId=${id}&userId=${user.idUser}`);
           if (response.data) {
-
             setFollow(response.data);
             setFavorite(response.data.status);
           }
@@ -311,7 +293,7 @@ function MovieDetail() {
                           <span>
                             <Trans i18nKey={"menu.categories"}>{t("menu.categories")}</Trans>:
                           </span>
-                            {genres.map((genre) => (
+                            {movie.genres?.map((genre) => (
                                 <Link key={genre.id} to={`/categories/${genre.id}/${genre.description}`}>
                                   <button
                                       className="btn btn-outline-danger ml-2 hoverWhite"
@@ -353,7 +335,7 @@ function MovieDetail() {
                           <span>
                             <Trans i18nKey={"content.views"}>{t("content.views")}</Trans>
                           </span>
-                            <span style={{ width: "unset", fontWeight: "400" }}>0{/* {movie.views.length} */}</span>
+                            <span style={{ width: "unset", fontWeight: "400" }}>{movie.views?.length}</span>
                           </li>
                         </ul>
                       </div>

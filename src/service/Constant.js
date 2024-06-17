@@ -5,7 +5,7 @@ export const API_GET_PATHS = {
   GET_ALL_MOVIE: `${BASE_URL}/movie/`,
   GET_ALL_GENRE: `${BASE_URL}/genre`,
   GET_MOVIE_SAME: `${BASE_URL}/movie/same/`,
-  GET_FOLLOW: `${BASE_URL}/follow/`,
+  GET_FOLLOW: `${BASE_URL}/follow`,
   GET_PROFILE: `${BASE_URL}/account/view/`,
   GET_ALL_SERVICE_PACK:`${BASE_URL}/servicePack/findAll`
 };

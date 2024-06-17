@@ -9,7 +9,7 @@ import "../App.css";
 import "../css/bootstrap.min.css";
 import "../css/owl.carousel.min.css";
 import "../css/ds/style.css";
-import "../css/home.css"
+import "../css/home.css";
 import MovieDetail from "../page/MovieDetail";
 import ProductItem from "../page/ProductItem";
 import AnimePage from "../component/Index";
@@ -23,25 +23,27 @@ import PayPal from "../component/PayPal";
 import ExecutePaymentComponent from "../component/ExecutePaymentComponent";
 import Follow from "../page/Follow";
 import History from "../component/history-packed";
-import Profile from "../page/ProfilePage"
+import Profile from "../page/ProfilePage";
 import ChangePassword from "../page/Changepassword";
-import AboutUs from "../component/about_us"
-import AboutPayment from "../component/payment_information"
-import ForgotPassword from '../component/forgotPassword';
-import ResetPassword from '../component/resetPassword';
+import AboutUs from "../component/about_us";
+import AboutPayment from "../component/payment_information";
+import ForgotPassword from "../component/forgotPassword";
+import ResetPassword from "../component/resetPassword";
+import { NotAuthorized } from "../component/NotAuthorized";
 function IndexApp() {
   return (
     <Router>
       <HeaderPage />
       <Routes>
+        <Route path="/NotAuthorized" element={<NotAuthorized />} />
         <Route path="/" element={<AnimePage />} />
         <Route path="/movie/:id" element={<MovieDetail />} />
         <Route path="/item" element={<ProductItem />} />
         <Route path="/history-packed" element={<History />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/about-payment" element={<AboutPayment />} />
-        <Route path="/forgot-password" element={<ForgotPassword/>} />
-        <Route path="/reset-password/:token" element={<ResetPassword/>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route
           path="/categories/:idGenre/:nameGenre"
           element={<CategoriesPage />}
@@ -52,14 +54,13 @@ function IndexApp() {
         <Route path="/login-facebook" element={<LoginFacebook />} />
         <Route path="/execute-payment" element={<ExecutePaymentComponent />} />
         <Route
-          path="/movie/watching/:movieId/:chapterId"
+          path="/movie/watching/:movieId/:ordinal"
           element={<MovieWatching />}
         />
         <Route path="/follow_page" element={<Follow />} />
-        <Route path="/watching/:id/:chapter" element={<MovieWatching />} />
         <Route path="/PayPal" element={<PayPal />} />
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/changePassword" element={<ChangePassword/>}/>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/changePassword" element={<ChangePassword />} />
       </Routes>
     </Router>
   );

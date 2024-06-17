@@ -95,7 +95,7 @@ public class AdminServiceImpl implements AdminService {
         user.setEmail(request.email());
         user.setAuthenticated(true);
         user.setStatus(true);
-        user.setRoles(List.of(roleRepository.findByName("USER").orElseThrow()));
+        user.setRoles(List.of(roleRepository.findByNameAndStatusTrue("USER")));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.password()));
         String avatar = uploadService.uploadUserAvt(request.avatarPicture(), user.getId());

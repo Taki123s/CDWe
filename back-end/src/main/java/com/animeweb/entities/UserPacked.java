@@ -27,9 +27,9 @@ public class UserPacked {
     @JsonBackReference
     private ServicePack servicePackId;
 
-    @Column(name = "expired_time")
+    @Column(name = "expired_time", columnDefinition = "datetime")
     private Date expiredTime;
-    @Column(name = "captureId")
+    @Column(name = "captureId", columnDefinition = "datetime")
     private Long captureId;
     @Column(name = "create_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt = new Date();
@@ -37,7 +37,7 @@ public class UserPacked {
     @Column(name = "status",columnDefinition = "tinyint default 1")
     private Boolean status = true;
 
-    @Column(name = "delete_at")
+    @Column(name = "delete_at", columnDefinition = "datetime")
     private Date deletedAt;
 
     public UserPacked(User userId, ServicePack servicePackId, Date expiredTime) {

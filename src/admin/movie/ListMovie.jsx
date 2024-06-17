@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { Checkbox } from "@mui/material";
 import ArrowDownward from "@mui/icons-material/ArrowDownward";
 import Button from "@mui/material/Button";
-import { parse, format } from "date-fns";
+import { parse } from "date-fns";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
 import { adminListMovie, deleteMovie } from "../../service/MovieServices";
 import { Link } from "react-router-dom";
 import { Loading } from "../../component/Loading";
+import TextField from "@mui/material/TextField";
+
 Modal.setAppElement("#root");
 
 export const ListMovie = () => {
@@ -16,6 +17,8 @@ export const ListMovie = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     adminListMovie()
       .then((response) => {
@@ -24,7 +27,7 @@ export const ListMovie = () => {
       .catch((error) => {
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data.message,
+          text: error.response?.data.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -52,10 +55,10 @@ export const ListMovie = () => {
       cancelButtonText: "Hủy bỏ",
     }).then((result) => {
       if (result.isConfirmed) {
-        setIsUploading(true)
+        setIsUploading(true);
         deleteMovie(id)
           .then((response) => {
-            setIsUploading(false)
+            setIsUploading(false);
             setMovies((prevMovies) =>
               prevMovies.filter((movie) => movie.id !== id)
             );
@@ -68,10 +71,10 @@ export const ListMovie = () => {
             });
           })
           .catch((error) => {
-            setIsUploading(false)
+            setIsUploading(false);
             Swal.fire({
               title: "Lỗi",
-              text: error.response.data || "Lỗi kết nối",
+              text: error.response?.data.message || "Unknown error occurred",
               icon: "error",
               timer: 2000,
               showConfirmButton: false,
@@ -81,12 +84,10 @@ export const ListMovie = () => {
     });
   };
 
-  const handleEdit = (id) => {};
-
   const columns = [
     {
       id: 1,
-      name: "Số thứ tự",
+      name: "No",
       selector: (row, index) => index + 1,
       reorder: true,
     },
@@ -125,7 +126,13 @@ export const ListMovie = () => {
           <img
             src={row.avatarMovie}
             key={row.id}
-            style={{ width: "100%", height: "100%" }}
+            alt={row.name}
+            style={{
+              width: "100%",
+              height: "100%",
+              maxWidth: "100px",
+              maxHeight: "100px",
+            }}
           />
         </div>
       ),
@@ -213,7 +220,7 @@ export const ListMovie = () => {
     {
       id: 10,
       name: "Series Descriptions",
-      selector: (row) => row.seriesDescriptions,
+      selector: (row) => row.series?row.seriesDescriptions:"",
     },
     {
       id: 11,
@@ -241,7 +248,18 @@ export const ListMovie = () => {
     {
       id: 13,
       name: "Current Chapters",
-      selector: (row) => row.currentChapters,
+      cell: (row) => (
+        <div key={row.index} style={{display:"flex"}}>
+          <div style={{alignSelf:"center"}}>{row.currentChapters}</div>
+          <Link
+            to={`/admin/chapterList/${row.id}`}
+            className="btn btn-outline-info ml-2 hoverWhite"
+          >
+            View
+          </Link>
+        </div>
+      ),
+
       sortable: true,
       reorder: true,
     },
@@ -320,14 +338,15 @@ export const ListMovie = () => {
       style: "word-wrap:unset;word-break:unset;",
       cell: (row) => (
         <div style={{ display: "flex" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ width: "50%" }}
-            onClick={() => handleEdit(row)}
-          >
-            Edit
-          </Button>
+          <Link to={`/admin/editMovie/${row.id}`}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ width: "50%" }}
+            >
+              Edit
+            </Button>
+          </Link>
           <Button
             variant="contained"
             style={{ marginLeft: "20px", width: "50%" }}
@@ -340,23 +359,31 @@ export const ListMovie = () => {
       ),
     },
   ];
-
-  const paginationComponentOptions = {
-    selectAllRowsItem: true,
-    selectAllRowsItemText: "ALL",
-  };
-
+  const filteredItems = movies.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const customTile = (
+    <div>
+      <h2>List Movie</h2>
+      <TextField
+        type="text"
+        placeholder="Search by name"
+        style={{ marginBottom: "20px" }}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+  );
   return (
     <div>
       <Loading open={isUploading} />
+
       <DataTable
-        title="List Movie"
+        title={customTile}
         columns={columns}
-        data={movies}
+        data={Array.isArray(filteredItems) ? filteredItems : []}
         defaultSortFieldId={1}
         sortIcon={<ArrowDownward />}
         pagination
-        paginationComponentOptions={paginationComponentOptions}
       />
       <Modal
         isOpen={isOpen}

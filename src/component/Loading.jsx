@@ -42,7 +42,7 @@ export const Loading = ({ open = false }) => {
           backgroundSize: "cover",
         }}
       ></div>
-      <h2 style={{ color: "white" }}>Đang tải lên...</h2>
+      <h2 style={{ color: "white" }}>Đang xử lý...</h2>
     </Modal>
   );
 };

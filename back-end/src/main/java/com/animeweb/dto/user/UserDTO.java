@@ -56,4 +56,9 @@ public class UserDTO {
         this.phone = phone;
         this.userType = userType;
     }
+
+    public UserDTO(Long id, String userName) {
+        this.id = id;
+        this.userName = userName;
+    }
 }

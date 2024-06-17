@@ -62,4 +62,19 @@ public class GenreServiceImpl implements GenreService {
     public List<Genre> findGenresByList(List<Long> genres) {
         return genreRepository.findGenresByIds(genres);
     }
+
+    @Override
+    public Boolean existDescription(String description) {
+        return genreRepository.existsByDescriptionAndStatusTrue(description);
+    }
+
+    @Override
+    public void save(Genre genre) {
+        genreRepository.save(genre);
+    }
+
+    @Override
+    public Genre getById(Long genreId) {
+        return genreRepository.findGenresByIdAndStatusTrue(genreId);
+    }
 }

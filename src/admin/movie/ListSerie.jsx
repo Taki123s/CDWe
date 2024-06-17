@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import { parse, format } from "date-fns";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
+import TextField from "@mui/material/TextField";
 
 Modal.setAppElement("#root");
 export const ListSerie = () => {
@@ -20,7 +21,11 @@ export const ListSerie = () => {
   const [currentRow, setCurrentRow] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [currentAddData, setCurrentAddData] = useState(null);
-
+  const [searchText, setSearchText] = useState("");
+  const filteredItems = series.filter(
+    (item) =>
+      item.descriptions.toLowerCase().includes(searchText.toLowerCase())
+  );
   useEffect(() => {
     getAllSerie()
       .then((response) => {
@@ -29,7 +34,7 @@ export const ListSerie = () => {
       .catch((error) => {
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data.message,
+          text: error.response?.data.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -63,7 +68,7 @@ export const ListSerie = () => {
       .catch((error) => {
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data.message,
+          text: error.response?.data.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -96,7 +101,7 @@ export const ListSerie = () => {
           .catch((error) => {
             Swal.fire({
               title: "Lỗi",
-              text: error.response.data.message,
+              text: error.response?.data.message || "Unknown error occurred",
               icon: "error",
               timer: 2000,
               showConfirmButton: false,
@@ -128,7 +133,7 @@ export const ListSerie = () => {
       .catch((error) => {
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data.message,
+          text: error.response?.data.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -146,7 +151,7 @@ export const ListSerie = () => {
   const columns = [
     {
       id: 1,
-      name: "Số thứ tự",
+      name: "No",
       selector: (row, index) => index + 1,
       reorder: true,
     },
@@ -257,6 +262,7 @@ export const ListSerie = () => {
     selectAllRowsItemText: "ALL",
   };
   const customTitle = (
+    <div>
     <div
       style={{
         display: "flex",
@@ -269,13 +275,25 @@ export const ListSerie = () => {
         New Serie
       </Button>
     </div>
+    <div>
+    <TextField
+        type="text"
+        placeholder="Search By Description"
+        variant="outlined"
+        margin="normal"
+        value={searchText}
+        style={{ display: "block" }}
+        onChange={(e) => setSearchText(e.target.value)}
+      />
+    </div>
+    </div>
   );
   return (
     <div>
       <DataTable
         title={customTitle}
         columns={columns}
-        data={series}
+        data={Array.isArray(filteredItems) ? filteredItems : []}
         defaultSortFieldId={1}
         sortIcon={<ArrowDownward />}
         pagination

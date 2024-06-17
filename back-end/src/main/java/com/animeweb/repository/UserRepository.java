@@ -1,5 +1,6 @@
 package com.animeweb.repository;
 
+import com.animeweb.dto.user.UserDTO;
 import com.animeweb.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,8 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT a from User a where a.userName=:userName and a.status = true and a.authenticated = true")
+
+public interface UserRepository extends JpaRepository<User,Long> {
+    @Query("SELECT a from User a where a.userName=:userName and a.status = true and a.authenticated = true and a.userType=1" )
     Optional<User> findByUserName(String userName);
 
     @Query("SELECT a from User a where a.id= :id and a.status = true ")
@@ -49,8 +51,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.isActive=false and u.status=true")
     List<User> GetAllUserLocked();
+    User findByIdAndStatusTrue(Long id);
+    @Query(value = "select * from users u where authenticated=true and status=true and (u.id in (select distinct user_id from user_roles where role_id!=1 and role_id != :roleId) or u.id not in (select distinct user_id from user_roles))", nativeQuery = true)
+    List<User> findUserNotHaveRole(Long roleId);
 
-    Optional<User> findById(Long id);
 }
 
 

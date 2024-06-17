@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import defaultAvatar from "../images/defaultImg.jpg";
-import { getGenreList } from "../../service/CategoryServices";
+import { getAdminGenre } from "../../service/CategoryServices";
 import DataTable from "react-data-table-component";
 import { getAllSerie } from "../../service/SerieServices";
 import { addMovie } from "../../service/MovieServices";
 import Swal from "sweetalert2";
 import { Loading } from "../../component/Loading";
-
+import { useNavigate } from "react-router-dom";
 
 export const AddMovie = () => {
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const [imageSrc, setImageSrc] = useState(defaultAvatar);
   const [isUploading, setIsUploading] = useState(false);
@@ -27,19 +28,31 @@ export const AddMovie = () => {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [series, setSeries] = useState([]);
   useEffect(() => {
-    getGenreList()
+    getAdminGenre()
       .then((response) => {
         setGenres(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        Swal.fire({
+          title: "Lỗi",
+          text: error.response?.data.message || "Unknown error occurred",
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       });
     getAllSerie()
       .then((response) => {
         setSeries(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        Swal.fire({
+          title: "Lỗi",
+          text: error.response?.data.message || "Unknown error occurred",
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       });
   }, []);
   const handleGenreSelect = (genreId) => {
@@ -112,7 +125,6 @@ export const AddMovie = () => {
     }
     formDt.append("file", avatar);
     setIsUploading(true);
-    console.log(formData)
     addMovie(formDt)
       .then((response) => {
         setIsUploading(false);
@@ -122,13 +134,15 @@ export const AddMovie = () => {
           icon: "success",
           timer: 2000,
           showConfirmButton: false,
+        }).then(() => {
+          navigate("/admin/listMovie");
         });
       })
       .catch((error) => {
         setIsUploading(false);
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data,
+          text: error.response?.data.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -159,10 +173,10 @@ export const AddMovie = () => {
       selector: (row) => row.description,
     },
   ];
-  
+
   return (
     <div>
-     <Loading open={isUploading}/>
+      <Loading open={isUploading} />
       <h1>Nhập phim mới</h1>
       <form className="needs-validation">
         <div className="row">
@@ -311,7 +325,10 @@ export const AddMovie = () => {
                     <div className="form-group col-md-6">
                       <div id="GenresRender">
                         <label>Chọn thể loại</label>
-                        <DataTable columns={columns} data={genres} />
+                        <DataTable
+                          columns={columns}
+                          data={Array.isArray(genres) ? genres : []}
+                        />
                       </div>
                     </div>
                     <div className="form-group col-md-6">
@@ -323,7 +340,7 @@ export const AddMovie = () => {
                         onChange={handleChange}
                       >
                         <option value="">Chọn serie (nếu có)</option>
-                        {series.map((serie) => (
+                        {series?.map((serie) => (
                           <option key={serie.id} value={serie.id}>
                             {serie.descriptions}
                           </option>
@@ -358,7 +375,6 @@ export const AddMovie = () => {
                     Xác nhận
                   </button>
                 </div>
-                {/* <p>${requestScope.error}</p> */}
               </div>
             </div>
           </div>

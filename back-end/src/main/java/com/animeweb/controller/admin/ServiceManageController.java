@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -42,10 +43,12 @@ public class ServiceManageController {
     CloudinaryService uploadService;
     private static final Logger logger = LoggerFactory.getLogger(ServiceManageController.class);
     @GetMapping
+    @PreAuthorize("hasAuthority('view_services') or hasRole('ADMIN')")
     public ResponseEntity<List<ServicePackDTO>> getServiceList() {
         return ResponseEntity.ok(servicePackService.getListServicePack());
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('edit_service') or hasRole('ADMIN')")
     public ResponseEntity<String> editServicePack(@PathVariable Long id, @ModelAttribute ServicePackAdmin updatedService) throws Exception {
         ServicePack servicePack = ServicePackMapper.mapToEntity(updatedService);
         String avatar = uploadService.uploadServiceAvt(updatedService.getFile(),updatedService.getId());
@@ -58,34 +61,34 @@ public class ServiceManageController {
     }
 
     @PutMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('delete_service') or hasRole('ADMIN')")
     public ResponseEntity<String> updateServicePack(@PathVariable Long id) throws Exception {
-
         servicePackService.updateServicePack(id);
         logger.warn("Service with id "+id+" has been deleted by admin..",id);
         return ResponseEntity.ok("Service Pack updated successfully");
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('add_service') or hasRole('ADMIN')")
     public ResponseEntity<ServicePackAdmin> createServicePack(@ModelAttribute ServicePackAdmin service) throws IOException {
         ServicePack servicePack = ServicePackMapper.mapToEntity(service);
-        long id = servicePackRepository.findFirstByStatusNotNullOrderByIdDesc().getId()+1;
         if (servicePackService.existType(service.getService_type())) {
             return ResponseEntity.ok(null);
         }
-        String avatar = uploadService.uploadServiceAvt(service.getFile(), id);
+        servicePack.setStatus(false);
+        servicePackService.createServicePack(servicePack);
+        String avatar = uploadService.uploadServiceAvt(service.getFile(), servicePack.getId());
         servicePack.setService_img(avatar);
-        System.out.println(avatar);
         Date now = new Date();
         servicePack.setCreateAt(now);
-//        System.out.println(service.getService_type());
-
-
+        servicePack.setStatus(true);
         servicePackService.createServicePack(servicePack);
-        logger.info("Service with id "+id+" has been created by admin..",id);
+        logger.info("Service with id "+servicePack.getId()+" has been created by admin..",servicePack.getId());
         return ResponseEntity.ok(ServicePackMapper.Maptoadmin(servicePack));
     }
 
     @GetMapping("/getAll")
+    @PreAuthorize("hasAuthority('view_services') or hasRole('ADMIN')")
     public ResponseEntity<List<UserPackedDTO>> getAll() {
         List<UserPacked> userPackeds = userPackedService.findAllUserPacked();
         List<UserPackedDTO> userPackedDTOS = new ArrayList<>();
@@ -102,6 +105,7 @@ public class ServiceManageController {
     }
 
     @GetMapping("/getAll/{idUser}")
+    @PreAuthorize("hasAuthority('view_services') or hasRole('ADMIN')")
     public ResponseEntity<List<UserPackedDTO>> getAllByUser(@PathVariable("idUser") Long idUser) {
         List<UserPacked> userPackeds = userPackedService.findAllUserPackedById(userService.findUserById(idUser));
         List<UserPackedDTO> userPackedDTOS = new ArrayList<>();
@@ -116,6 +120,8 @@ public class ServiceManageController {
     }
 
     @PutMapping("/delete/user-packed/{id}")
+    @PreAuthorize("hasAuthority('delete_service') or hasRole('ADMIN')")
+
     public ResponseEntity<String> deleteServicePack(@PathVariable Long id) {
 
         userPackedService.deleteUserPacked(id);

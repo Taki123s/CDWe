@@ -1,11 +1,10 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-
-const SERIE_API_BASE_URL = "http://localhost:8080/series";
+import { refreshToken } from "./AuthServices";
+import { jwtDecode } from "jwt-decode";
 const SERIE_API_ADMIN_URL = "http://localhost:8080/admin/series";
-const axiosInstance = axios.create({
-});
 
+const axiosInstance = axios.create({});
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get("jwt_token");
@@ -18,16 +17,15 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-export const getAllSerie = () =>{
-    return axiosInstance.get(SERIE_API_ADMIN_URL)
-  }
-export const editSerie = (id,data) =>{
-    return axiosInstance.put(SERIE_API_ADMIN_URL+`/edit/${id}`,data)
-}
-export const deleteSerie = (id)=>{
-    return axiosInstance.delete(SERIE_API_ADMIN_URL+`/delete/${id}`)
-}
-export const addSerie = (data) =>{
-    return axiosInstance.post(SERIE_API_ADMIN_URL+"/add",data)
-}
+export const getAllSerie = () => {
+  return axiosInstance.get(SERIE_API_ADMIN_URL);
+};
+export const editSerie = (id, data) => {
+  return axiosInstance.put(SERIE_API_ADMIN_URL + `/edit/${id}`, data);
+};
+export const deleteSerie = (id) => {
+  return axiosInstance.delete(SERIE_API_ADMIN_URL + `/delete/${id}`);
+};
+export const addSerie = (data) => {
+  return axiosInstance.post(SERIE_API_ADMIN_URL + "/add", data);
+};

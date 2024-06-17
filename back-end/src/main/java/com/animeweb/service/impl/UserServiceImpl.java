@@ -8,13 +8,11 @@ import com.animeweb.entities.Role;
 import com.animeweb.entities.User;
 import com.animeweb.repository.ExpiredTokenRepository;
 import com.animeweb.repository.UserRepository;
-import com.animeweb.security.IntrospectRequest;
-import com.animeweb.security.IntrospectResponse;
-import com.animeweb.security.JwtGenerator;
-import com.animeweb.security.LogOutRequest;
+import com.animeweb.security.*;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     public User findUserById(Long idUser) {
-        return userRepository.findById(idUser).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userRepository.findByIdAndStatusTrue(idUser);
     }
     public User findUserByEmail(String email){
         int userType = 1;
@@ -75,28 +74,37 @@ public class UserServiceImpl implements UserDetailsService {
 
     public IntrospectResponse introspect(IntrospectRequest introspectRequest) throws ParseException, JOSEException {
         String token = introspectRequest.getToken();
+
         boolean isValid = true;
         try {
-            SignedJWT verified = jwtGenerator.verifyToken(token);
+            SignedJWT verified = jwtGenerator.verifyToken(token,false);
         } catch (Exception e) {
             isValid = false;
-
         }
         return new IntrospectResponse(isValid);
     }
 
-    public void logout(LogOutRequest logOutRequest) throws ParseException, JOSEException {
-        SignedJWT verified = jwtGenerator.verifyToken(logOutRequest.getToken());
+    public void logout(LogOutRequest logOutRequest) throws ParseException{
+            SignedJWT verified = jwtGenerator.verifyToken(logOutRequest.getToken(), true);
+            String jit = verified.getJWTClaimsSet().getJWTID();
+            Date expiredDate = verified.getJWTClaimsSet().getExpirationTime();
+            expiredTokenRepository.save(new ExpiredToken(jit, expiredDate));
+    }
+    public String refreshToken(RefreshRequest request) throws ParseException {
+        SignedJWT verified = jwtGenerator.verifyToken(request.getToken(),true);
         String jit = verified.getJWTClaimsSet().getJWTID();
         Date expiredDate = verified.getJWTClaimsSet().getExpirationTime();
-        expiredTokenRepository.save(new ExpiredToken(jit, expiredDate));
+        ExpiredToken expiredToken = new ExpiredToken(jit,expiredDate);
+        expiredTokenRepository.save(expiredToken);
+        Long idUser = verified.getJWTClaimsSet().getLongClaim("idUser");
+        User user = findUserById(idUser);
+        return jwtGenerator.generateToken(user);
     }
 
-    public String authenticate(LoginDTO loginDTO) {
-        User user = userRepository.findByUserName(loginDTO.getUserName()).orElseThrow(() -> new RuntimeException("User not exits"));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean authenticated = passwordEncoder.matches(loginDTO.getPassword(), user.getPassword());
-        if (!authenticated) throw new RuntimeException("Wrong password!");
+    public User findByUserName(String userName){
+        return userRepository.findByUserName(userName).orElse(null);
+    }
+    public String authenticate(User user){
         return jwtGenerator.generateToken(user);
     }
 

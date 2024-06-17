@@ -37,7 +37,14 @@ export const findMovieWatching = (movieId, token) => {
 export const updateView = (movieId, token) => {
   return axiosInstance.post(MOVIE_API_BASE_URL + `/${movieId}`, token);
 };
-
+export const movieViewed = (idUser, token) => {
+  return axiosInstance.get(MOVIE_API_BASE_URL +`/viewed`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: { idUser }
+  });
+};
 export const adminListMovie = () => {
   return axiosInstance.get(MOVIE_API_ADMIN_URL);
 };

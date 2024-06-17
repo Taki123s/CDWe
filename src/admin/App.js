@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import AddUserForm from "./user/AddUser";
 import ServicePacks from "./component/packed-service";
-import Logs from "./component/log";
+
 import UserPacked from "./component/user-packed";
 import "boxicons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -96,7 +96,7 @@ function App() {
                   >
                   <Route path="packed-service" element={<ServicePacks />} />
                   <Route path="user-packed" element={<UserPacked />} />
-                  <Route path="log" element={<Logs />} />
+
                   </Route>
                   {/* user */}
                   <Route

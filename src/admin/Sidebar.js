@@ -89,6 +89,13 @@ const Sidebar = () => {
                 </li>
               </ul>
             </li>
+            <li className="parentActive">
+              <a href="https://analytics.google.com/analytics/web/#/p380852987/reports/reportinghub?params=_u..nav%3Dmaui%26_r.14..selmet%3D%5B%22conversions%22%5D"
+                 target="_blank" className="iq-waves-effect"><span
+                  className="ripple rippleEffect"></span><i
+                  className="las la-user-tie iq-arrow-left"></i><span>Google Analytics</span></a>
+
+            </li>
 
             <li className={menuState.userinfo ? "parentActive" : ""}>
               <Link to="/admin/DashBoard">
@@ -192,11 +199,6 @@ const Sidebar = () => {
                     <i className="ri-database-line"></i>Danh sách thành viên
                   </Link>
                 </li>
-                <li>
-                  <Link to="/import/coupons">
-                    <i className="ri-folder-chart-2-line"></i>Lịch sử nhập phim
-                  </Link>
-                </li>
               </ul>
             </li>
             <li className={menuState.role ? "parentActive" : ""}>
@@ -225,29 +227,6 @@ const Sidebar = () => {
               </ul>
             </li>
 
-            <li className={menuState.log ? "parentActive" : ""}>
-              <a
-                href="#log"
-                className="iq-waves-effect"
-                onClick={() => toggleMenu("log")}
-                aria-expanded={menuState.log}
-              >
-                <i className="ri-table-line iq-arrow-left"></i>
-                <span>Quản lý Log</span>
-                <i className="ri-arrow-right-s-line iq-arrow-right"></i>
-              </a>
-              <ul
-                id="log"
-                className={`iq-submenu collapse ${menuState.log ? "show" : ""}`}
-                data-parent="#iq-sidebar-toggle"
-              >
-                <li>
-                  <Link to="/log/list">
-                    <i className="ri-table-line"></i>Quản lý tổng
-                  </Link>
-                </li>
-              </ul>
-            </li>
           </ul>
         </nav>
         <div className="p-3"></div>

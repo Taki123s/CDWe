@@ -24,6 +24,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -237,5 +239,19 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void updateView(View view) {
         viewRepository.save(view);
+    }
+
+    @Override
+    public List<MovieDTO> findAllMovieViewedByUserId(Long userId) {
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        LocalDate oneMonthAgo = now.minusMonths(1);
+
+        List<Movie> movies = movieRepository.findAllMovieViewedByUserId(userId);
+        for (Movie m : movies
+        ){
+          movieDTOS.add(MovieMapper.mapToMovieDTO(m))  ;
+        }
+        return movieDTOS;
     }
 }

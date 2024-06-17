@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -44,6 +45,8 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     Movie findMovieByIdAndStatusTrue(Long id);
     @Query("select  m from Follow  f join Movie  m on f.movie.id=m.id where  f.status=true and f.userId.id= :user_id  ")
     List<Movie> findAllMovieFollowedByUserId(@Param("user_id") Long userId);
-
+    @Query("SELECT DISTINCT m FROM Movie m JOIN View v ON m.id = v.movie.id WHERE v.userId.id = :userId AND m.status = true AND YEAR(v.watchAt) = YEAR(CURDATE()) AND MONTH(v.watchAt) = MONTH(CURDATE())")
+    List<Movie> findAllMovieViewedByUserId(@Param("userId") Long userId);
 }
+
 

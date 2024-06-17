@@ -189,7 +189,7 @@ function MovieDetail() {
               <div className="col-lg-12">
                 <div className="breadcrumb__links"><i className="fas fa-home" style={{color: "#000000"}}></i>
                   <Link to="/">
-                <Trans i18nKey={"menu.home"}>{t("menu.home")}</Trans>
+                <Trans i18nKey={"menu.home"}>{t("menu.home")}</Trans>/
                   </Link>
                   <Link to="">
                     <Trans i18nKey={"content.moviedetail"}>{t("content.moviedetail")}</Trans>

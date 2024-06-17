@@ -58,6 +58,11 @@ public class MovieController {
     public ResponseEntity<MovieDTO> findMovieById(@PathVariable Long movieId) {
         return ResponseEntity.ok(movieService.findMovieById(movieId));
     }
+    @GetMapping("/viewed")
+    public ResponseEntity<List<MovieDTO>> findMovieViewedByUser(@RequestParam("idUser") Long idUser) {
+        List<MovieDTO> movies = movieService.findAllMovieViewedByUserId(idUser);
+        return ResponseEntity.ok(movies);
+    }
     @PostMapping("/{movieId}")
     public void updateView(@RequestBody IntrospectRequest introspectRequest, @PathVariable Long movieId) throws ParseException {
         SignedJWT verified = jwtGenerator.verifyToken(introspectRequest.getToken(),false);

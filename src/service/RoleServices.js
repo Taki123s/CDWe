@@ -1,10 +1,10 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-
+import { refreshToken } from "./AuthServices";
+import { jwtDecode } from "jwt-decode";
 const ROLE_API_BASE_URL = "http://localhost:8080/admin/roles";
 
 const axiosInstance = axios.create({});
-
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get("jwt_token");
@@ -45,4 +45,11 @@ export const deleteUserRole = (roleId, userId) => {
 };
 export const deleteRole = (roleId) => {
   return axiosInstance.delete(ROLE_API_BASE_URL + `/delete/${roleId}`);
+};
+
+export const getUsersNotHaveRole = (roleId) => {
+  return axiosInstance.get(ROLE_API_BASE_URL + `/${roleId}/not`);
+};
+export const addRoleUser = (roleId, userId) => {
+  return axiosInstance.post(ROLE_API_BASE_URL + `/${roleId}/user/${userId}`);
 };

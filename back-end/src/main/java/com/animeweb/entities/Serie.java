@@ -28,10 +28,10 @@ public class Serie {
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createAt = new Date();
 
-    @Column(name = "update_at")
+    @Column(name = "update_at", columnDefinition = "datetime")
     private Date updateAt;
 
-    @Column(name = "delete_at")
+    @Column(name = "delete_at", columnDefinition = "datetime")
     private Date deleteAt;
     @Column(name = "status",columnDefinition = "tinyint default 1")
     private Boolean status = true;

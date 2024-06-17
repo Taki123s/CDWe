@@ -20,9 +20,9 @@ public class Rate {
     private Double score;
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createAt = new Date();
-    @Column(name = "update_at")
+    @Column(name = "update_at", columnDefinition = "datetime")
     private Date updateAt;
-    @Column(name = "delete_at")
+    @Column(name = "delete_at", columnDefinition = "datetime")
     private Date deleteAt;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id", referencedColumnName = "id")

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { API_GET_PATHS,API_PATCH_PATHS } from "../service/Constant";
+import { API_GET_PATHS, API_PATCH_PATHS } from "../service/Constant";
 
 const EditUser = () => {
   const [avatar, setAvatar] = useState(null);
@@ -30,14 +30,12 @@ const EditUser = () => {
   };
   useEffect(() => {
     fetchUserData();
-    fetchRoles();
-    console.log(account.roleIdList)
-  
+    console.log(account.roleIdList);
   }, []);
 
   const fetchUserData = () => {
     axios
-      .get(API_GET_PATHS.GET_PROFILE+`${id}`)
+      .get(API_GET_PATHS.GET_PROFILE + `${id}`)
       .then((response) => {
         setAccount(response.data);
         setFullName(response.data.fullName);
@@ -47,15 +45,6 @@ const EditUser = () => {
       })
       .catch((error) => console.error("Error fetching user data:", error));
   };
-  const fetchRoles = () => {
-  };
-
-  const addRole = (roleId, roleName) => {
-  };
-
-  const removeRole = (roleId) => {
-  };
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -69,8 +58,7 @@ const EditUser = () => {
     }
   };
 
-  const backToUserList = () => {
-  };
+  const backToUserList = () => {};
   const submitEdit = async () => {
     const user = {
       name: document.getElementById("fname").value,
@@ -88,7 +76,7 @@ const EditUser = () => {
     setIsUploading(true);
 
     const response = await axios
-      .patch(API_PATCH_PATHS.EDIT_USER+`${id}`, formData, {
+      .patch(API_PATCH_PATHS.EDIT_USER + `${id}`, formData, {
         // headers: {
         //   "Content-Type": "multipart/form-data",
         // },
@@ -102,8 +90,7 @@ const EditUser = () => {
           timer: 2000,
           showConfirmButton: false,
         });
-    navigate(`/admin/UserList`);
-
+        navigate(`/admin/UserList`);
       })
       .catch((error) => {
         setIsUploading(false);
@@ -139,18 +126,6 @@ const EditUser = () => {
                         href="#personal-information"
                       >
                         Thông tin người dùng
-                      </a>
-                    </li>
-                    
-                    <li className="col-md-3 p-0">
-                      <a
-                        className={`nav-link ${
-                          activeTab === "change-roles" ? "active" : ""
-                        }`}
-                        onClick={() => setActiveTab("change-roles")}
-                        href="#change-roles"
-                      >
-                        Chỉnh sửa vai trò
                       </a>
                     </li>
                   </ul>
@@ -267,113 +242,6 @@ const EditUser = () => {
                         >
                           Hủy
                         </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              
-                <div
-                  className={`tab-pane fade ${
-                    activeTab === "change-roles" ? "active show" : ""
-                  }`}
-                  id="change-roles"
-                  role="tabpanel"
-                >
-                  <div className="iq-card">
-                    <div className="iq-card-header d-flex justify-content-between">
-                      <div className="iq-header-title">
-                        <h4 className="card-title">Chỉnh sửa vai trò</h4>
-                      </div>
-                    </div>
-                    <div className="iq-card-body">
-                      <div className="container">
-                        <div className="row">
-                          <div className="col-md-6">
-                            <p>Vai trò đang có</p>
-                            <table className="table" id="roleHaveTable">
-                              <thead>
-                                <tr>
-                                  <th></th>
-                                  <th>Tên</th>
-                                  <th>Tuỳ chọn</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {/* {account.roles.map((role) => (
-                                  <tr key={role.id}>
-                                    <td></td>
-                                    <td>{role.description}</td>
-                                    <td>
-                                      {role.id !== 1 && (
-                                        <button
-                                          type="button"
-                                          className="btn iq-bg-danger btn-rounded btn-sm my-0"
-                                          // onClick={() => removeRole(role.id, role.description)}
-                                        >
-                                          <i className="ri-delete-bin-line"></i>
-                                        </button>
-                                      )}
-                                    </td>
-                                  </tr>
-                                ))} */}
-                              </tbody>
-                            </table>
-                          </div>
-                          <div className="col-md-6">
-                            <p>Vai trò có thể thêm</p>
-                            <table className="table" id="roleMayHadTable">
-                              <thead>
-                                <tr>
-                                  <th></th>
-                                  <th>Tên</th>
-                                  <th>Tùy chỉnh</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {/* {availableRoles.map((role) => (
-                                  <tr key={role.id}>
-                                    <td></td>
-                                    <td>{role.description}</td>
-                                    <td>
-                                      <button
-                                        className="btn iq-bg-info fa fa-plus-circle"
-                                        // onClick={() => addRole(role.id, role.description)}
-                                      ></button>
-                                    </td>
-                                  </tr>
-                                ))} */}
-                              </tbody>
-                            </table>
-                          </div>
-                          <div className="col-md-6">
-                            <p>Vai trò có thể thêm</p>
-                            <table className="table" id="roleMayHadTable">
-                              <thead>
-                                <tr>
-                                  <th></th>
-                                  <th>Tên</th>
-                                  <th>Tùy chỉnh</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {unableRoles.map((role) => (
-                                  <tr key={role.id}>
-                                    <td></td>
-                                    <td>{role.name}</td>
-                                    <td>
-                                      <button
-                                        className="btn iq-bg-info fa fa-plus-circle"
-                                        onClick={() =>
-                                          addRole(role.id, role.name)
-                                        }
-                                      ></button>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>

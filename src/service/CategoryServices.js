@@ -1,10 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { refreshToken } from "./AuthServices";
+import { jwtDecode } from "jwt-decode";
 
 const GENRE_API_BASE_URL = "http://localhost:8080/genre";
 const GENRE_API_ADMIN_URL = "http://localhost:8080/admin/genres";
 const axiosInstance = axios.create({});
-
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get("jwt_token");
@@ -18,10 +19,13 @@ axiosInstance.interceptors.request.use(
   }
 );
 export const getGenreList = () => {
-  return axios.get(GENRE_API_BASE_URL);
+  return axiosInstance.get(GENRE_API_BASE_URL);
+};
+export const getAdminGenre = () => {
+  return axiosInstance.get(GENRE_API_ADMIN_URL);
 };
 export const getMoviesByGenre = (idGenre, currentPage, sortBy, ascending) => {
-  return axios.get(GENRE_API_BASE_URL + "/movies", {
+  return axiosInstance.get(GENRE_API_BASE_URL + "/movies", {
     params: {
       idGenre: idGenre,
       page: currentPage,
@@ -34,12 +38,12 @@ export const getMoviesByGenre = (idGenre, currentPage, sortBy, ascending) => {
 export const getAllGenre = () => {
   return axiosInstance.get(GENRE_API_ADMIN_URL);
 };
-export const addGenre = (data)=>{
-  return axiosInstance.post(GENRE_API_ADMIN_URL,data)
-}
-export const editGenre = (genreId,data)=>{
-  return axiosInstance.put(GENRE_API_ADMIN_URL+`/${genreId}`,data)
-}
-export const deleteGenre = (genreId)=>{
-  return axiosInstance.delete(GENRE_API_ADMIN_URL+`/${genreId}`)
-}
+export const addGenre = (data) => {
+  return axiosInstance.post(GENRE_API_ADMIN_URL, data);
+};
+export const editGenre = (genreId, data) => {
+  return axiosInstance.put(GENRE_API_ADMIN_URL + `/${genreId}`, data);
+};
+export const deleteGenre = (genreId) => {
+  return axiosInstance.delete(GENRE_API_ADMIN_URL + `/${genreId}`);
+};

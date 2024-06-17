@@ -172,9 +172,10 @@ public class AdminMovieController {
         return new ResponseEntity<>("Xóa thành công",HttpStatus.CREATED);
     }
     @PutMapping("/{idMovie}")
+    @PreAuthorize("hasAuthority('edit_movie') or hasRole('ADMIN')")
     public ResponseEntity<String> editMovie(@PathVariable Long idMovie,@ModelAttribute MovieAdd movieAdd) throws IOException {
-        boolean existName = movieService.findByNameNotThis(idMovie,movieAdd.getName());
-        if(existName) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tên phim đã tồn tại");
+        boolean existName = movieService.findByNameNotThis(idMovie, movieAdd.getName());
+        if (existName) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tên phim đã tồn tại");
         Movie movie = movieService.findById(idMovie);
         Serie serie = serieService.findById(movieAdd.getSeries());
         List<Genre> genres = genreService.findGenresByList(movieAdd.getGenres());
@@ -188,11 +189,12 @@ public class AdminMovieController {
         movie.setGenres(genres);
         movie.setSeriesDescriptions(movieAdd.getSeriesDescriptions());
         movie.setUpdateAt(new Date());
-        String avatar = uploadService.uploadMovieAvt(movieAdd.getFile(),movie.getId());
+
+        String avatar = uploadService.uploadMovieAvt(movieAdd.getFile(), movie.getId());
         movie.setAvatarMovie(avatar);
         movieService.save(movie);
-        return new ResponseEntity<>("Sửa thành công",HttpStatus.CREATED);
-
+        return new ResponseEntity<>("Sửa thành công", HttpStatus.CREATED);
+    }
     @GetMapping("/viewed/month/top5")
     public  ResponseEntity<List<Movie>>getTop5MovieViewedByMonth(){
         return  ResponseEntity.ok(viewService.GetTop5MovieViewedByMonth());

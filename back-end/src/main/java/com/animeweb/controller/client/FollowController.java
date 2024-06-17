@@ -47,15 +47,17 @@ public class FollowController {
 //        followService.updateFollow(new Follow(follow.getId(), follow.getFollowAt(), follow.getStatus(), user, movie));
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<FollowDTO> findFollow(@RequestParam  Long movieId, @RequestParam  Long userId) {
-
         FollowDTO follow = followService.findFollowByIdUserAndIdMovie(movieId, userId);
+        System.out.println("follow "+follow);
         if (follow != null) {
+
             return new ResponseEntity<>(follow, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }    }
+        }
+    }
 
 
 }

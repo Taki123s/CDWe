@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import { parse, format } from "date-fns";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
+import TextField from "@mui/material/TextField";
 
 Modal.setAppElement("#root");
 export const ListSerie = () => {
@@ -20,7 +21,11 @@ export const ListSerie = () => {
   const [currentRow, setCurrentRow] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [currentAddData, setCurrentAddData] = useState(null);
-
+  const [searchText, setSearchText] = useState("");
+  const filteredItems = series.filter(
+    (item) =>
+      item.descriptions.toLowerCase().includes(searchText.toLowerCase())
+  );
   useEffect(() => {
     getAllSerie()
       .then((response) => {
@@ -257,6 +262,7 @@ export const ListSerie = () => {
     selectAllRowsItemText: "ALL",
   };
   const customTitle = (
+    <div>
     <div
       style={{
         display: "flex",
@@ -269,13 +275,25 @@ export const ListSerie = () => {
         New Serie
       </Button>
     </div>
+    <div>
+    <TextField
+        type="text"
+        placeholder="Search By Description"
+        variant="outlined"
+        margin="normal"
+        value={searchText}
+        style={{ display: "block" }}
+        onChange={(e) => setSearchText(e.target.value)}
+      />
+    </div>
+    </div>
   );
   return (
     <div>
       <DataTable
         title={customTitle}
         columns={columns}
-        data={Array.isArray(series) ? series : []}
+        data={Array.isArray(filteredItems) ? filteredItems : []}
         defaultSortFieldId={1}
         sortIcon={<ArrowDownward />}
         pagination

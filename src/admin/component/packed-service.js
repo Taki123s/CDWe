@@ -23,7 +23,13 @@ export const ListService = () => {
                 setServices(response.data);
             })
             .catch((error) => {
-                console.log(error);
+                Swal.fire({
+                    title: "Lỗi",
+                    text: error.response?.data.message || "Unknown error occurred",
+                    icon: "error",
+                    timer: 2000,
+                    showConfirmButton: false,
+                  });
             });
     }, []);
 
@@ -50,7 +56,13 @@ export const ListService = () => {
                 setEditModalOpen(false);
             })
             .catch((error) => {
-                console.log(error);
+                Swal.fire({
+                    title: "Lỗi",
+                    text: error.response?.data.message || "Unknown error occurred",
+                    icon: "error",
+                    timer: 2000,
+                    showConfirmButton: false,
+                  });
             });
     };
     const handleDelete = (editedService) => {
@@ -68,7 +80,13 @@ export const ListService = () => {
                         setServices(updatedServices);
                     })
                     .catch((error) => {
-                        console.log(error);
+                        Swal.fire({
+                            title: "Lỗi",
+                            text: error.response?.data.message || "Unknown error occurred",
+                            icon: "error",
+                            timer: 2000,
+                            showConfirmButton: false,
+                          });
                     });
             }
         });
@@ -115,7 +133,13 @@ export const ListService = () => {
                     }
                 })
                 .catch((error) => {
-                    console.log(error);
+                    Swal.fire({
+                        title: "Lỗi",
+                        text: error.response?.data.message || "Unknown error occurred",
+                        icon: "error",
+                        timer: 2000,
+                        showConfirmButton: false,
+                      });
                 });
         } else {
             alert("Invalid service type. Please select week, month or year.");

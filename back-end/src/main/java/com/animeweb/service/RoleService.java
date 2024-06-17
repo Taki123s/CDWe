@@ -2,6 +2,7 @@ package com.animeweb.service;
 
 import com.animeweb.dto.oauth.PermissionDTO;
 import com.animeweb.dto.oauth.RoleDTO;
+import com.animeweb.dto.user.UserDTO;
 import com.animeweb.entities.Role;
 
 import java.util.List;
@@ -19,4 +20,7 @@ public interface RoleService {
     boolean addRolePermission(Long roleId, Long permissionId);
     boolean findContainsName(Long roleId, String name);
     boolean findContainsName(String name);
+    List<UserDTO> findUserNotHaveRole(Long roleId);
+    boolean addUserRole(Long roleId, Long userId);
+    List<Role> findUserRole(Long id);
 }

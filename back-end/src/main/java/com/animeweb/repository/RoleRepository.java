@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role,Long> {
@@ -30,6 +31,13 @@ public interface RoleRepository extends JpaRepository<Role,Long> {
    @Transactional
    @Query(value ="insert into roles_permissions values(:roleId,:permissionId)" ,nativeQuery = true)
    int addRolePermission(Long roleId, Long permissionId);
+   @Modifying
+   @Transactional
+   @Query(value ="insert into user_roles values(:userId,:roleId)" ,nativeQuery = true)
+   int addUserRole(Long roleId, Long userId);
    Boolean existsRoleByNameAndAndStatusTrueAndIdIsNot(String name,Long id);
    Boolean existsRoleByNameAndAndStatusTrue(String name);
+
+   @Query(value = "select * from roles where id in (select role_id from user_roles where user_id=:id) and status=true",nativeQuery = true)
+    List<Role> findByUserId(Long id);
 }

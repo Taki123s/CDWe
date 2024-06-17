@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import { adminListMovie, deleteMovie } from "../../service/MovieServices";
 import { Link } from "react-router-dom";
 import { Loading } from "../../component/Loading";
+import TextField from "@mui/material/TextField";
+
 Modal.setAppElement("#root");
 
 export const ListMovie = () => {
@@ -15,6 +17,8 @@ export const ListMovie = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     adminListMovie()
       .then((response) => {
@@ -80,8 +84,6 @@ export const ListMovie = () => {
     });
   };
 
-  const handleEdit = (id) => {};
-
   const columns = [
     {
       id: 1,
@@ -125,7 +127,12 @@ export const ListMovie = () => {
             src={row.avatarMovie}
             key={row.id}
             alt={row.name}
-            style={{ width: "100%", height: "100%" }}
+            style={{
+              width: "100%",
+              height: "100%",
+              maxWidth: "100px",
+              maxHeight: "100px",
+            }}
           />
         </div>
       ),
@@ -213,7 +220,7 @@ export const ListMovie = () => {
     {
       id: 10,
       name: "Series Descriptions",
-      selector: (row) => row.seriesDescriptions,
+      selector: (row) => row.series?row.seriesDescriptions:"",
     },
     {
       id: 11,
@@ -242,7 +249,8 @@ export const ListMovie = () => {
       id: 13,
       name: "Current Chapters",
       cell: (row) => (
-        <div key={row.index}>
+        <div key={row.index} style={{display:"flex"}}>
+          <div style={{alignSelf:"center"}}>{row.currentChapters}</div>
           <Link
             to={`/admin/chapterList/${row.id}`}
             className="btn btn-outline-info ml-2 hoverWhite"
@@ -335,7 +343,6 @@ export const ListMovie = () => {
               variant="contained"
               color="primary"
               style={{ width: "50%" }}
-              onClick={() => handleEdit(row)}
             >
               Edit
             </Button>
@@ -352,14 +359,28 @@ export const ListMovie = () => {
       ),
     },
   ];
-
+  const filteredItems = movies.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const customTile = (
+    <div>
+      <h2>List Movie</h2>
+      <TextField
+        type="text"
+        placeholder="Search by name"
+        style={{ marginBottom: "20px" }}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+  );
   return (
     <div>
       <Loading open={isUploading} />
+
       <DataTable
-        title="List Movie"
+        title={customTile}
         columns={columns}
-        data={Array.isArray(movies) ? movies : []}
+        data={Array.isArray(filteredItems) ? filteredItems : []}
         defaultSortFieldId={1}
         sortIcon={<ArrowDownward />}
         pagination

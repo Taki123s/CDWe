@@ -11,18 +11,21 @@ import {
   register,
 } from "../service/AuthServices";
 import { jwtDecode } from "jwt-decode";
+import iconAdmin from "../img/icon-admin.png";
 import Cookies from "js-cookie";
-import axios from "axios";
 import logo from "../img/logo.png";
 import { getGenreList } from "../service/CategoryServices";
 import { useTranslation, Trans } from "react-i18next";
 import { Dropdown, Space, Typography } from "antd";
-import { useNavigate } from "react-router-dom";
 import { searchMovie } from "../service/MovieServices";
+import { Loading } from "../component/Loading";
 import Swal from "sweetalert2";
+import { refreshToken } from "../service/AuthServices";
 export const HeaderPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const lngs = {
     en: {
       nativeName: "English",
@@ -75,6 +78,23 @@ export const HeaderPage = () => {
   const [registerFullname, setRegisterFullname] = useState("");
   const [correctPassword, setCorrectPassword] = useState(false);
   const [correctUserName, setcorrectUserName] = useState(false);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const token = Cookies.get("jwt_token");
+      if (token) {
+        console.log("refresh");
+        const decodedToken = jwtDecode(token);
+        const expirationTime = decodedToken.exp * 1000;
+        const currentTime = Date.now();
+        if (currentTime > expirationTime - 43200000) {
+          try {
+            refreshToken(token);
+          } catch (error) {}
+        }
+      }
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleLogin = (event) => {
     const user = { userName: username, password: password };
@@ -82,17 +102,20 @@ export const HeaderPage = () => {
       .then((response) => {
         const token = response.data.accessToken;
         setToken(token);
-        const decodedToken = jwtDecode(token);
-        const expires = new Date(decodedToken.exp * 1000);
-        Cookies.set("jwt_token", token, {
-          expires: expires,
-        });
+        Cookies.set("jwt_token", token);
         decodeToken();
+        Swal.fire({
+          title: "Thành công",
+          text: "Đăng nhập thành công",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       })
       .catch((error) => {
         Swal.fire({
           title: "Lỗi",
-          text: error.response.data?.message||"Unknown error occurred",
+          text: error.response.data?.message || "Unknown error occurred",
           icon: "error",
           timer: 2000,
           showConfirmButton: false,
@@ -105,6 +128,7 @@ export const HeaderPage = () => {
     );
   };
   const EmailVerificationDialog = ({ onClose }) => {
+    const [isUploading, setIsUploading] = useState(false);
     const [verificationCode, setVerificationCode] = useState("");
     const [email, setEmail] = useState("");
     const [isSendCodeDisabled, setSendCodeDisabled] = useState(false);
@@ -128,8 +152,10 @@ export const HeaderPage = () => {
     const sendCode = (emailInput) => {
       currentRegister.email = emailInput;
       setRegisterUser(currentRegister);
+      setIsUploading(true);
       sendMail(currentRegister)
         .then((response) => {
+          setIsUploading(false);
           Swal.fire({
             title: "Thành công",
             text: "Đã gửi mã xác thực",
@@ -151,6 +177,7 @@ export const HeaderPage = () => {
           setTimer(interval);
         })
         .catch((error) => {
+          setIsUploading(false);
           Swal.fire({
             title: "Lỗi",
             text: error.response.data,
@@ -220,6 +247,7 @@ export const HeaderPage = () => {
     };
     return (
       <div className="modal-overlay">
+        <Loading open={isUploading} />
         <div className="modal-content">
           <h2>Xác thực email</h2>
           <input
@@ -261,7 +289,11 @@ export const HeaderPage = () => {
     );
   };
   const handleRegister = () => {
-    if (correctUserName) {
+    if (
+      correctUserName &&
+      registerPassword.trim().length >= 8 &&
+      registerPassword == registerRePassword
+    ) {
       const navbarRight = document.getElementById("navbar-right");
       navbarRight.classList.toggle("-right-[300px]");
       const modalDiv = document.createElement("div");
@@ -271,7 +303,7 @@ export const HeaderPage = () => {
     } else {
       Swal.fire({
         title: "Lỗi",
-        text: "Vui lòng điền đầy đủ và hợp lệ các trường",
+        text: "Vui lòng điền đầy đủ và hợp lệ các trường, mật khẩu phải có độ dài hơn 8 ký tự!",
         icon: "error",
         timer: 2000,
         showConfirmButton: false,
@@ -311,7 +343,8 @@ export const HeaderPage = () => {
       })
       .catch((error) => {
         setcorrectUserName(false);
-        errorUserName.innerText = error.response?.data || "Unknown error occurred";
+        errorUserName.innerText =
+          error.response?.data || "Unknown error occurred";
       });
   };
   const handleMouseEnter = () => {
@@ -373,6 +406,12 @@ export const HeaderPage = () => {
     const token = Cookies.get("jwt_token");
     if (token) {
       const decodedToken = jwtDecode(token);
+      const userRoles = decodedToken.scope.split(" ");
+      const roles = ["ROLE_ADMIN", "view_dashboard"];
+      console.log(userRoles)
+      if (userRoles && roles && roles.some((role) => userRoles.includes(role))) {
+        setIsAdmin(true);
+      }
       setToken(token);
       setLoggedUser(decodedToken);
     }
@@ -566,8 +605,7 @@ export const HeaderPage = () => {
               </div>
 
               <div className="navbar-item s768:h-[30px] dark:s768:border-gray-700 s768:border s768:rounded-full s768:hover:text-red-600 dark:s768:hover:text-teal-500 s768:order-4">
-                <a
-                >
+                <a>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -582,9 +620,12 @@ export const HeaderPage = () => {
                       d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
                     />
                   </svg>
-                <Link to={"/about-us"}>  <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                    About us
-                  </span></Link>
+                  <Link to={"/about-us"}>
+                    {" "}
+                    <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
+                      About us
+                    </span>
+                  </Link>
                 </a>
               </div>
               <div className="group/search navbar-search s768:order-last s768:ml-auto s1024:w-[300px] s1280:w-[320px]">
@@ -900,7 +941,7 @@ export const HeaderPage = () => {
                         name="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        required
+                        required={true}
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -947,17 +988,10 @@ export const HeaderPage = () => {
                       <span className="tip absolute top-1 right-0 text-[10px] text-red-500"></span>
                     </div>
                     <div className="navbar-form-group relative mb-3 flex justify-between text-[14px] font-light">
-                      <label className="navbar-form-checkbox flex items-center gap-2">
-                        <input
-                          className="rounded text-teal-600 border-gray-400 focus:ring-0 focus:ring-offset-0 focus:border-gray-400  dark:border-teal-600 dark:focus:border-teal-500 dark:focus:ring-0 dark:focus:ring-offset-0 "
-                          type="checkbox"
-                          name="remember"
-                          defaultChecked
-                        />
-                        <span> {t("login.remember")}</span>
-                      </label>
                       <a className="forgot-password">
-                       <Link to={"/forgot-password"}>{t("content.forgotpassword")}{" "}</Link>
+                        <Link to={"/forgot-password"}>
+                          {t("content.forgotpassword")}{" "}
+                        </Link>
                       </a>
                     </div>
                     <div className="navbar-form-group relative mb-3 hidden">
@@ -1282,9 +1316,21 @@ export const HeaderPage = () => {
               >
                 <div className="navbar-user-content font-light text-[14px] s1024:text-[15px]">
                   <div className="user-item">
-                    <a
+                    {isAdmin && (
+                      <div className="block flex gap-4 items-center h-8">
+                        <a
+                          className="block flex gap-4 items-center h-8"
+                          href="/admin/Dashboard"
+                        >
+                          {" "}
+                          <img src={iconAdmin} className="w-4 h-4 shrink-0" />
+                          Go to dashboard
+                        </a>
+                      </div>
+                    )}
+                    <Link
                       className="block flex gap-4 items-center h-8"
-                      href="/profile"
+                      to="/profile"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1301,7 +1347,7 @@ export const HeaderPage = () => {
                         ></path>
                       </svg>
                       <span> {t("login.editinformation")} </span>
-                    </a>
+                    </Link>
                   </div>
                   <div className="user-item">
                     <a

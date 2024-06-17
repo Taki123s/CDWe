@@ -15,4 +15,7 @@ public interface GenreRepository extends JpaRepository<Genre,Long> {
     List<Genre> findGenresByIds(List<Long> genList);
     Genre findGenresByIdAndStatusTrue(Long id);
     Boolean existsByDescriptionAndStatusTrue(String description);
+    @Query(value ="select * from genres where id in (select genres_id from movies_genres where movie_id=:id) and status=1", nativeQuery = true)
+    List<Genre> getMovieGenre( Long id);
+
 }

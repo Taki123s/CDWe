@@ -1,11 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-
+import { jwtDecode } from "jwt-decode";
+import { refreshToken } from "./AuthServices";
 const MOVIE_API_BASE_URL = "http://localhost:8080/movie";
 const MOVIE_API_ADMIN_URL = "http://localhost:8080/admin/movies";
 
 const axiosInstance = axios.create({});
-
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get("jwt_token");
@@ -20,20 +20,24 @@ axiosInstance.interceptors.request.use(
 );
 
 export const getMovieList = () => {
-  return axios.get(MOVIE_API_BASE_URL);
+  return axiosInstance.get(MOVIE_API_BASE_URL);
 };
 export const findMovie = (id) => {
-  return axios.get(MOVIE_API_BASE_URL + `/${id}`);
+  return axiosInstance.get(MOVIE_API_BASE_URL + `/${id}`);
 };
-export const searchMovie=(term)=>{
-  return axios.get(MOVIE_API_BASE_URL+"/search?term="+`${term}`);
-}
+export const searchMovie = (term) => {
+  return axiosInstance.get(MOVIE_API_BASE_URL + "/search?term=" + `${term}`);
+};
 
 export const findMovieWatching = (movieId, token) => {
   return axiosInstance.get(MOVIE_API_BASE_URL + "/watching", {
     params: { movieId: movieId, token: token },
   });
 };
+export const updateView = (movieId, token) => {
+  return axiosInstance.post(MOVIE_API_BASE_URL + `/${movieId}`, token);
+};
+
 export const adminListMovie = () => {
   return axiosInstance.get(MOVIE_API_ADMIN_URL);
 };
@@ -53,13 +57,13 @@ export const getMovieChapters = (idMovie) => {
 
 export const uploadChapter = (idMovie, idChapter, data, onUploadProgress) => {
   return axiosInstance.put(
-    `${MOVIE_API_ADMIN_URL}/${idMovie}/chapter/${idChapter}/editFile`, 
-    data, 
+    `${MOVIE_API_ADMIN_URL}/${idMovie}/chapter/${idChapter}/editFile`,
+    data,
     {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      onUploadProgress: onUploadProgress
+      onUploadProgress: onUploadProgress,
     }
   );
 };
@@ -86,10 +90,10 @@ export const deleteChapter = (idMovie, idChapter) => {
   );
 };
 
-export const getMovieById =(idMovie) =>{
-  return axiosInstance.get(MOVIE_API_BASE_URL+`/${idMovie}`)
-}
-export const editMovie = (idMovie,data) => {
+export const getMovieById = (idMovie) => {
+  return axiosInstance.get(MOVIE_API_BASE_URL + `/${idMovie}`);
+};
+export const editMovie = (idMovie, data) => {
   return axiosInstance.put(MOVIE_API_ADMIN_URL + `/${idMovie}`, data, {
     headers: {
       "Content-Type": "multipart/form-data",

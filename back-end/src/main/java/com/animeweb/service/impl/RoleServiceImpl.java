@@ -2,13 +2,16 @@ package com.animeweb.service.impl;
 
 import com.animeweb.dto.oauth.PermissionDTO;
 import com.animeweb.dto.oauth.RoleDTO;
+import com.animeweb.dto.user.UserDTO;
 import com.animeweb.entities.Permission;
 import com.animeweb.entities.Role;
 import com.animeweb.entities.User;
 import com.animeweb.mapper.PermissionMapper;
 import com.animeweb.mapper.RoleMapper;
+import com.animeweb.mapper.UserMapper;
 import com.animeweb.repository.PermissionRepository;
 import com.animeweb.repository.RoleRepository;
+import com.animeweb.repository.UserRepository;
 import com.animeweb.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,8 @@ public class RoleServiceImpl implements RoleService {
     RoleRepository roleRepository;
     @Autowired
     PermissionRepository permissionRepository;
+    @Autowired
+    UserRepository userRepository;
     @Override
     public RoleDTO createRole(RoleDTO roleDTO) {
         return null;
@@ -115,5 +120,26 @@ public class RoleServiceImpl implements RoleService {
     public boolean findContainsName(String name) {
         return roleRepository.existsRoleByNameAndAndStatusTrue(name);
     }
+
+    @Override
+    public List<UserDTO> findUserNotHaveRole(Long roleId) {
+        List<User> users = userRepository.findUserNotHaveRole(roleId);
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for(User user : users){
+            userDTOS.add(UserMapper.mapToUserNotRole(user));
+        }
+        return userDTOS;
+    }
+
+    @Override
+    public List<Role> findUserRole(Long userId) {
+        return roleRepository.findByUserId(userId);
+    }
+    @Override
+    public boolean addUserRole(Long roleId, Long userId) {
+        return roleRepository.addUserRole(roleId,userId)==1;
+    }
+
+
 
 }

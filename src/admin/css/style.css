@@ -5051,6 +5051,12 @@ body.two-sidebar.sidebar-main .iq-sidebar {
     height: 150px !important;
 }
 
-.rdt_TableHeadRow .sc-cwHqhk{
-    overflow: unset !important;
+.rdt_TableHeadRow .doSrUc{
+    box-sizing: content-box;
+    font-weight: 1000;
+    font-size: 17px;
+}
+.rdt_TableRow .rdt_TableCell{
+    font-weight: 500;
+    font-size: 15px;
 }

@@ -3,6 +3,7 @@ package com.animeweb.service;
 import com.animeweb.dto.movie.MovieAdmin;
 import com.animeweb.dto.movie.MovieDTO;
 import com.animeweb.entities.Movie;
+import com.animeweb.entities.View;
 
 import java.util.List;
 
@@ -24,4 +25,5 @@ public interface MovieService {
     Movie findById(Long id);
     boolean findByNameNotThis(Long idMovie, String name);
     List<MovieDTO> findAllMovieFollowedByUserId(Long userId);
+    void updateView(View view);
 }

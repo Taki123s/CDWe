@@ -22,7 +22,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 
 import java.util.List;
@@ -39,14 +38,27 @@ public class SecurityConfig {
     JwtAuthEntryPoint authEntryPoint;
     @Autowired
     CustomJwtDecoder jwtDecoder;
-    @Autowired
-    CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
-    private final String[] PUBLIC_ENDPOINTS ={"/account/view/**", "/auth/**","/genre","/genres","/movie/**","/topView", "/static/imgs","/servicePack","/comment/**"};
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/follow/**",
+            "/rates/**",
+            "/account/**",
+            "/auth/**",
+            "/auth/refresh",
+            "/genre/**",
+            "/genres/**",
+            "/movie/**",
+            "/topView/**",
+            "/static/imgs/**",
+            "/servicePack/**",
+            "/comment/**",
+
+    };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource())).authorizeHttpRequests(request->
                 request.requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.PATCH,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.PUT,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.DELETE,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/").hasRole("ADMIN")
@@ -54,8 +66,11 @@ public class SecurityConfig {
                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))).
                 oauth2Login(oauth2 -> oauth2
                 .successHandler(customOAuth2SuccessHandler)
-                .permitAll());
-
+                .permitAll())
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(authenticationEntryPoint())
+                .accessDeniedHandler(accessDeniedHandler())
+        );
         return http.build();
     }
     @Bean

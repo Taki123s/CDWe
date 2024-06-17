@@ -6,8 +6,9 @@ import Button from "@mui/material/Button";
 import { parse, format } from "date-fns";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
+import TextField from "@mui/material/TextField";
 import {
-  getAllGenre,
+  getAdminGenre,
   addGenre,
   editGenre,
   deleteGenre,
@@ -18,9 +19,17 @@ export const ListGenre = () => {
   const [currentRow, setCurrentRow] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [currentAddData, setCurrentAddData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
+  const filteredItems = genres.filter(
+    (item) =>
+      item.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   useEffect(() => {
-    getAllGenre()
+    getAdminGenre()
       .then((response) => {
         setGenres(response.data);
       })
@@ -145,7 +154,6 @@ export const ListGenre = () => {
   };
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
 
     setCurrentRow((prevRow) => ({
@@ -219,17 +227,27 @@ export const ListGenre = () => {
     selectAllRowsItemText: "ALL",
   };
   const customTitle = (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-      <h2>Genre</h2>
-      <Button variant="contained" color="success" onClick={handleAdd}>
-        New Genre
-      </Button>
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2>Genre</h2>
+        <Button variant="contained" color="success" onClick={handleAdd}>
+          New Genre
+        </Button>
+      </div>
+      <div>
+        <TextField
+          type="text"
+          placeholder="Search By Description"
+          style={{ marginBottom: "20px" }}
+          onChange={handleSearch}
+        />
+      </div>
     </div>
   );
   return (
@@ -237,7 +255,7 @@ export const ListGenre = () => {
       <DataTable
         title={customTitle}
         columns={columns}
-        data={Array.isArray(genres) ? genres : []}
+        data={Array.isArray(filteredItems) ? filteredItems : []}
         defaultSortFieldId={1}
         sortIcon={<ArrowDownward />}
         pagination

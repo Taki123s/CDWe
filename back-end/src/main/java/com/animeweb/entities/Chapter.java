@@ -21,15 +21,15 @@ public class Chapter {
     private Long id;
     @Column(name = "ordinal")
     private Integer ordinal;
-    @Column(name = "link")
+    @Column(name = "link", columnDefinition = "MEDIUMTEXT")
     private String link;
     @Column(name = "status", columnDefinition = "TINYINT(1)")
     private Boolean status = true;
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createAt = new Date();
-    @Column(name = "update_at")
+    @Column(name = "update_at", columnDefinition = "datetime")
     private Date updateAt;
-    @Column(name = "delete_at")
+    @Column(name = "delete_at", columnDefinition = "datetime")
     private Date deleteAt;
     @ManyToOne
     @JoinColumn(name ="movie_id",nullable = false,referencedColumnName = "id")

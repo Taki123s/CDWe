@@ -108,7 +108,6 @@ export const RoleManager = () => {
                         idRole={item.id}
                         title={item.name}
                         data={item.userMap}
-                        description={item.description}
                       />
                     </div>
                   </div>

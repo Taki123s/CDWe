@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
-
+import Cookies from "js-cookie";
+import { refreshToken } from "../service/AuthServices";
 const Sidebar = () => {
   const [menuState, setMenuState] = useState({
     dashboard: true,
@@ -14,7 +16,24 @@ const Sidebar = () => {
     log: false,
     keys: false,
   });
-
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const token = Cookies.get("jwt_token");
+      if (token) {
+        console.log("refresh")
+        const decodedToken = jwtDecode(token);
+        const expirationTime = decodedToken.exp * 1000;
+        const currentTime = Date.now();
+        if (currentTime > expirationTime - 43200000) {
+          try {
+            refreshToken(token);
+          } catch (error) {
+          }
+        }
+      }
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
   const toggleMenu = (menu) => {
     setMenuState((prevState) => ({
       ...prevState,
@@ -25,7 +44,7 @@ const Sidebar = () => {
   return (
     <div className="iq-sidebar">
       <div className="iq-navbar-logo d-flex justify-content-between">
-        <a href="/Dashboard" className="header-logo">
+        <a href="/" className="header-logo">
           <img src="../img/logonweb.png" className="img-fluid rounded" alt="" />
           <span>AnimeWeb</span>
         </a>
@@ -124,77 +143,27 @@ const Sidebar = () => {
                 data-parent="#iq-sidebar-toggle"
               >
                 <li>
-                  <Link to="/movie/list">
+                  <Link to="/admin/listMovie">
                     <i className="ri-folder-chart-2-line"></i>Danh sách phim
                   </Link>
                 </li>
                 <li>
-                  <Link to="/movie/add">
+                  <Link to="/admin/addMovie">
                     <i className="ri-folder-chart-2-line"></i>Nhập phim mới
                   </Link>
                 </li>
                 <li>
-                  <Link to="/genre/list">
+                  <Link to="/admin/listGenre">
                     <i className="ri-folder-chart-2-line"></i>Danh sách thể loại
                   </Link>
                 </li>
-              </ul>
-            </li>
-
-            <li className={menuState.supplier ? "parentActive" : ""}>
-              <a
-                href="#supplier"
-                className="iq-waves-effect"
-                onClick={() => toggleMenu("supplier")}
-                aria-expanded={menuState.supplier}
-              >
-                <i className="ri-pages-line iq-arrow-left"></i>
-                <span>Quản lý nhà cung cấp</span>
-                <i className="ri-arrow-right-s-line iq-arrow-right"></i>
-              </a>
-              <ul
-                id="supplier"
-                className={`iq-submenu collapse ${
-                  menuState.supplier ? "show" : ""
-                }`}
-                data-parent="#iq-sidebar-toggle"
-              >
                 <li>
-                  <Link to="/supplier/list">
-                    <i className="ri-folder-chart-2-line"></i>Danh sách nhà cung
-                    cấp
+                  <Link to="/admin/listSerie">
+                    <i className="ri-folder-chart-2-line"></i>Danh sách Serie
                   </Link>
                 </li>
               </ul>
             </li>
-
-            <li className={menuState.producer ? "parentActive" : ""}>
-              <a
-                href="#producer"
-                className="iq-waves-effect"
-                onClick={() => toggleMenu("producer")}
-                aria-expanded={menuState.producer}
-              >
-                <i className="ri-pages-line iq-arrow-left"></i>
-                <span>Quản lý nhà sản xuất</span>
-                <i className="ri-arrow-right-s-line iq-arrow-right"></i>
-              </a>
-              <ul
-                id="producer"
-                className={`iq-submenu collapse ${
-                  menuState.producer ? "show" : ""
-                }`}
-                data-parent="#iq-sidebar-toggle"
-              >
-                <li>
-                  <Link to="/producer/list">
-                    <i className="ri-folder-chart-2-line"></i>Danh sách nhà sản
-                    xuất
-                  </Link>
-                </li>
-              </ul>
-            </li>
-
             <li className={menuState.tables ? "parentActive" : ""}>
               <a
                 href="#tables"
@@ -230,33 +199,6 @@ const Sidebar = () => {
                 </li>
               </ul>
             </li>
-
-            <li className={menuState.bonus ? "parentActive" : ""}>
-              <a
-                href="#bonus"
-                className="iq-waves-effect"
-                onClick={() => toggleMenu("bonus")}
-                aria-expanded={menuState.bonus}
-              >
-                <i className="ri-table-line iq-arrow-left"></i>
-                <span>Quản lý khuyến mãi</span>
-                <i className="ri-arrow-right-s-line iq-arrow-right"></i>
-              </a>
-              <ul
-                id="bonus"
-                className={`iq-submenu collapse ${
-                  menuState.bonus ? "show" : ""
-                }`}
-                data-parent="#iq-sidebar-toggle"
-              >
-                <li>
-                  <Link to="/bonus/list">
-                    <i className="ri-table-line"></i>Danh sách khuyến mãi
-                  </Link>
-                </li>
-              </ul>
-            </li>
-
             <li className={menuState.role ? "parentActive" : ""}>
               <a
                 href="#role"
@@ -276,13 +218,8 @@ const Sidebar = () => {
                 data-parent="#iq-sidebar-toggle"
               >
                 <li>
-                  <Link to="/role">
+                  <Link to="/admin/roleManager">
                     <i className="ri-table-line"></i>Quản lý tổng
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/role/add">
-                    <i className="ri-table-line"></i>Tạo vai trò mới
                   </Link>
                 </li>
               </ul>
@@ -307,32 +244,6 @@ const Sidebar = () => {
                 <li>
                   <Link to="/log/list">
                     <i className="ri-table-line"></i>Quản lý tổng
-                  </Link>
-                </li>
-              </ul>
-            </li>
-
-            <li className={menuState.keys ? "parentActive" : ""}>
-              <a
-                href="#keys"
-                className="iq-waves-effect"
-                onClick={() => toggleMenu("keys")}
-                aria-expanded={menuState.keys}
-              >
-                <i className="ri-table-line iq-arrow-left"></i>
-                <span>Quản lý chữ ký</span>
-                <i className="ri-arrow-right-s-line iq-arrow-right"></i>
-              </a>
-              <ul
-                id="keys"
-                className={`iq-submenu collapse ${
-                  menuState.keys ? "show" : ""
-                }`}
-                data-parent="#iq-sidebar-toggle"
-              >
-                <li>
-                  <Link to="/keys/list">
-                    <i className="ri-table-line"></i>Danh sách khóa
                   </Link>
                 </li>
               </ul>

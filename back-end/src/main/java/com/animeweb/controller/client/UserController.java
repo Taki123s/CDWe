@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +31,7 @@ public class UserController {
     @GetMapping("/view/{id}")
     public ResponseEntity<UserDTOBuilder> viewProfile(@PathVariable Long id) {
         User user = userService.findUserById(id);
+        if(user==null) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User không tồn tại");
         List<Long> viewIdList = user.getViews().stream()
                 .map(View::getId)
                 .collect(Collectors.toList());

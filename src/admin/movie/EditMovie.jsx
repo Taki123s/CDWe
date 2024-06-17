@@ -52,7 +52,7 @@ export const EditMovie = () => {
           seriesDescriptions: movieData.seriesDescriptions
             ? movieData.seriesDescriptions
             : "",
-          series: movieData.serie.id,
+          series: movieData.serie?movieData.serie.id:"",
           trailer: movieData.trailer,
           genres: movieData.genres
             ? movieData.genres.map((genre) => genre.id)

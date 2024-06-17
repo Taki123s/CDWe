@@ -34,13 +34,13 @@ public class ApplicationInitConfig {
                 roleRepository.save(role);
             }
 
-            if(permissionRepository.findByName("view_admin")==null){
+            if(permissionRepository.findByName("view_dashboard")==null){
                 Permission permission = new Permission();
-                permission.setName("view_admin");
-                permission.setDescription("view_admin");
+                permission.setName("view_dashboard");
+                permission.setDescription("view_dashboard");
                 permissionRepository.save(permission);
             }
-            Permission viewAdmin = permissionRepository.findByName("view_admin");
+            Permission viewAdmin = permissionRepository.findByName("view_dashboard");
             for(String roleName : InitPermission.ROLE_PERMISSIONS.keySet()){
                 if(roleRepository.findByNameAndStatusTrue(roleName)==null){
                     Role role = new Role();
@@ -68,6 +68,7 @@ public class ApplicationInitConfig {
                 admin.setAvatarPicture("https://s0.smartresize.com/wallpaper/252/68/HD-wallpaper-anime-live-kurumi-tokisaki-art-anime-live-kurumi-tokisaki-art-anime.jpg");
                 admin.setPassword(passwordEncoder.encode("123456789"));
                 admin.setAuthenticated(true);
+                admin.setFullName("ADMIN");
                 Role role = roleRepository.findByNameAndStatusTrue("ADMIN");
                 userRepository.save(admin);
                 admin.setRoles(Collections.singletonList(role));

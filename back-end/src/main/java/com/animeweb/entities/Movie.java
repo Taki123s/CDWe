@@ -21,7 +21,7 @@ public class Movie {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "MEDIUMTEXT")
     private String name;
 
     @Column(name = "total_chapters")
@@ -36,10 +36,10 @@ public class Movie {
     @Column(name = "create_at",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createAt = new Date();
 
-    @Column(name = "update_at")
+    @Column(name = "update_at", columnDefinition = "datetime")
     private Date updateAt;
 
-    @Column(name = "delete_at")
+    @Column(name = "delete_at", columnDefinition = "datetime")
     private Date deleteAt;
 
     @Column(name = "status",columnDefinition = "tinyint default 1")
@@ -48,11 +48,11 @@ public class Movie {
     @Column(name = "producer")
     private String producer;
 
-    @Column(name = "avatar_movie")
+    @Column(name = "avatar_movie", columnDefinition = "MEDIUMTEXT")
     private String avatarMovie;
-    @Column(name = "trailer")
+    @Column(name = "trailer", columnDefinition = "MEDIUMTEXT")
     private String trailer;
-    @Column(name = "series_descriptions")
+    @Column(name = "series_descriptions", columnDefinition = "MEDIUMTEXT")
     private String seriesDescriptions;
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Genre> genres = new ArrayList<>();

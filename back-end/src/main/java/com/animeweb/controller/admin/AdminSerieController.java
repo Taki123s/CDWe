@@ -8,6 +8,7 @@ import com.animeweb.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,10 +21,12 @@ public class AdminSerieController {
     @Autowired
     SerieService serieService;
     @GetMapping
+    @PreAuthorize("hasAuthority('view_series') or hasRole('ADMIN')")
     public ResponseEntity<List<SerieDTO>> getAllSeries(){
         return ResponseEntity.ok(serieService.getAllSerie());
     }
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('add_serie') or hasRole('ADMIN')")
     public ResponseEntity<SerieDTO> addSerie(@RequestBody SerieUpdate serieUpdate){
         String descriptions = serieUpdate.getDescriptions();
         boolean isExit = serieService.findByDescription(descriptions);
@@ -34,6 +37,7 @@ public class AdminSerieController {
         return new ResponseEntity<>(SerieMapper.mapToSerieDto(newSerie),HttpStatus.CREATED);
     }
     @PutMapping("/edit/{id}")
+    @PreAuthorize("hasAuthority('edit_serie') or hasRole('ADMIN')")
     public ResponseEntity<SerieDTO> editSerie(@PathVariable Long id, @RequestBody SerieUpdate serieUpdate){
         boolean isExit = serieService.findByDescription(serieUpdate.getDescriptions());
         if (isExit) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Tên serie đã tồn tại");
@@ -45,6 +49,7 @@ public class AdminSerieController {
 
     }
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('delete_serie') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteSerie(@PathVariable Long id){
         Serie removeSerie = serieService.findById(id);
         removeSerie.setStatus(false);

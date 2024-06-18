@@ -4,11 +4,13 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { API_GET_PATHS, API_PATCH_PATHS } from "../service/Constant";
 import Swal from "sweetalert2";
+import { refreshToken } from "../service/AuthServices";
 
 function ProfilePage() {
   const [isUploading, setIsUploading] = useState(false);
 
   const [account, setAccount] = useState("");
+  var token = Cookies.get("jwt_token");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
 
@@ -19,10 +21,8 @@ function ProfilePage() {
   const [service, setService] = useState([]);
   const [imageSrc, setImageSrc] = useState("");
   const [avatar, setAvatar] = useState(null);
-  var miniImage = null;
-  const [token, setToken] = useState(Cookies.get("jwt_token"));
-  const [loggedUser, setLoggedUser] = useState(null);
   const user = typeof token === "undefined" ? null : jwtDecode(token);
+
   useEffect(() => {
     fetchData();
     FetchService();
@@ -34,10 +34,9 @@ function ProfilePage() {
           API_GET_PATHS.GET_PROFILE + `${user.idUser}`
         );
         const data = response.data;
-        console.log(response.data)
+        console.log(response.data);
         setAccount(data);
-        console.log(data.avatarPicture)
-        miniImage = data.avatarPicture;
+        console.log(data.avatarPicture);
         setImageSrc(data.avatarPicture);
         setUsername(data.userName);
         setFullName(data.fullName);
@@ -55,7 +54,6 @@ function ProfilePage() {
         const response = await axios.get(
           API_GET_PATHS.GET_ALL_SERVICE_PACK + `?userID=${user.idUser}`
         );
-        console.log("this is data ", response.data?.accessToken)
         const data = response.data;
         setService(data);
       }
@@ -76,21 +74,8 @@ function ProfilePage() {
       };
       reader.readAsDataURL(file);
       setAvatar(file);
-      // const token = response.data.accessToken;
-      
-      console.log("hello", file, avatar);
     }
   };
-
-  const decodeToken = () => {
-    const token = Cookies.get("jwt_token");
-    if (token) {
-        const decodedToken = jwtDecode(token);
-        setToken(token);
-        setLoggedUser(decodedToken);
-    }
-};
-
   const validatePhone = (phone) => {
     const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
@@ -162,31 +147,21 @@ function ProfilePage() {
 
       setIsUploading(true);
 
-      const response = await axios.patch(
-        API_PATCH_PATHS.UPDATE_PROFILE,
-        formData
-      ).then((response=>{
-        console.log(response);
-        Cookies.set("avatar", response.data.avatarPicture);
-        setToken(token);
-        console.log("current token", token);
-        const decodedToken = jwtDecode(token);
-        const expires = new Date(decodedToken.exp * 1000);
-        Cookies.set("jwt_token", token, {
-            expires: expires,
-        });
-        // decodeToken();
-        setIsUploading(false);
-        Swal.fire({
-          title: "Thành công",
-          text: "Chỉnh sửa thành công!",
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      }));
+      const response = await axios
+        .patch(API_PATCH_PATHS.UPDATE_PROFILE, formData)
+        .then((response) => {
+          setIsUploading(false);
+          Swal.fire({
+            title: "Thành công",
+            text: "Chỉnh sửa thành công!",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          refreshToken(token);
+          window.location.reload();
 
-      
+        });
     } catch (error) {
       setIsUploading(false);
       Swal.fire({

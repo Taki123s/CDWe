@@ -196,10 +196,12 @@ public class AdminMovieController {
         return new ResponseEntity<>("Sửa thành công", HttpStatus.CREATED);
     }
     @GetMapping("/viewed/month/top5")
+    @PreAuthorize("hasAuthority('top5_view') or hasRole('ADMIN')")
     public  ResponseEntity<List<Movie>>getTop5MovieViewedByMonth(){
         return  ResponseEntity.ok(viewService.GetTop5MovieViewedByMonth());
     }
     @GetMapping("/viewed/year/top5")
+    @PreAuthorize("hasAuthority('top5_view') or hasRole('ADMIN')")
     public  ResponseEntity<List<Movie>>getTop5MovieViewedByYear(){
         return  ResponseEntity.ok(viewService.GetTop5MovieViewedByYear());
     }

@@ -9,7 +9,6 @@ function ProfilePage() {
   const [isUploading, setIsUploading] = useState(false);
 
   const [account, setAccount] = useState("");
-  var token = Cookies.get("jwt_token");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
 
@@ -20,6 +19,9 @@ function ProfilePage() {
   const [service, setService] = useState([]);
   const [imageSrc, setImageSrc] = useState("");
   const [avatar, setAvatar] = useState(null);
+  var miniImage = null;
+  const [token, setToken] = useState(Cookies.get("jwt_token"));
+  const [loggedUser, setLoggedUser] = useState(null);
   const user = typeof token === "undefined" ? null : jwtDecode(token);
   useEffect(() => {
     fetchData();
@@ -35,6 +37,7 @@ function ProfilePage() {
         console.log(response.data)
         setAccount(data);
         console.log(data.avatarPicture)
+        miniImage = data.avatarPicture;
         setImageSrc(data.avatarPicture);
         setUsername(data.userName);
         setFullName(data.fullName);
@@ -52,6 +55,7 @@ function ProfilePage() {
         const response = await axios.get(
           API_GET_PATHS.GET_ALL_SERVICE_PACK + `?userID=${user.idUser}`
         );
+        console.log("this is data ", response.data?.accessToken)
         const data = response.data;
         setService(data);
       }
@@ -72,8 +76,21 @@ function ProfilePage() {
       };
       reader.readAsDataURL(file);
       setAvatar(file);
+      // const token = response.data.accessToken;
+      
+      console.log("hello", file, avatar);
     }
   };
+
+  const decodeToken = () => {
+    const token = Cookies.get("jwt_token");
+    if (token) {
+        const decodedToken = jwtDecode(token);
+        setToken(token);
+        setLoggedUser(decodedToken);
+    }
+};
+
   const validatePhone = (phone) => {
     const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
@@ -149,6 +166,16 @@ function ProfilePage() {
         API_PATCH_PATHS.UPDATE_PROFILE,
         formData
       ).then((response=>{
+        console.log(response);
+        Cookies.set("avatar", response.data.avatarPicture);
+        setToken(token);
+        console.log("current token", token);
+        const decodedToken = jwtDecode(token);
+        const expires = new Date(decodedToken.exp * 1000);
+        Cookies.set("jwt_token", token, {
+            expires: expires,
+        });
+        // decodeToken();
         setIsUploading(false);
         Swal.fire({
           title: "Thành công",

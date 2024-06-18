@@ -159,7 +159,6 @@ function ProfilePage() {
             showConfirmButton: false,
           });
           refreshToken(token);
-          window.location.reload();
 
         });
     } catch (error) {

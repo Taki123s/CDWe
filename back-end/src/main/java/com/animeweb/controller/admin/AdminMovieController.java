@@ -43,6 +43,7 @@ public class AdminMovieController {
     GenreService genreService;
     @Autowired
     ChapterService chapterService;
+    @Autowired
     ViewService viewService;
     @GetMapping()
     @PreAuthorize("hasAuthority('view_movies') or hasRole('ADMIN')")

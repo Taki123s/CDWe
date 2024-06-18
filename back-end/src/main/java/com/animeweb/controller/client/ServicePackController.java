@@ -52,19 +52,6 @@ public class ServicePackController {
         return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/all/user/bought")
-    public ResponseEntity<List<UserDTO>> GetAllUserBought() {
-        return ResponseEntity.ok(userPackedService.GetAllUserBought());
-    }
 
-    @GetMapping("/hot/month")
-    public ResponseEntity<List<DashboardView>> getUserPackedBoughtMostByMonth() {
-        return ResponseEntity.ok(servicePackService.getUserPackedBoughtMostByMonth());
-    }
-
-    @GetMapping("/hot/year")
-    public ResponseEntity<List<DashboardView>> getUserPackedBoughtMostByYear() {
-        return ResponseEntity.ok(servicePackService.getUserPackedBoughtMostByYear());
-    }
 
 }

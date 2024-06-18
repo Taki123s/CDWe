@@ -13,7 +13,7 @@ const ChangePassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const token = Cookies.get("jwt_token"); // Fix: Changed var to const and removed redundant typeof check
+  const token = Cookies.get("jwt_token"); 
   const user = token ? jwtDecode(token) : null;
   const [account, setAccount] = useState("");
   const { t } = useTranslation();

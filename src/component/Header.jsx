@@ -89,6 +89,7 @@ export const HeaderPage = () => {
         if (currentTime > expirationTime - 43200000) {
           try {
             refreshToken(token);
+            
           } catch (error) {}
         }
       }

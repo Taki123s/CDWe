@@ -761,7 +761,7 @@ export const HeaderPage = () => {
                 className="navbar-avatar w-[40px] h-[40px] rounded-full overflow-hidden"
                 id="navbar-avatar"
               >
-                <img className="w-full h-full" src={Cookies.get("avatar")} />
+                <img className="w-full h-full" src={Cookies.get("avatar") == undefined ? loggedUser?.avt : Cookies.get('avatar')} />
               </div>
             </div>
           )}
@@ -1256,7 +1256,7 @@ export const HeaderPage = () => {
                 <div className="group/avatar user-avatar big-avatar absolute top-3 right-3 w-20 h-20">
                   <img
                     className="self-avatar w-full h-full rounded-full"
-                    src={Cookies.get("avatar")}
+                    src={Cookies.get("avatar") == undefined ? loggedUser?.avt : Cookies.get('avatar')}
                   />
                   <div className="user-avatar-update absolute w-8 h-8 top-6 left-6 rounded-lg bg-black/50 text-white opacity-50 flex items-center text-center hidden group-hover/avatar:block">
                     <svg

@@ -43,7 +43,10 @@
   },
   "header": {
     "account": "Quản lý tài khoản",
-    "follow": "Phim đang theo dõi"
+    "follow": "Phim đang theo dõi",
+    "Gotodashboard":"Đi đến bảng điều khiển",
+    "aboutus":"Giới thiệu"
+
   },
   "content": {
     "addcommnent":"Thêm bình luận mới",

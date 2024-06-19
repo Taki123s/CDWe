@@ -43,7 +43,10 @@
   },
   "header": {
     "account": "Account Management",
-    "follow": "Follow"
+    "follow": "Follow",
+    "Gotodashboard":"Go to dashboard",
+    "aboutus":"About us"
+
   },
   "content": {
     "addcommnent":"Add new comment",

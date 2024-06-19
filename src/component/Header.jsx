@@ -624,7 +624,7 @@ export const HeaderPage = () => {
                   <Link to={"/about-us"}>
                     {" "}
                     <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                      About us
+                    {t("header.aboutus")}
                     </span>
                   </Link>
                 </a>
@@ -1329,7 +1329,7 @@ export const HeaderPage = () => {
                         >
                           {" "}
                           <img src={iconAdmin} className="w-4 h-4 shrink-0" />
-                          Go to dashboard
+                          {t("header.Gotodashboard")}
                         </a>
                       </div>
                     )}

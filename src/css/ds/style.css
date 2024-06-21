@@ -2120,10 +2120,11 @@ margin-bottom: 25px;
 -----------------------*/
 
 .footer {
-	background: #070720;
 	padding-top: 60px;
 	padding-bottom: 40px;
-	position: relative;
+	position:relative;
+	bottom:0;
+	width:100%;
 }
 
 .page-up {

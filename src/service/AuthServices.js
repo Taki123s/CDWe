@@ -35,6 +35,7 @@ export const refreshToken = (oldToken) => {
     .then((response) => {
       const newToken = response.data.accessToken;
       Cookies.set("jwt_token", newToken);
+      window.location.reload();
       return newToken;
     })
     .catch((error) => {

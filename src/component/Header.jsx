@@ -89,6 +89,7 @@ export const HeaderPage = () => {
         if (currentTime > expirationTime - 43200000) {
           try {
             refreshToken(token);
+            
           } catch (error) {}
         }
       }
@@ -623,7 +624,7 @@ export const HeaderPage = () => {
                   <Link to={"/about-us"}>
                     {" "}
                     <span className="s768:px-3 s1024:px-2 s1280:px-3 s1366:px-4 s768:text-[14px]">
-                      About us
+                    {t("header.aboutus")}
                     </span>
                   </Link>
                 </a>
@@ -761,7 +762,9 @@ export const HeaderPage = () => {
                 className="navbar-avatar w-[40px] h-[40px] rounded-full overflow-hidden"
                 id="navbar-avatar"
               >
+                {/* <img className="w-full h-full" src={Cookies.get("avatar") == undefined ? loggedUser?.avt : Cookies.get('avatar')} /> */}
                 <img className="w-full h-full" src={loggedUser?.avt} />
+
               </div>
             </div>
           )}
@@ -1257,6 +1260,8 @@ export const HeaderPage = () => {
                   <img
                     className="self-avatar w-full h-full rounded-full"
                     src={loggedUser.avt}
+
+                    // src={Cookies.get("avatar") == undefined ? loggedUser?.avt : Cookies.get('avatar')}
                   />
                   <div className="user-avatar-update absolute w-8 h-8 top-6 left-6 rounded-lg bg-black/50 text-white opacity-50 flex items-center text-center hidden group-hover/avatar:block">
                     <svg
@@ -1324,7 +1329,7 @@ export const HeaderPage = () => {
                         >
                           {" "}
                           <img src={iconAdmin} className="w-4 h-4 shrink-0" />
-                          Go to dashboard
+                          {t("header.Gotodashboard")}
                         </a>
                       </div>
                     )}

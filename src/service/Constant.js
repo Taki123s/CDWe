@@ -7,10 +7,14 @@ export const API_GET_PATHS = {
   GET_MOVIE_SAME: `${BASE_URL}/movie/same/`,
   GET_FOLLOW: `${BASE_URL}/follow`,
   GET_PROFILE: `${BASE_URL}/account/view/`,
-  GET_ALL_SERVICE_PACK:`${BASE_URL}/servicePack/findAll`
+  GET_ALL_SERVICE_PACK:`${BASE_URL}/servicePack/findAll`,
+  GET_RATE:`${BASE_URL}/rates/user`,
+  GET_AVERAGE_RATE:`${BASE_URL}/rates/average`
 };
 export const API_POST_PATHS = {
   FOLLOW_MOVIE: `${BASE_URL}/follow/save`,
+  VOTE_MOVIE:`${BASE_URL}/rates/vote`
+
 };
 export const API_PATCH_PATHS = {
   CHANGE_PASSWORD: `${BASE_URL}/account/changePassword/`,

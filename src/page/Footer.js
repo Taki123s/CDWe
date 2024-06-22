@@ -1,86 +1,54 @@
-import { Padding } from '@mui/icons-material';
-import React, { useEffect } from 'react';
-
+import React, { useRef } from "react";
+import { Link } from "react-router-dom";
+import logo from "../img/logo.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 const Footer = () => {
-    useEffect(() => {
-        const scrollToTopButton = document.getElementById('scrollToTopButton');
-        scrollToTopButton.addEventListener('click', scrollToTop);
+  const currentYear = new Date().getFullYear();
+  const scrollRef = useRef(null);
 
-        // Execute your script here
-        var chatbox = document.getElementById('fb-customer-chat');
-        chatbox.setAttribute("page_id", "101798746296853");
-        chatbox.setAttribute("attribution", "biz_inbox");
+  const scrollToTop = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
-        // Initialize Facebook SDK
-        window.fbAsyncInit = function () {
-            window.FB.init({
-                xfbml: true,
-                version: 'v17.0'
-            });
-        };
+  return (
+    <footer className="footer" style={{ background: "white", padding: "2%" }}>
+      <div className="page-up" onClick={scrollToTop} style={{ cursor: "pointer" }}>
+        <a href="" id="scrollToTopButton">
+        <FontAwesomeIcon icon={faChevronUp} className="arrow_carrot-up" />
+        </a>
+      </div>
 
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s);
-            js.id = id;
-            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+      <div id="fb-root"></div>
 
-        return () => {
-            scrollToTopButton.removeEventListener('click', scrollToTop);
-        };
-    }, []);
+      <div id="fb-customer-chat" className="fb-customerchat"></div>
 
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    };
-
-    return (
-        <footer className="footer" style={{background:"white",paddingTop:"2%"}}>
-            <script src="js/main.js"></script>
-            <div className="page-up">
-                <a href="#" id="scrollToTopButton"><span className="arrow_carrot-up"></span></a>
+      <div className="container">
+        <div className="ah_footer">
+          <div className="row">
+            <div className="col-lg-3">
+              <div className="footer__logo">
+                <Link to={"/index"}>
+                  <img className="h-full" src={logo} alt="" />{" "}
+                </Link>{" "}
+              </div>
             </div>
+            <div className="col-lg-6"></div>
 
-            <div id="fb-root"></div>
-
-            <div id="fb-customer-chat" className="fb-customerchat"></div>
-
-            <div className="container">
-                <div className="ah_footer">
-                    <div className="row">
-                        <div className="col-lg-3">
-                            <div className="footer__logo">
-                                <a href="./index.jsp"><img src="img/logo.png" alt="" /></a>
-                            </div>
-                        </div>
-                        <div className="col-lg-6">
-                            <div className="footer__nav">
-                                <ul>
-                                    <li className="active"><a href="${index}"></a></li>
-                                    <li><a href="./categories.jsp"></a></li>
-                                    <li><a href="https://www.facebook.com/profile.php?id=100012214729084"></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="col-lg-3">
-                            <p>
-                                Copyright &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved  
-                            </p>
-                            <p>20130012 & 20130305 & 20130115</p>
-                            <p>IT NLU</p>
-
-                        </div>
-                    </div>
-                </div>
+            <div className="col-lg-3">
+              <p>Copyright &copy; {currentYear} All rights reserved</p>
+              <p>20130012 & 20130305 & 20130115</p>
+              <p>IT NLU</p>
             </div>
-        </footer>
-    );
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;
